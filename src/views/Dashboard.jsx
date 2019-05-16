@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Col, Row } from "react-bootstrap";
+import { Grid } from "react-bootstrap";
 
 class Dashboard extends Component {
   render() {

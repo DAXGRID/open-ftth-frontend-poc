@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import {
-  Navbar,
   Nav,
-  NavItem,
   NavDropdown,
-  MenuItem,
-  FormGroup,
-  FormControl,
-  InputGroup
+  MenuItem
 } from "react-bootstrap";
 
 class HeaderLinks extends Component {

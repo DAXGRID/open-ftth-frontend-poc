@@ -14,10 +14,11 @@ class RouteNetworkMap extends React.Component {
       styleID: "mapbox/light-v10"
     }
   }
+
   componentDidMount(){
     const { longitude, latitude, zoom, styleID } = this.state.viewport;
     const mapConfig = {
-      container: 'route-network-map',
+      container: this.mapContainer,
       style: `mapbox://styles/${ styleID }`,
       center: [longitude, latitude],
       zoom: zoom,
@@ -31,13 +32,17 @@ class RouteNetworkMap extends React.Component {
 
 
     this.map.on('load', () => {
-      const style = this.map.getStyle();
+      // const style = this.map.getStyle();
     });
+  }
+
+  componentWillUnmount() {
+    this.map.remove();
   }
 
   render() {
     return (
-      <div id="route-network-map" style={{width: '100%', height: '100%'}}>
+      <div ref={el => this.mapContainer = el} style={{width: '100%', height: '100%'}}>
       </div>
     )
   }

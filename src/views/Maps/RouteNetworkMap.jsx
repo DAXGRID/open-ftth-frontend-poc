@@ -1,51 +1,46 @@
-import React from "react";
-import mapboxgl from 'mapbox-gl'
-import MapboxDraw from 'mapbox-gl-draw';
+import React from 'react'
+import { connect } from 'react-redux'
+import { addRouteSegment } from '../../redux/actions'
+import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
+import Map from './Map'
 
-import 'mapbox-gl/dist/mapbox-gl.css'
-import 'mapbox-gl-draw/dist/mapbox-gl-draw.css'
+const ReduxMapControl= MapboxGLRedux.ReduxMapControl
+const container = 'mapbox-map'
+const control = new ReduxMapControl(container)
 
-class RouteNetworkMap extends React.Component {
-  state = {
+var RouteNetworkMap = props => (
+  <>
+    <Map
+      viewport={props.viewport}
+      routeSegments={props.routeSegments}
+      nodes={props.nodes}
+      createFeatures={props.createFeatures}
+      reduxControl={control}
+      container={container}/>
+  </>
+)
+
+const mapStateToProps = state => {
+  return {
+    routeSegments: state.routeSegments,
+    nodes: state.nodes,
     viewport: {
       latitude: "37.9135",
       longitude: "-122.2914",
       zoom: 16,
-      styleID: "mapbox/light-v10"
+      styleID: "mapbox/streets-v9"
     }
-  }
-
-  componentDidMount(){
-    const { longitude, latitude, zoom, styleID } = this.state.viewport;
-    const mapConfig = {
-      container: this.mapContainer,
-      style: `mapbox://styles/${ styleID }`,
-      center: [longitude, latitude],
-      zoom: zoom,
-    };
-    mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
-
-    this.map = new mapboxgl.Map(mapConfig);
-
-    const draw = new MapboxDraw();
-    this.map.addControl(draw);
-
-
-    this.map.on('load', () => {
-      // const style = this.map.getStyle();
-    });
-  }
-
-  componentWillUnmount() {
-    this.map.remove();
-  }
-
-  render() {
-    return (
-      <div ref={el => this.mapContainer = el} style={{width: '100%', height: '100%'}}>
-      </div>
-    )
   }
 }
 
-export default RouteNetworkMap;
+const mapDispatchToProps = dispatch => {
+  return {
+    createFeatures: feature => {
+      dispatch(addRouteSegment(feature))
+    }
+  }
+}
+
+RouteNetworkMap = connect(mapStateToProps, mapDispatchToProps)(RouteNetworkMap)
+
+export default RouteNetworkMap

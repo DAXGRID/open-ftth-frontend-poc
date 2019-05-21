@@ -3,9 +3,12 @@
   "version": "1.2.0",
   "private": true,
   "dependencies": {
+    "@mapbox/mapbox-gl-redux": "^0.1.0",
     "bootstrap": "3.3.7",
     "chartist": "0.10.1",
     "history": "4.9.0",
+    "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.11",
     "mapbox-gl": "^0.54.0",
     "mapbox-gl-draw": "^0.16.0",
     "moment": "2.24.0",
@@ -21,6 +24,7 @@
     "react-datetime": "2.16.3",
     "react-dom": "16.8.6",
     "react-notification-system": "0.2.17",
+    "react-redux": "^7.0.3",
     "react-router": "5.0.0",
     "react-router-dom": "5.0.0",
     "react-scripts": "3.0.0",
@@ -29,6 +33,8 @@
     "react-syntax-highlighter": "10.2.1",
     "react-table": "6.10.0",
     "react-tagsinput": "3.19.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "wnumb": "1.1.0"
   },
   "scripts": {

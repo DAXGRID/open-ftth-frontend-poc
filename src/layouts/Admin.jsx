@@ -29,7 +29,7 @@ class Dashboard extends Component {
       color: "black",
       hasImage: true,
       navbar: false,
-      mini: false
+      mini: true
     };
   }
   componentDidMount() {
@@ -63,6 +63,7 @@ class Dashboard extends Component {
     }
   }
   componentWillMount() {
+    document.body.classList.toggle("sidebar-mini");
     if (document.documentElement.className.indexOf("nav-open") !== -1) {
       document.documentElement.classList.toggle("nav-open");
     }

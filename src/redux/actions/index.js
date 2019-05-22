@@ -5,6 +5,13 @@ export function createFeatures(features) {
   }
 }
 
+export function updateFeatures(features) {
+  return {
+    type: 'UPDATE_FEATURES',
+    features
+  }
+}
+
 export function deleteFeatures(features) {
   return {
     type: 'DELETE_FEATURES',

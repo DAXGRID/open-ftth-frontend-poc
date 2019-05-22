@@ -37,6 +37,10 @@ class Map extends Component {
       this.props.createFeatures(e.features)
     })
 
+    map.on('draw.update', (e) => {
+      this.props.updateFeatures(e.features)
+    })
+
     map.on('draw.delete', (e) => {
       this.props.deleteFeatures(e.features)
     })
@@ -61,11 +65,13 @@ Map.propTypes = {
   container: PropTypes.string.isRequired,
   features: PropTypes.array,
   createFeatures: PropTypes.func,
+  updateFeatures: PropTypes.func,
   deleteFeatures: PropTypes.func
 }
 
 Map.defaultProps = {
   createFeatures: () => {},
+  updateFeatures: () => {},
   deleteFeatures: () => {}
 }
 

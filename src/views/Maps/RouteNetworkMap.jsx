@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { createFeatures, deleteFeatures } from '../../redux/actions'
+import { createFeatures, updateFeatures, deleteFeatures } from '../../redux/actions'
 import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
 import Map from './Map'
 
@@ -14,6 +14,7 @@ var RouteNetworkMap = props => (
       viewport={props.viewport}
       features={props.features}
       createFeatures={props.createFeatures}
+      updateFeatures={props.updateFeatures}
       deleteFeatures={props.deleteFeatures}
       reduxControl={control}
       container={container}/>
@@ -34,12 +35,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createFeatures: features => {
-      dispatch(createFeatures(features))
-    },
-    deleteFeatures: features => {
-      dispatch(deleteFeatures(features))
-    }
+    createFeatures: features => dispatch(createFeatures(features)),
+    updateFeatures: features => dispatch(updateFeatures(features)),
+    deleteFeatures: features => dispatch(deleteFeatures(features))
   }
 }
 

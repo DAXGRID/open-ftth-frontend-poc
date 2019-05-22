@@ -7,6 +7,17 @@ const reducer = (state = {}, action = '') => {
           ...action.features
         ]
       })
+    case 'UPDATE_FEATURES':
+      const updated_indexes = action.features.map((feature) => feature.id ).filter(Boolean)
+
+      console.log('updated')
+      console.log(updated_indexes)
+      return Object.assign({}, state, {
+        features: [
+          ...state.features.filter((feature) => !updated_indexes.includes(feature.id)),
+          ...action.features
+        ]
+      })
     case 'DELETE_FEATURES':
       const deleted_indexes = action.features.map((feature) => feature.id ).filter(Boolean)
       return Object.assign({}, state, {

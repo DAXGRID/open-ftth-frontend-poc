@@ -9,7 +9,7 @@ const configureStore = () => {
 
   store.subscribe(throttle(() => {
     saveState({
-      routeSegments: store.getState().routeSegments,
+      features: store.getState().features,
     })
   }, 1000))
 

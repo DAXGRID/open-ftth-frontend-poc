@@ -4,7 +4,7 @@ export const loadState = () => {
     if (serializedState === null) {
       return {
         // avoid totally empty state
-        routeSegments: [{
+        features: [{
           type: 'Feature',
           geometry: {
             type: 'LineString',

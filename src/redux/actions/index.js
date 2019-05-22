@@ -1,13 +1,6 @@
-export function addRouteSegment(routeSegment) {
+export function createFeatures(features) {
   return {
-    type: 'ADD_ROUTE_SEGMENT',
-    routeSegment
+    type: 'CREATE_FEATURES',
+    features
   }
 }
-//
-// export function addNode(node) {
-//   configureStore.dispatch({
-//     type: 'ADD_NODE',
-//     node
-//   });
-// }

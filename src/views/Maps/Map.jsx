@@ -17,32 +17,22 @@ class Map extends Component {
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken
 
     const map = new mapboxgl.Map(mapConfig)
-    const draw = new MapboxDraw()
+    const draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: { point: true, line_string: true, combine_features: true, uncombine_features: true, trash: true }
+    })
     map.addControl(draw)
     map.addControl(this.props.reduxControl)
 
-    const routeSegments = this.props.routeSegments
+    const features = this.props.features
     map.on('load', () => {
-      console.log('load routeSegments')
-      console.log(routeSegments)
-      routeSegments.map(( routeSegment, i ) =>
-        draw.add(routeSegment)
-        // map.addLayer({
-        //   id: `routeSegments_${i}`,
-        //   type: 'line',
-        //   source: {
-        //     type: 'geojson',
-        //     data: {
-        //       type: 'Feature',
-        //       ...routeSegment
-        //     }
-        //   }
-        // })
+      features.map(( feature, i ) =>
+        draw.add(feature)
       )
     })
 
     map.on('draw.create', (e) => {
-      this.props.createFeatures(e.features[0])
+      this.props.createFeatures(e.features)
     })
   }
 
@@ -63,8 +53,7 @@ Map.propTypes = {
   }),
   reduxControl: PropTypes.object.isRequired,
   container: PropTypes.string.isRequired,
-  routeSegments: PropTypes.array,
-  nodes: PropTypes.array,
+  features: PropTypes.array.isRequired,
   createFeatures: PropTypes.func
 }
 

@@ -26,13 +26,19 @@ class Map extends Component {
 
     const features = this.props.features
     map.on('load', () => {
-      features.map(( feature, i ) =>
-        draw.add(feature)
-      )
+      if(features && features.length > 0) {
+        features.map(( feature, i ) =>
+          draw.add(feature)
+        )
+      }
     })
 
     map.on('draw.create', (e) => {
       this.props.createFeatures(e.features)
+    })
+
+    map.on('draw.delete', (e) => {
+      this.props.deleteFeatures(e.features)
     })
   }
 
@@ -53,12 +59,14 @@ Map.propTypes = {
   }),
   reduxControl: PropTypes.object.isRequired,
   container: PropTypes.string.isRequired,
-  features: PropTypes.array.isRequired,
-  createFeatures: PropTypes.func
+  features: PropTypes.array,
+  createFeatures: PropTypes.func,
+  deleteFeatures: PropTypes.func
 }
 
 Map.defaultProps = {
-  createFeatures: () => {}
+  createFeatures: () => {},
+  deleteFeatures: () => {}
 }
 
 export default Map

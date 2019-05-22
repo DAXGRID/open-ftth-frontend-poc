@@ -4,3 +4,10 @@ export function createFeatures(features) {
     features
   }
 }
+
+export function deleteFeatures(features) {
+  return {
+    type: 'DELETE_FEATURES',
+    features
+  }
+}

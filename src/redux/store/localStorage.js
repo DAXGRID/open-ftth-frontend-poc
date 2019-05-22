@@ -5,6 +5,7 @@ export const loadState = () => {
       return {
         // avoid totally empty state
         features: [{
+          id: "01",
           type: 'Feature',
           geometry: {
             type: 'LineString',

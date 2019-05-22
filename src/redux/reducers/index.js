@@ -7,6 +7,13 @@ const reducer = (state = {}, action = '') => {
           ...action.features
         ]
       })
+    case 'DELETE_FEATURES':
+      const deleted_indexes = action.features.map((feature) => feature.id ).filter(Boolean)
+      return Object.assign({}, state, {
+        features: [
+          ...state.features.filter((feature) => !deleted_indexes.includes(feature.id))
+        ]
+      })
     default:
       return state
   }

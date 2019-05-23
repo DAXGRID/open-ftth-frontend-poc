@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
-import MapboxDraw from 'mapbox-gl-draw'
+import MapboxDraw from '@mapbox/mapbox-gl-draw'
+import SnapPointMode from '../../lib/SnapPointMode';
+import SnapLineMode from '../../lib/SnapLineMode';
+import { drawStyles } from '../../lib/snapUtils'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import 'mapbox-gl-draw/dist/mapbox-gl-draw.css'
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 class Map extends Component {
   componentDidMount() {
@@ -18,8 +21,15 @@ class Map extends Component {
 
     const map = new mapboxgl.Map(mapConfig)
     const draw = new MapboxDraw({
+      styles: drawStyles,
+      userProperties: true,
       displayControlsDefault: false,
-      controls: { point: true, line_string: true, combine_features: true, uncombine_features: true, trash: true }
+      controls: { point: true, line_string: true, combine_features: true, uncombine_features: true, trash: true },
+      modes: {
+        ...MapboxDraw.modes,
+        snap_point: SnapPointMode,
+        snap_line: SnapLineMode,
+      }
     })
     map.addControl(draw)
     map.addControl(this.props.reduxControl)
@@ -33,7 +43,16 @@ class Map extends Component {
       }
     })
 
+    map.on('draw.modechange', (e) => {
+      if (draw.getMode() === 'draw_point') draw.changeMode('snap_point')
+      if (draw.getMode() === 'draw_line_string') draw.changeMode('snap_line')
+    })
+
     map.on('draw.create', (e) => {
+      // If this is a node, check if we already have one here and don't create a duplicate
+      // If this is a node, check to see if it sits on a line, and split it
+      // If this is a line, create nodes on both ends, unless they exist already
+
       this.props.createFeatures(e.features)
     })
 

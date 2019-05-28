@@ -14,6 +14,7 @@ import {
   roundLngLatTo1Cm,
   shouldHideGuide,
   snapAndDrawGuides,
+  createPoint,
 } from './snapUtils'
 
 const SnapLineMode = {...DrawLine}
@@ -121,7 +122,44 @@ SnapLineMode.onStop = function(state) {
   // This relies on the the state of SnapLineMode being similar to DrawLine
   DrawLine.onStop.call(this, state)
 
+  // Draw points on start and end coordinates
+  // TODO if they don't exist yet
+  const coords = state.line.toGeoJSON().geometry.coordinates
+  const startPointCoords = coords[0]
+  const endPointCoords = coords[coords.length - 1]
+
+  const startPoint = this.newFeature({
+    geometry: {
+      type: 'Point',
+      coordinates: startPointCoords,
+    },
+  })
+
+  const endPoint = this.newFeature({
+    geometry: {
+      type: 'Point',
+      coordinates: endPointCoords,
+    },
+  })
+
+  this.addFeature(startPoint)
+  this.addFeature(endPoint)
+
+  if (startPoint.isValid()) {
+    this.map.fire(Constants.events.CREATE, {
+      features: [startPoint.toGeoJSON()]
+    });
+  }
+
+  if (endPoint.isValid()) {
+    this.map.fire(Constants.events.CREATE, {
+      features: [endPoint.toGeoJSON()]
+    });
+  }
+
   state.onAdd(state.line)
+  state.onAdd(startPoint)
+  state.onAdd(endPoint)
 }
 
 export default SnapLineMode

@@ -50,10 +50,6 @@ class Map extends Component {
     })
 
     map.on('draw.create', (e) => {
-      // If this is a node, check if we already have one here and don't create a duplicate
-      // If this is a node, check to see if it sits on a line, and split it
-      // If this is a line, create nodes on both ends, unless they exist already
-
       this.props.createFeatures(e.features)
     })
 

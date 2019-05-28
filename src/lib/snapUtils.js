@@ -99,6 +99,11 @@ export const findGuidesFromFeatures = ({map, currentFeature, draw}) => {
       horizontal: [],
   }
 
+  if (!draw) {
+    console.error('No draw object passed to findGuidesFromFeatures')
+    return
+  }
+
   draw.getAll().features.forEach(feature => {
     // Only snap to PAM features
     if (feature.properties.pam !== 'true') return
@@ -107,7 +112,7 @@ export const findGuidesFromFeatures = ({map, currentFeature, draw}) => {
     // guides
     if (feature.id === IDS.HORIZONTAL_GUIDE || feature.id === IDS.VERTICAL_GUIDE) return
 
-    const isTheCurrentFeature = feature.id === currentFeature.id
+    const isTheCurrentFeature = currentFeature && (feature.id === currentFeature.id)
 
     let coordinates
 

@@ -5,7 +5,7 @@ export const loadState = () => {
       return {
         // avoid totally empty state
         features: [{
-          id: "01",
+          id: '01',
           type: 'Feature',
           geometry: {
             type: 'LineString',
@@ -17,27 +17,30 @@ export const loadState = () => {
             ]
           },
           properties: {
-            name: 'Initial line'
+            name: 'Initial line',
+            pam: 'true'
           }
         }, {
-          id: "02",
+          id: '02',
           type: 'Feature',
           geometry: {
             type: 'Point',
             coordinates: [-122.29032365729391, 37.91208121972484]
           },
           properties: {
-            name: 'Initial point'
+            name: 'Initial point',
+            pam: 'true'
           }
         }, {
-          id: "03",
+          id: '03',
           type: 'Feature',
           geometry: {
             type: 'Point',
             coordinates: [-122.29060675013326, 37.91321720194698]
           },
           properties: {
-            name: 'Initial point'
+            name: 'Initial point',
+            pam: 'true'
           }
         }
       ]

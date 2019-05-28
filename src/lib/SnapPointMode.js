@@ -13,6 +13,7 @@ import {
   roundLngLatTo1Cm,
   shouldHideGuide,
   snapAndDrawGuides,
+  getPointFeature,
 } from './snapUtils'
 
 const SnapPointMode = {...DrawPoint}
@@ -58,8 +59,17 @@ SnapPointMode.onSetup = function({properties = {}}) {
   return state
 }
 
-SnapPointMode.onClick = function(state) {
-  // We mock out e with the rounded lng/lat then call DrawPoint with it
+SnapPointMode.onTap = SnapPointMode.onClick = function(state, e) {
+  // Don't allow overlying points
+  const existingPoint = getPointFeature(e)
+
+  if (existingPoint) {
+    const existingPointID = existingPoint.properties.id
+    console.warn('Attempted to create point on existing point, selected existing instead')
+    this.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [existingPointID] })
+    return
+  }
+
   DrawPoint.onClick.call(this, state, {
     lngLat: {
       lng: roundLngLatTo1Cm(state.snappedLng),

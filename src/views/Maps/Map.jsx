@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
-import SnapPointMode from '../../lib/SnapPointMode';
-import SnapLineMode from '../../lib/SnapLineMode';
+import * as turf from '@turf/turf'
+import SnapPointMode from '../../lib/SnapPointMode'
+import SnapLineMode from '../../lib/SnapLineMode'
 import { drawStyles } from '../../lib/snapUtils'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'

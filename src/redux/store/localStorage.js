@@ -17,9 +17,30 @@ export const loadState = () => {
             ]
           },
           properties: {
+            name: 'Initial line'
+          }
+        }, {
+          id: "02",
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.29032365729391, 37.91208121972484]
+          },
+          properties: {
             name: 'Initial point'
           }
-        }]
+        }, {
+          id: "03",
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.29060675013326, 37.91321720194698]
+          },
+          properties: {
+            name: 'Initial point'
+          }
+        }
+      ]
       }
     }
     return JSON.parse(serializedState)

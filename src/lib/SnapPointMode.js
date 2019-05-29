@@ -4,6 +4,7 @@
 import Constants from '@mapbox/mapbox-gl-draw/src/constants'
 import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom'
 import DrawPoint from '@mapbox/mapbox-gl-draw/src/modes/draw_point'
+import { getPointFromEvent } from './getUtils.js'
 import {
   findGuidesFromFeatures,
   getGuideFeature,
@@ -13,7 +14,6 @@ import {
   roundLngLatTo1Cm,
   shouldHideGuide,
   snapAndDrawGuides,
-  getPointFeature,
 } from './snapUtils'
 
 const SnapPointMode = {...DrawPoint}
@@ -61,7 +61,7 @@ SnapPointMode.onSetup = function({properties = {}}) {
 
 SnapPointMode.onTap = SnapPointMode.onClick = function(state, e) {
   // Don't allow overlying points
-  const existingPoint = getPointFeature(e)
+  const existingPoint = getPointFromEvent(e)
 
   if (existingPoint) {
     const existingPointID = existingPoint.properties.id

@@ -4,6 +4,7 @@
 import Constants from '@mapbox/mapbox-gl-draw/src/constants'
 import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom'
 import DrawLine from '@mapbox/mapbox-gl-draw/src/modes/draw_line_string'
+import { getPointsFromCoords } from './getUtils.js'
 import {
   addPointToGuides,
   findGuidesFromFeatures,
@@ -14,7 +15,6 @@ import {
   roundLngLatTo1Cm,
   shouldHideGuide,
   snapAndDrawGuides,
-  createPoint,
 } from './snapUtils'
 
 const SnapLineMode = {...DrawLine}
@@ -121,45 +121,48 @@ SnapLineMode.onStop = function(state) {
 
   // This relies on the the state of SnapLineMode being similar to DrawLine
   DrawLine.onStop.call(this, state)
-
-  // Draw points on start and end coordinates
-  // TODO if they don't exist yet
-  const coords = state.line.toGeoJSON().geometry.coordinates
-  const startPointCoords = coords[0]
-  const endPointCoords = coords[coords.length - 1]
-
-  const startPoint = this.newFeature({
-    geometry: {
-      type: 'Point',
-      coordinates: startPointCoords,
-    },
-  })
-
-  const endPoint = this.newFeature({
-    geometry: {
-      type: 'Point',
-      coordinates: endPointCoords,
-    },
-  })
-
-  this.addFeature(startPoint)
-  this.addFeature(endPoint)
-
-  if (startPoint.isValid()) {
-    this.map.fire(Constants.events.CREATE, {
-      features: [startPoint.toGeoJSON()]
-    });
-  }
-
-  if (endPoint.isValid()) {
-    this.map.fire(Constants.events.CREATE, {
-      features: [endPoint.toGeoJSON()]
-    });
-  }
-
   state.onAdd(state.line)
-  state.onAdd(startPoint)
-  state.onAdd(endPoint)
+
+  // Draw points on start and end coordinates if they don't exist yet
+  this.createEndPoints(state)
+}
+
+SnapLineMode.createEndPoints = function(state) {
+  const coords = state.line.coordinates
+
+  const startPointCoords = coords[0]
+  if(!getPointsFromCoords(state.map, startPointCoords)) {
+    const startPoint = this.createPointFromCoords(startPointCoords)
+    state.onAdd(startPoint)
+  } else {
+    console.warn('Attempted to generate endpoint on existing point, skipped')
+  }
+
+  const endPointCoords = coords[coords.length - 1]
+  if(!getPointsFromCoords(state.map, endPointCoords)) {
+    const endPoint = this.createPointFromCoords(endPointCoords)
+    state.onAdd(endPoint)
+  } else {
+    console.warn('Attempted to generate endpoint on existing point, skipped')
+  }
+}
+
+SnapLineMode.createPointFromCoords = function(coords) {
+  const point = this.newFeature({
+    geometry: {
+      type: 'Point',
+      coordinates: coords,
+    },
+  })
+  this.addFeature(point)
+
+  if (point.isValid()) {
+    this.map.fire(Constants.events.CREATE, {
+      features: [point.toGeoJSON()]
+    })
+  }
+
+  return point
 }
 
 export default SnapLineMode

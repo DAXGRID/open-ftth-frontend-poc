@@ -1,5 +1,3 @@
-import CommonSelectors from '@mapbox/mapbox-gl-draw/src/lib/common_selectors'
-
 // adapted from https://github.com/davidgilbertson/draw-geoson
 
 /* eslint-disable no-param-reassign */
@@ -256,19 +254,6 @@ export const shouldHideGuide = (state, geojson) => {
   }
 
   return false
-}
-
-
-/**
-* Returns existing point feature if there are any, using same logic as SimpleSelect
-
-* @param e
-* @returns GeoJSONFeature
-*/
-export const getPointFeature = (e) => {
-  if (CommonSelectors.isFeature(e) && e.featureTarget.geometry.type === "Point") {
-    return e.featureTarget
-  }
 }
 
 export const drawStyles = [

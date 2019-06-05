@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import SnapPointMode from '../../lib/SnapPointMode'
 import SnapLineMode from '../../lib/SnapLineMode'
-import { drawStyles } from '../../lib/snapUtils'
+import drawStyles from '../../lib/drawStyles'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
@@ -20,6 +20,7 @@ class Map extends Component {
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken
 
     const map = new mapboxgl.Map(mapConfig)
+
     const draw = new MapboxDraw({
       styles: drawStyles,
       userProperties: true,
@@ -32,10 +33,14 @@ class Map extends Component {
       }
     })
     map.addControl(draw)
+
     map.addControl(this.props.reduxControl)
 
     const features = this.props.features
     map.on('load', () => {
+      console.log('features')
+      console.log(features)
+
       if(features && features.length > 0) {
         features.map(( feature, i ) =>
           draw.add(feature)
@@ -44,7 +49,7 @@ class Map extends Component {
     })
 
     map.on('draw.modechange', (e) => {
-      // user check here - 
+      // user check here -
       if (draw.getMode() === 'draw_point') draw.changeMode('snap_point')
       if (draw.getMode() === 'draw_line_string') draw.changeMode('snap_line')
     })

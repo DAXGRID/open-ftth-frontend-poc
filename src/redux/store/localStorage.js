@@ -47,7 +47,9 @@ export const loadState = () => {
           },
           properties: {
             name: 'Initial line',
-            pam: 'true'
+            pam: 'true',
+            physicalType: 'Duct',
+            state: 'complete'
           }
         }, {
           id: '02',
@@ -58,7 +60,9 @@ export const loadState = () => {
           },
           properties: {
             name: 'Initial point',
-            pam: 'true'
+            pam: 'true',
+            physicalType: 'Cabinet',
+            state: 'complete'
           }
         }, {
           id: '03',
@@ -69,7 +73,9 @@ export const loadState = () => {
           },
           properties: {
             name: 'Initial point',
-            pam: 'true'
+            pam: 'true',
+            physicalType: 'Cabinet',
+            state: 'complete'
           }
         }]
       }

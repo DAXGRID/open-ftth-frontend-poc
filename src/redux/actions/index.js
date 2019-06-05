@@ -1,3 +1,10 @@
+export function updateCurrentUserByRole(role) {
+  return {
+    type: 'UPDATE_CURRENT_USER_BY_ROLE',
+    role
+  }
+}
+
 export function createFeatures(features) {
   return {
     type: 'CREATE_FEATURES',

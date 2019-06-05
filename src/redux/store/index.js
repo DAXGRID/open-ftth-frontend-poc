@@ -10,6 +10,8 @@ const configureStore = () => {
   store.subscribe(throttle(() => {
     saveState({
       features: store.getState().features,
+      users: store.getState().users,
+      currentUserID: store.getState().currentUserID
     })
   }, 1000))
 

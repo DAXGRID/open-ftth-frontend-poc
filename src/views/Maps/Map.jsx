@@ -44,6 +44,7 @@ class Map extends Component {
     })
 
     map.on('draw.modechange', (e) => {
+      // user check here - 
       if (draw.getMode() === 'draw_point') draw.changeMode('snap_point')
       if (draw.getMode() === 'draw_line_string') draw.changeMode('snap_line')
     })

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { updateCurrentUserByRole } from '../../redux/actions'
+import { updateCurrentUser } from '../../redux/actions'
 import { Collapse } from 'react-bootstrap'
 
 class SidebarUserMenu extends Component {
@@ -34,15 +34,15 @@ class SidebarUserMenu extends Component {
           <Collapse in={this.state.openAvatar}>
             <ul className="nav">
               <li>
-                <a href="#planner" onClick={e => {this.props.setUser("planner"); e.preventDefault()}}>
+                <a href="#planner" onClick={e => {this.props.updateCurrentUser(0); e.preventDefault()}}>
                   <span className="sidebar-mini">P</span>
                   <span className="sidebar-normal">Planner</span>
                 </a>
-                <a href="#installer" onClick={e => {this.props.setUser("installer"); e.preventDefault()}}>
+                <a href="#installer" onClick={e => {this.props.updateCurrentUser(1); e.preventDefault()}}>
                   <span className="sidebar-mini">I</span>
                   <span className="sidebar-normal">Installer</span>
                 </a>
-                <a href="#viewer" onClick={e => {this.props.setUser("viewer"); e.preventDefault()}}>
+                <a href="#viewer" onClick={e => {this.props.updateCurrentUser(2); e.preventDefault()}}>
                   <span className="sidebar-mini">V</span>
                   <span className="sidebar-normal">Viewer</span>
                 </a>
@@ -57,13 +57,13 @@ class SidebarUserMenu extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.users.filter((user) => user.id === state.currentUserID)[0]
+    currentUser: state.users[state.currentUserID]
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: role => dispatch(updateCurrentUserByRole(role))
+    updateCurrentUser: id => dispatch(updateCurrentUser(id))
   }
 }
 

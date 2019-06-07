@@ -1,7 +1,7 @@
-export function updateCurrentUserByRole(role) {
+export function updateCurrentUser(id) {
   return {
-    type: 'UPDATE_CURRENT_USER_BY_ROLE',
-    role
+    type: 'UPDATE_CURRENT_USER',
+    id
   }
 }
 

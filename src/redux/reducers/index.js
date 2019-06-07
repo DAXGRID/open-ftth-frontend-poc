@@ -1,13 +1,12 @@
 const reducer = (state = {}, action = '') => {
   switch (action.type) {
-    case 'UPDATE_CURRENT_USER_BY_ROLE':
+    case 'UPDATE_CURRENT_USER':
       if (!state.users) return
-      const user = state.users.filter((user) => user.role === action.role)[0]
+      const user = state.users[action.id]
       if (!user) return
-      const userID = user.id
 
       return Object.assign({}, state, {
-        currentUserID: userID
+        currentUserID: action.id
       })
     case 'CREATE_FEATURES':
       return Object.assign({}, state, {

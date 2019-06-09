@@ -30,6 +30,7 @@ SnapPointMode.onSetup = function({properties = {}}) {
 
   // not ideal, but we need to access draw for the getAll function
   const draw = this.map._controls.filter((control) => control.hasOwnProperty('getAll'))[0]
+  const snapFeatures = [...this.map.queryRenderedFeatures(), ...draw.getAll().features]
   const verticalGuide = this.newFeature(getGuideFeature(IDS.VERTICAL_GUIDE))
   const horizontalGuide = this.newFeature(getGuideFeature(IDS.HORIZONTAL_GUIDE))
 
@@ -40,7 +41,12 @@ SnapPointMode.onSetup = function({properties = {}}) {
   doubleClickZoom.disable(this)
 
   const state = {
-    guides: findGuidesFromFeatures({map: this.map, currentFeature: point, draw: draw}),
+    guides: findGuidesFromFeatures({
+      map: this.map,
+      draw,
+      snapFeatures,
+      currentFeature: point,
+    }),
     horizontalGuide,
     map: this.map,
     draw: draw,

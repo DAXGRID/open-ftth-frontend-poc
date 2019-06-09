@@ -31,6 +31,7 @@ SnapLineMode.onSetup = function({onAdd = () => {}, properties = {}}) {
 
   // not ideal, but we need to access draw for the getAll function
   const draw = this.map._controls.filter((control) => control.hasOwnProperty('getAll'))[0]
+  const snapFeatures = [...this.map.queryRenderedFeatures(), ...draw.getAll().features]
   const verticalGuide = this.newFeature(getGuideFeature(IDS.VERTICAL_GUIDE))
   const horizontalGuide = this.newFeature(getGuideFeature(IDS.HORIZONTAL_GUIDE))
 
@@ -43,7 +44,12 @@ SnapLineMode.onSetup = function({onAdd = () => {}, properties = {}}) {
   const state = {
     currentVertexPosition: 0,
     direction: 'forward', // expected by DrawLineString
-    guides: findGuidesFromFeatures({map: this.map, currentFeature: line, draw: draw}),
+    guides: findGuidesFromFeatures({
+      map: this.map,
+      draw,
+      snapFeatures,
+      currentFeature: line,
+    }),
     horizontalGuide,
     line,
     map: this.map,

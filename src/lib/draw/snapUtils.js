@@ -90,7 +90,7 @@ export const addPointToGuides = (guides, point, forceInclusion) => {
 * @param props.currentFeature
 * @returns {{vertical: Array, horizontal: Array}}
 */
-export const findGuidesFromFeatures = ({map, currentFeature, draw}) => {
+export const findGuidesFromFeatures = ({map, draw, snapFeatures, currentFeature}) => {
   const guides = {
       vertical: [],
       horizontal: [],
@@ -101,7 +101,7 @@ export const findGuidesFromFeatures = ({map, currentFeature, draw}) => {
     return
   }
 
-  draw.getAll().features.forEach(feature => {
+  snapFeatures.forEach(feature => {
     // Only snap to PAM features
     if (feature.properties.pam !== 'true') return
 

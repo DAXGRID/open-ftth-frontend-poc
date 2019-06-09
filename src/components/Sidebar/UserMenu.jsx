@@ -34,15 +34,15 @@ class SidebarUserMenu extends Component {
           <Collapse in={this.state.openAvatar}>
             <ul className="nav">
               <li>
-                <a href="#planner" onClick={e => {this.props.updateCurrentUser(0); e.preventDefault()}}>
+                <a href="#planner" onClick={e => {this.props.updateCurrentUser(0)}}>
                   <span className="sidebar-mini">P</span>
                   <span className="sidebar-normal">Planner</span>
                 </a>
-                <a href="#installer" onClick={e => {this.props.updateCurrentUser(1); e.preventDefault()}}>
+                <a href="#installer" onClick={e => {this.props.updateCurrentUser(1)}}>
                   <span className="sidebar-mini">I</span>
                   <span className="sidebar-normal">Installer</span>
                 </a>
-                <a href="#viewer" onClick={e => {this.props.updateCurrentUser(2); e.preventDefault()}}>
+                <a href="#viewer" onClick={e => {this.props.updateCurrentUser(2)}}>
                   <span className="sidebar-mini">V</span>
                   <span className="sidebar-normal">Viewer</span>
                 </a>

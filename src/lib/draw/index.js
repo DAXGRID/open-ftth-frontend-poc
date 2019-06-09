@@ -3,6 +3,10 @@ import SnapPointMode from './SnapPointMode'
 import SnapLineMode from './SnapLineMode'
 import drawStyles from './drawStyles'
 
+SnapPointMode.foo = "bar"
+console.log('SnapPointMode')
+console.log(SnapPointMode)
+
 export const draw = new MapboxDraw({
   styles: drawStyles,
   userProperties: true,

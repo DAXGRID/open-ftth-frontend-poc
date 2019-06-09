@@ -1,15 +1,25 @@
 import React, { Component } from "react";
 import {
   Nav,
+  NavItem,
   NavDropdown,
-  MenuItem
+  MenuItem,
 } from "react-bootstrap";
 
+
 class HeaderLinks extends Component {
+  resetLocalStorage = e => {
+    if (window.confirm('Resetting drawn lines!')) {
+      localStorage.removeItem('state')
+      window.location.reload()
+    }
+  }
+
   render() {
     return (
       <div>
         <Nav pullRight>
+          <NavItem onClick={this.resetLocalStorage}>Reset Data</NavItem>
           <NavDropdown
             eventKey={3}
             title={
@@ -61,6 +71,7 @@ class HeaderLinks extends Component {
               </div>
             </MenuItem>
           </NavDropdown>
+
         </Nav>
       </div>
     );

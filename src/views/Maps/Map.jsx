@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
-import MapboxDraw from '@mapbox/mapbox-gl-draw'
-import SnapPointMode from '../../lib/SnapPointMode'
-import SnapLineMode from '../../lib/SnapLineMode'
-import drawStyles from '../../lib/drawStyles'
+import { draw } from '../../lib/draw'
+import addUneditableFeatureLayers from '../../lib/mapbox/layers'
+
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 class Map extends Component {
   componentDidMount() {
+    const editableFeatures = this.props.editableFeatures
+    const uneditableFeatures = this.props.uneditableFeatures
+
     const { longitude, latitude, zoom, styleID } = this.props.viewport
     const mapConfig = {
       container: this.props.container,
@@ -21,37 +23,31 @@ class Map extends Component {
 
     const map = new mapboxgl.Map(mapConfig)
 
-    const draw = new MapboxDraw({
-      styles: drawStyles,
-      userProperties: true,
-      displayControlsDefault: false,
-      controls: { point: true, line_string: true, combine_features: true, uncombine_features: true, trash: true },
-      modes: {
-        ...MapboxDraw.modes,
-        snap_point: SnapPointMode,
-        snap_line: SnapLineMode,
-      }
-    })
+    map.addControl(this.props.reduxControl)
     map.addControl(draw)
 
-    map.addControl(this.props.reduxControl)
-
-    const features = this.props.features
     map.on('load', () => {
-      console.log('features')
-      console.log(features)
+      if(uneditableFeatures && uneditableFeatures.length > 0) {
+        map.addSource('features', {
+          type: 'geojson',
+          data : {
+            type: 'FeatureCollection',
+            features: uneditableFeatures
+          }
+        })
+        addUneditableFeatureLayers(map)
+      }
 
-      if(features && features.length > 0) {
-        features.map(( feature, i ) =>
-          draw.add(feature)
-        )
+      if(editableFeatures && editableFeatures.length > 0) {
+        editableFeatures.map(( feature, i ) => draw.add(feature))
       }
     })
 
     map.on('draw.modechange', (e) => {
-      // user check here -
-      if (draw.getMode() === 'draw_point') draw.changeMode('snap_point')
-      if (draw.getMode() === 'draw_line_string') draw.changeMode('snap_line')
+      const currentMode = draw.getMode()
+
+      if (currentMode === 'draw_point') draw.changeMode('snap_point')
+      if (currentMode === 'draw_line_string') draw.changeMode('snap_line')
     })
 
     map.on('draw.create', (e) => {
@@ -84,7 +80,8 @@ Map.propTypes = {
   }),
   reduxControl: PropTypes.object.isRequired,
   container: PropTypes.string.isRequired,
-  features: PropTypes.array,
+  editableFeatures: PropTypes.array,
+  uneditableFeatures: PropTypes.array,
   createFeatures: PropTypes.func,
   updateFeatures: PropTypes.func,
   deleteFeatures: PropTypes.func

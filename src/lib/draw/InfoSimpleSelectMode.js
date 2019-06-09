@@ -35,13 +35,13 @@
 //   console.log(feature)
 //
 //   const draw = this.map._controls.filter((control) => control.hasOwnProperty('getAll'))[0]
-//   const editablePhysicalTypes = draw.options.editablePhysicalTypes
-//   console.log('editablePhysicalTypes')
-//   console.log(editablePhysicalTypes)
+//   const editableFeatureTypes = draw.options.editableFeatureTypes
+//   console.log('editableFeatureTypes')
+//   console.log(editableFeatureTypes)
 //   const physicalType = feature.properties.physicalType
 //
-//   if (!physicalType || !editablePhysicalTypes) return
-//   return editablePhysicalTypes.includes(physicalType)
+//   if (!physicalType || !editableFeatureTypes) return
+//   return editableFeatureTypes.includes(physicalType)
 // }
 //
 // export default InfoSimpleSelectMode

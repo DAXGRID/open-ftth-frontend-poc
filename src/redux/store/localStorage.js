@@ -10,34 +10,30 @@ export const loadState = () => {
             id: 0,
             name: 'Planner User',
             role: 'planner',
-            canEditAll: true,
-            canEditCustomerConnections: true,
-            editablePhysicalTypes:['duct', 'cabinet', 'customer_connection'],
-            canViewAll: true,
-            isPlanner: true,
+            permissions: {
+              editableFeatureTypes: ['duct', 'cabinet', 'customer_connection'],
+            },
             avatar: 'https://i.pravatar.cc/100?img=32'
           },
           1: {
             id: 1,
             name: 'Installer User',
             role: 'installer',
-            canEditAll: false,
-            canEditCustomerConnections: true,
-            editablePhysicalTypes:['customer_connection'],
-            canViewAll: true,
-            isInstaller: true,
+            permissions: {
+              editableFeatureTypes: ['customer_connection'],
+              canOnlyAddToExistingFeatureLayers: {
+                cabinet: 'physical-type-cabinet'
+              }
+            },
             avatar: 'https://i.pravatar.cc/100?img=8'
           },
           2: {
             id: 2,
             name: 'Viewer User',
             role: 'viewer',
-            canEditAll: false,
-            canEditCustomerConnections: false,
-            editablePhysicalTypes:[],
-            canViewAll: true,
-            isViewer: true,
-            avatar: 'https://i.pravatar.cc/100?img=5'
+            editableFeatureTypes: [],
+            avatar: 'https://i.pravatar.cc/100?img=5',
+            permissions: {}
           }
         },
         features: [{

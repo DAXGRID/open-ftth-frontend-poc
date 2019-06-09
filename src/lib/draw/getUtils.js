@@ -20,9 +20,9 @@ export const getPointFromEvent = (e) => {
 * @param coords
 * @returns [GeoJSONFeature]
 */
-export const getPointsFromCoords = (map, coords) => {
-  const layers = ['gl-draw-point-point-stroke-inactive.cold']
-  return getFeaturesFromCoords(map, coords, layers)
+export const getPointsFromCoords = ({map, coords, layers=[]}) => {
+  if (!layers.length) layers = ['gl-draw-point-point-stroke-inactive.cold']
+  return getFeaturesFromCoords({map, coords, layers})
 }
 
 /**
@@ -32,9 +32,9 @@ export const getPointsFromCoords = (map, coords) => {
 * @param coords
 * @returns [GeoJSONFeature]
 */
-export const getLinesFromCoords = (map, coords) => {
-  const layers = ['gl-draw-line-inactive.cold']
-  return getFeaturesFromCoords(map, coords, layers)
+export const getLinesFromCoords = ({map, coords, layers=[]}) => {
+  if (!layers.length) layers = ['gl-draw-line-inactive.cold']
+  return getFeaturesFromCoords({map, coords, layers})
 }
 
 /**
@@ -45,7 +45,7 @@ export const getLinesFromCoords = (map, coords) => {
 * @param [layers]
 * @returns [GeoJSONFeature]
 */
-export const getFeaturesFromCoords = (map, coords, layers) => {
+export const getFeaturesFromCoords = ({map, coords, layers=[]}) => {
   if (map == null) return
   const xypoint = map.project(coords)
   const existing = map.queryRenderedFeatures(xypoint, {layers: layers})

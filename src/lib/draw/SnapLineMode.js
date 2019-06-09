@@ -5,6 +5,7 @@ import Constants from '@mapbox/mapbox-gl-draw/src/constants'
 import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom'
 import DrawLine from '@mapbox/mapbox-gl-draw/src/modes/draw_line_string'
 import { getPointsFromCoords } from './getUtils.js'
+import { userAllowedToAddFeatureHere } from './permissions'
 import {
   addPointToGuides,
   findGuidesFromFeatures,
@@ -57,6 +58,7 @@ SnapLineMode.onSetup = function({onAdd = () => {}, properties = {}}) {
     onAdd,
     snapPx: 10,
     verticalGuide,
+    permissions: SnapLineMode.permissions
   }
 
   handleMoveEnd = () => {
@@ -88,16 +90,17 @@ SnapLineMode.onClick = function(state) {
     }
   }
 
+  const coords = state.line.coordinates[0]
+
+  if (state.currentVertexPosition === 0 && !userAllowedToAddFeatureHere(state, state.permissions, coords)) {
+    return this.changeMode(Constants.modes.SIMPLE_SELECT)
+  }
+
   const point = state.map.project({lng, lat})
-
   addPointToGuides(state.guides, point)
-
   state.line.updateCoordinate(state.currentVertexPosition, lng, lat)
-
   state.currentVertexPosition++
-
   state.line.updateCoordinate(state.currentVertexPosition, lng, lat)
-
   return null
 }
 
@@ -123,6 +126,10 @@ SnapLineMode.toDisplayFeatures = function(state, geojson, display) {
 SnapLineMode.onStop = function(state) {
   this.deleteFeature(IDS.VERTICAL_GUIDE, {silent: true})
   this.deleteFeature(IDS.HORIZONTAL_GUIDE, {silent: true})
+
+  // check to see if we've deleted this feature or ending on first point
+  if (state.line.coordinates.length <= 1 || this.getFeature(state.line.id) === undefined) return;
+
   this.map.off('moveend', handleMoveEnd)
 
   // This relies on the the state of SnapLineMode being similar to DrawLine
@@ -137,7 +144,7 @@ SnapLineMode.createEndPoints = function(state) {
   const coords = state.line.coordinates
 
   const startPointCoords = coords[0]
-  if(!getPointsFromCoords(state.map, startPointCoords)) {
+  if(!getPointsFromCoords({map: state.map, coords: startPointCoords})) {
     const startPoint = this.createPointFromCoords(startPointCoords)
     state.onAdd(startPoint)
   } else {
@@ -145,7 +152,7 @@ SnapLineMode.createEndPoints = function(state) {
   }
 
   const endPointCoords = coords[coords.length - 1]
-  if(!getPointsFromCoords(state.map, endPointCoords)) {
+  if(!getPointsFromCoords({map: state.map, coords: endPointCoords})) {
     const endPoint = this.createPointFromCoords(endPointCoords)
     state.onAdd(endPoint)
   } else {

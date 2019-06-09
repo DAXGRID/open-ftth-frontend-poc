@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { createFeatures, updateFeatures, deleteFeatures } from '../../redux/actions'
-import { editableFeature } from '../../lib/users'
+import { editableFeature } from '../../lib/draw/permissions'
 import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
 import Map from './Map'
 
@@ -10,8 +10,8 @@ const container = 'mapbox-map'
 const control = new ReduxMapControl(container)
 
 var RouteNetworkMap = props => {
-  const editableFeatures = props.features.filter((feature) => editableFeature(feature, props.currentUser))
-  const uneditableFeatures = props.features.filter((feature) => !editableFeature(feature, props.currentUser))
+  const editableFeatures = props.features.filter((feature) => editableFeature(feature, props.currentUser.permissions))
+  const uneditableFeatures = props.features.filter((feature) => !editableFeature(feature, props.currentUser.permissions))
 
   return (
     <>
@@ -19,6 +19,7 @@ var RouteNetworkMap = props => {
         viewport={props.viewport}
         editableFeatures={editableFeatures}
         uneditableFeatures={uneditableFeatures}
+        permissions={props.currentUser.permissions}
         createFeatures={props.createFeatures}
         updateFeatures={props.updateFeatures}
         deleteFeatures={props.deleteFeatures}

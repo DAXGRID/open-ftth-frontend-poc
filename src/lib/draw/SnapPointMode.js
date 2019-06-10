@@ -5,6 +5,7 @@ import Constants from '@mapbox/mapbox-gl-draw/src/constants'
 import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom'
 import DrawPoint from '@mapbox/mapbox-gl-draw/src/modes/draw_point'
 import { getPointFromEvent } from './getUtils.js'
+import { userAllowedToAddFeatureHere } from './permissions'
 import {
   findGuidesFromFeatures,
   getGuideFeature,
@@ -53,6 +54,7 @@ SnapPointMode.onSetup = function({properties = {}}) {
     point,
     snapPx: 10,
     verticalGuide,
+    permissions: SnapPointMode.permissions
   }
 
   handleMoveEnd = () => {
@@ -74,6 +76,17 @@ SnapPointMode.onTap = SnapPointMode.onClick = function(state, e) {
     console.warn('Attempted to create point on existing point, selected existing instead')
     this.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [existingPointID] })
     return
+  }
+
+  if (state.permissions.canOnlyAddToExistingFeatureLayers &&
+      state.permissions.canOnlyAddToExistingFeatureLayers.points) {
+
+    const lineAddPermissions = state.permissions.canOnlyAddToExistingFeatureLayers.points
+    const coords = [state.snappedLng, state.snappedLat]
+
+    if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
+      return this.changeMode(Constants.modes.SIMPLE_SELECT)
+    }
   }
 
   DrawPoint.onClick.call(this, state, {

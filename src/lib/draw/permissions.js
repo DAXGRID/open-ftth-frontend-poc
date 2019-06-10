@@ -8,10 +8,10 @@ export const editableFeature = (feature, permissions) => {
 }
 
 export const userAllowedToAddFeatureHere = (state, permissions, coords) => {
-  if (!permissions.canOnlyAddToExistingFeatureLayers) return true
+  if (!permissions) return true
 
-  const allowableFeatureLayers = Object.values(permissions.canOnlyAddToExistingFeatureLayers)
-  const allowableFeatures = Object.keys(permissions.canOnlyAddToExistingFeatureLayers)
+  const allowableFeatureLayers = Object.values(permissions)
+  const allowableFeatures = Object.keys(permissions)
 
   const existingFeatures = getFeaturesFromCoords({map: state.map, coords: coords, layers: allowableFeatureLayers})
   if(!existingFeatures) {

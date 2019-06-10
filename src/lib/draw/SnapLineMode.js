@@ -90,10 +90,16 @@ SnapLineMode.onClick = function(state) {
     }
   }
 
-  const coords = state.line.coordinates[0]
 
-  if (state.currentVertexPosition === 0 && !userAllowedToAddFeatureHere(state, state.permissions, coords)) {
-    return this.changeMode(Constants.modes.SIMPLE_SELECT)
+  if (state.permissions.canOnlyAddToExistingFeatureLayers &&
+      state.permissions.canOnlyAddToExistingFeatureLayers.lines) {
+
+    const lineAddPermissions = state.permissions.canOnlyAddToExistingFeatureLayers.lines
+    const coords = state.line.coordinates[0]
+
+    if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
+      return this.changeMode(Constants.modes.SIMPLE_SELECT)
+    }
   }
 
   const point = state.map.project({lng, lat})

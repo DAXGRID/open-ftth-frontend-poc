@@ -22,7 +22,7 @@ export const loadState = () => {
             permissions: {
               editableFeatureTypes: ['customer_connection'],
               canOnlyAddToExistingFeatureLayers: {
-                cabinet: 'physical-type-cabinet'
+                lines: { cabinet: 'physical-type-cabinet' }
               }
             },
             avatar: 'https://i.pravatar.cc/100?img=8'

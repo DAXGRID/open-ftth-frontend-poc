@@ -23,6 +23,10 @@ export const loadState = () => {
               editableFeatureTypes: ['customer_connection'],
               canOnlyAddToExistingFeatureLayers: {
                 lines: { cabinet: 'physical-type-cabinet' }
+              },
+              drawControls: {
+                line_string: true,
+                trash: true
               }
             },
             avatar: 'https://i.pravatar.cc/100?img=8'

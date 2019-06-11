@@ -165,8 +165,9 @@ class Dashboard extends Component {
             handleMiniClick={this.handleMiniClick}
             navbar={this.state.navbar}
           />
-          <Switch>{this.getRoutes(routes)}</Switch>
-          <Footer fluid />
+          <div className="main-content">
+            <Switch>{this.getRoutes(routes)}</Switch>
+          </div>
         </div>
       </div>
     );

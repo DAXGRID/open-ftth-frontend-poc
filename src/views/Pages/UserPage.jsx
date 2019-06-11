@@ -20,7 +20,7 @@ class UserPage extends Component {
     return (
       <div className="main-content">
         <Grid fluid>
-          <Row>
+          <Row className="show-grid">
             <Col md={8}>
               <Card
                 title="Edit Profile"

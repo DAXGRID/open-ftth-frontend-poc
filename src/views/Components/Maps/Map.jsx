@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
-import { newDraw } from '../../lib/draw'
-import addUneditableFeatureLayers from '../../lib/mapbox/layers'
+import { newDraw } from '../../../lib/draw'
+import addUneditableFeatureLayers from '../../../lib/mapbox/layers'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
@@ -37,6 +37,9 @@ class Map extends Component {
   componentDidMount() {
     const uneditableFeatures = this.props.uneditableFeatures
     const editableFeatureTypes = this.props.permissions.editableFeatureTypes
+
+    console.log('uneditableFeatures')
+    console.log(uneditableFeatures)
 
     const { longitude, latitude, zoom, styleID } = this.props.viewport
     const mapConfig = {

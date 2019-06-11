@@ -24,7 +24,7 @@ ReactDOM.render(
       <HashRouter>
         <Switch>
           <Route path="/admin" render={props => <AdminLayout {...props} />} />
-          <Redirect from="/" to="/admin/route-network-map" />
+          <Redirect from="/" to="/admin/route-network" />
         </Switch>
       </HashRouter>
     </Provider>

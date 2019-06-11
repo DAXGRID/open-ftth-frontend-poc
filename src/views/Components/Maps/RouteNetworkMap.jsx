@@ -2,9 +2,9 @@ import React from 'react'
 import { gql } from 'apollo-boost';
 import { Query } from 'react-apollo';
 import { connect } from 'react-redux'
-import { createFeatures, updateFeatures, deleteFeatures } from '../../redux/actions'
-import { editableFeature } from '../../lib/draw/permissions'
-import { filterFeatureData } from '../../lib/mapbox/filterData'
+import { createFeatures, updateFeatures, deleteFeatures } from '../../../redux/actions'
+import { editableFeature } from '../../../lib/draw/permissions'
+import { filterFeatureData } from '../../../lib/mapbox/filterData'
 
 import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
 import Map from './Map'
@@ -42,7 +42,7 @@ var RouteNetworkMap = props => {
   const uneditableFeatures = props.features.filter((feature) => !editableFeature(feature, props.currentUser.permissions))
 
   return (
-    <>
+    <div style={{width: '100%', height: '100%'}}>
       <Query query={FEATURES}>
         {({ loading, error, data }) => {
           if (error) return (<p>{error.message}{console.log(error)}</p> )
@@ -66,7 +66,7 @@ var RouteNetworkMap = props => {
           }
         }}
       </Query>
-    </>
+    </div>
   )
 }
 

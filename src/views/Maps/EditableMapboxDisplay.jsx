@@ -1,50 +1,54 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
+import { useStateValue } from '../../hooks/state.jsx'
 import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
 import { newDraw } from '../../lib/draw'
 import addUneditableFeatureLayers from '../../lib/mapbox/layers'
+import { getFeaturesFromEvent } from '../../lib/draw/getUtils'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
-class EditableMapboxDisplay extends Component {
-  configureDraw(map) {
-    const editableFeatures = this.props.editableFeatures
-    const draw = newDraw({permissions: this.props.permissions})
-    map.addControl(draw)
-    editableFeatures.map(( feature, i ) => draw.add(feature))
 
-    map.on('draw.modechange', (e) => {
-      const currentMode = draw.getMode()
+const configureDraw = (map, props) => {
+  const editableFeatures = props.editableFeatures
+  const draw = newDraw({permissions: props.permissions})
+  map.addControl(draw)
+  editableFeatures.map(( feature, i ) => draw.add(feature))
 
-      if (currentMode === 'draw_point') draw.changeMode('snap_point')
-      if (currentMode === 'draw_line_string') draw.changeMode('snap_line')
-    })
+  map.on('draw.modechange', (e) => {
+    const currentMode = draw.getMode()
 
-    map.on('draw.create', (e) => {
-      this.props.createFeatures(e.features)
-    })
+    if (currentMode === 'draw_point') draw.changeMode('snap_point')
+    if (currentMode === 'draw_line_string') draw.changeMode('snap_line')
+  })
 
-    map.on('draw.update', (e) => {
-      this.props.updateFeatures(e.features)
-    })
+  map.on('draw.create', (e) => {
+    props.createFeatures(e.features)
+  })
 
-    map.on('draw.delete', (e) => {
-      this.props.deleteFeatures(e.features)
-    })
-  }
+  map.on('draw.update', (e) => {
+    props.updateFeatures(e.features)
+  })
 
-  componentDidMount() {
-    const MapboxReduxControl = new MapboxGLRedux.ReduxMapControl(this.props.container)
-    const uneditableFeatures = this.props.uneditableFeatures
-    const editableFeatureTypes = this.props.permissions.editableFeatureTypes
+  map.on('draw.delete', (e) => {
+    props.deleteFeatures(e.features)
+  })
+}
 
-    console.log('uneditableFeatures')
-    console.log(uneditableFeatures)
 
-    const { longitude, latitude, zoom, styleID } = this.props.viewport
+const EditableMapboxDisplay = (props) => {
+  const [{ currentFeature }, dispatch] = useStateValue()
+  var hoveredStateId = null
+
+  React.useLayoutEffect(() => {
+    const MapboxReduxControl = new MapboxGLRedux.ReduxMapControl(props.container)
+    const uneditableFeatures = props.uneditableFeatures
+    const editableFeatureTypes = props.permissions.editableFeatureTypes
+
+    const { longitude, latitude, zoom, styleID } = props.viewport
     const mapConfig = {
-      container: this.props.container,
+      container: props.container,
       style: `mapbox://styles/${ styleID }`,
       center: [longitude, latitude],
       zoom,
@@ -64,16 +68,38 @@ class EditableMapboxDisplay extends Component {
         })
         addUneditableFeatureLayers(map)
       }
-      if (editableFeatureTypes) this.configureDraw(map)
+      if (editableFeatureTypes) configureDraw(map, props)
     })
-  }
 
-  render() {
-    return (
-      <div id={this.props.container} style={{width: '100%', height: '100%'}}>
-      </div>
-    )
-  }
+    map.on('click', (e) => {
+      const features = getFeaturesFromEvent({map, e})
+
+      if (features.length > 0) {
+        dispatch({
+          type: 'changeCurrentFeature',
+          currentFeature: features[0].id
+        })
+      }
+    })
+
+    map.on('mousemove', (e) => {
+      const features = getFeaturesFromEvent({map, e})
+      if (features.length > 0) {
+        if (hoveredStateId !== null) {
+          // TODO make hook?
+          map.setFeatureState({source: 'features', id: hoveredStateId}, { hover: false})
+        }
+        hoveredStateId = features[0].id
+
+        map.setFeatureState({source: 'features', id: hoveredStateId}, { hover: true})
+      }
+    })
+  })
+
+  return (
+    <div id={props.container} style={{width: '100%', height: '100%'}}>
+    </div>
+  )
 }
 
 EditableMapboxDisplay.propTypes = {

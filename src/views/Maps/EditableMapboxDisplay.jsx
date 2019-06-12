@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import mapboxgl from 'mapbox-gl'
-import { newDraw } from '../../../lib/draw'
-import addUneditableFeatureLayers from '../../../lib/mapbox/layers'
-
+import * as MapboxGLRedux from '@mapbox/mapbox-gl-redux'
+import { newDraw } from '../../lib/draw'
+import addUneditableFeatureLayers from '../../lib/mapbox/layers'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
-class Map extends Component {
+class EditableMapboxDisplay extends Component {
   configureDraw(map) {
     const editableFeatures = this.props.editableFeatures
     const draw = newDraw({permissions: this.props.permissions})
@@ -35,6 +35,7 @@ class Map extends Component {
   }
 
   componentDidMount() {
+    const MapboxReduxControl = new MapboxGLRedux.ReduxMapControl(this.props.container)
     const uneditableFeatures = this.props.uneditableFeatures
     const editableFeatureTypes = this.props.permissions.editableFeatureTypes
 
@@ -50,7 +51,7 @@ class Map extends Component {
     }
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken
     const map = new mapboxgl.Map(mapConfig)
-    map.addControl(this.props.reduxControl)
+    map.addControl(MapboxReduxControl)
 
     map.on('load', () => {
       if(uneditableFeatures && uneditableFeatures.length > 0) {
@@ -75,14 +76,13 @@ class Map extends Component {
   }
 }
 
-Map.propTypes = {
+EditableMapboxDisplay.propTypes = {
   viewport: PropTypes.shape({
     longitude: PropTypes.string.isRequired,
     latitude: PropTypes.string.isRequired,
     zoom: PropTypes.number.isRequired,
     styleID: PropTypes.string.isRequired,
   }),
-  reduxControl: PropTypes.object.isRequired,
   container: PropTypes.string.isRequired,
   editableFeatures: PropTypes.array,
   uneditableFeatures: PropTypes.array,
@@ -92,10 +92,10 @@ Map.propTypes = {
   deleteFeatures: PropTypes.func
 }
 
-Map.defaultProps = {
+EditableMapboxDisplay.defaultProps = {
   createFeatures: () => {},
   updateFeatures: () => {},
   deleteFeatures: () => {}
 }
 
-export default Map
+export default EditableMapboxDisplay

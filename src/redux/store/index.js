@@ -1,6 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { ApolloProvider } from 'react-apollo'
-import client from './apolloClient'
+import { createStore } from 'redux'
 import reducer from '../reducers'
 import throttle from 'lodash/throttle'
 import { loadState, saveState } from './localStorage'

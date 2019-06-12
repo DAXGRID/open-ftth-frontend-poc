@@ -9,6 +9,8 @@
     "apollo-boost": "^0.4.2",
     "bootstrap": "3.3.7",
     "chartist": "0.10.1",
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
     "history": "4.9.0",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.11",

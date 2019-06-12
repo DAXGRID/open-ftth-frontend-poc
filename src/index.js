@@ -20,15 +20,16 @@ import AdminLayout from "layouts/Admin.jsx"
 const store = configureStore()
 
 const initialState = {
-  currentFeature: null
+  features: [],
+  currentFeatureId: null
 }
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'changeCurrentFeature':
+    case 'changeCurrentFeatureId':
       return {
         ...state,
-        currentFeature: action.currentFeature
+        currentFeatureId: action.currentFeatureId
       };
 
     default:

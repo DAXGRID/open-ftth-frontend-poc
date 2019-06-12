@@ -3,26 +3,21 @@ import { connect } from 'react-redux'
 import { createFeatures, updateFeatures, deleteFeatures } from '../../../redux/actions'
 import { editableFeature } from '../../../lib/draw/permissions'
 import EditableMapboxDisplay from '../EditableMapboxDisplay'
-import { useStateValue } from '../../../hooks/state.jsx'
 
 const container = 'mapbox-map'
 
 var MapDisplay = (props) => {
-  const [{ currentFeature }, dispatch] = useStateValue();
   const editableFeatures = props.features.filter((feature) => {
     editableFeature(feature, props.currentUser.permissions)
   })
 
   return (
     <div style={{width: '100%', height: '100%'}}>
-                currentFeature
-                {currentFeature}
       <EditableMapboxDisplay
         viewport={props.viewport}
         editableFeatures={editableFeatures}
         uneditableFeatures={props.uneditableFeatures}
         permissions={props.currentUser.permissions}
-        currentFeature={currentFeature}
         createFeatures={props.createFeatures}
         updateFeatures={props.updateFeatures}
         deleteFeatures={props.deleteFeatures}

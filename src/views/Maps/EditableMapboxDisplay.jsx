@@ -38,7 +38,7 @@ const configureDraw = (map, props) => {
 
 
 const EditableMapboxDisplay = (props) => {
-  const [{ currentFeature }, dispatch] = useStateValue()
+  const [{ currentFeatureId }, dispatch] = useStateValue()
   var hoveredStateId = null
 
   React.useLayoutEffect(() => {
@@ -73,11 +73,10 @@ const EditableMapboxDisplay = (props) => {
 
     map.on('click', (e) => {
       const features = getFeaturesFromEvent({map, e})
-
       if (features.length > 0) {
         dispatch({
-          type: 'changeCurrentFeature',
-          currentFeature: features[0].id
+          type: 'changeCurrentFeatureId',
+          currentFeatureId: features[0].id
         })
       }
     })
@@ -94,7 +93,9 @@ const EditableMapboxDisplay = (props) => {
         map.setFeatureState({source: 'features', id: hoveredStateId}, { hover: true})
       }
     })
-  })
+  // this means don't call redraw unless props change
+  // if getting weird re-renders, could be from here
+  }, [props])
 
   return (
     <div id={props.container} style={{width: '100%', height: '100%'}}>

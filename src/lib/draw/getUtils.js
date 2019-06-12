@@ -52,3 +52,18 @@ export const getFeaturesFromCoords = ({map, coords, layers=[]}) => {
 
   if (existing.length > 0) return existing
 }
+
+export const getFeaturesFromEvent = ({map, e}) => {
+  const bboxSize = 3
+  const layers = ['features-nodes', 'features-segments']
+  const features = map.queryRenderedFeatures(bbox(e, bboxSize), {
+  })
+  return features
+}
+
+const bbox = (e, bboxSize) => {
+  return [
+    [e.point.x - bboxSize, e.point.y - bboxSize],
+    [e.point.x + bboxSize, e.point.y + bboxSize]
+  ]
+}

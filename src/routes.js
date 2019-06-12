@@ -1,5 +1,5 @@
 import Dashboard from "views/Dashboard.jsx";
-import RouteNetworkMap from "views/Maps/RouteNetworkMap.jsx";
+import RouteNetworkPage from "views/Pages/RouteNetworkPage.jsx";
 import Buttons from "views/Components/Buttons.jsx";
 import GridSystem from "views/Components/GridSystem.jsx";
 import Panels from "views/Components/Panels.jsx";
@@ -31,11 +31,11 @@ var routes = [
     icon: "pe-7s-map-marker",
     views: [
       {
-        path: "/route-network-map",
+        path: "/route-network",
         layout: "/admin",
-        name: "Route Network Map",
+        name: "Route Network",
         mini: "RN",
-        component: RouteNetworkMap
+        component: RouteNetworkPage
       }
     ]
   },

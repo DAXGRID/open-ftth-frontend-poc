@@ -1,6 +1,6 @@
 const defaultLayers = (map) => {
   map.addLayer({
-    id: 'default-line',
+    id: 'features-segments',
     type: 'line',
     source: 'features',
     filter: ['all',
@@ -12,13 +12,21 @@ const defaultLayers = (map) => {
       'line-join': 'round'
     },
     'paint': {
-      'line-color': '#000',
-      'line-width': 1
+      'line-color': ['case',
+        ['boolean', ['feature-state', 'hover'], false],
+        '#bbc',
+        '#111'
+      ],
+      'line-width': ['case',
+        ['boolean', ['feature-state', 'hover'], false],
+        5,
+        2
+      ]
     }
   })
 
   map.addLayer({
-    id: 'default-circle',
+    id: 'features-nodes',
     type: 'circle',
     source: 'features',
     filter: ['all',
@@ -26,8 +34,16 @@ const defaultLayers = (map) => {
       ['!has', 'physicalType']
     ],
     'paint': {
-      'circle-radius': 2,
-      'circle-color': '#000'
+      'circle-color': ['case',
+        ['boolean', ['feature-state', 'hover'], false],
+        '#bbc',
+        '#111'
+      ],
+      'circle-radius': ['case',
+        ['boolean', ['feature-state', 'hover'], false],
+        6,
+        3
+      ]
     }
   })
 }

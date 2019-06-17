@@ -11,12 +11,16 @@ const defaultLayers = map => {
     paint: {
       "line-color": [
         "case",
+        ["boolean", ["feature-state", "selected"], false],
+        "#889",
         ["boolean", ["feature-state", "hover"], false],
         "#bbc",
         "#111"
       ],
       "line-width": [
         "case",
+        ["boolean", ["feature-state", "selected"], false],
+        5,
         ["boolean", ["feature-state", "hover"], false],
         5,
         2
@@ -32,12 +36,16 @@ const defaultLayers = map => {
     paint: {
       "circle-color": [
         "case",
+        ["boolean", ["feature-state", "selected"], false],
+        "#889",
         ["boolean", ["feature-state", "hover"], false],
         "#bbc",
         "#111"
       ],
       "circle-radius": [
         "case",
+        ["boolean", ["feature-state", "selected"], false],
+        6,
         ["boolean", ["feature-state", "hover"], false],
         6,
         3

@@ -39,7 +39,9 @@ const EditableMapboxDisplay = props => {
   const { currentFeature, setCurrentFeature } = React.useContext(
     CurrentFeatureContext
   );
-  var hoveredStateId = null;
+  // Can't use hooks inside this effect without redrawing map
+  var hoveredFeatureID;
+  var selectedFeatureID;
 
   React.useLayoutEffect(() => {
     const MapboxReduxControl = new MapboxGLRedux.ReduxMapControl(
@@ -76,24 +78,40 @@ const EditableMapboxDisplay = props => {
     map.on("click", e => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
-        setCurrentFeature(features[0])
+        const feature = features[0];
+        setCurrentFeature(feature)
+        console.log('setCurrentFeature')
+        console.log(currentFeature)
+        if (features.length > 0) {
+          if (selectedFeatureID !== null) {
+            map.setFeatureState(
+              { source: "features", id: selectedFeatureID },
+              { selected: false }
+            );
+          }
+          selectedFeatureID = features[0].id;
+  
+          map.setFeatureState(
+            { source: "features", id: selectedFeatureID },
+            { selected: true }
+          );
+        }
       }
     });
 
     map.on("mousemove", e => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
-        if (hoveredStateId !== null) {
-          // TODO make hook?
+        if (hoveredFeatureID !== null) {
           map.setFeatureState(
-            { source: "features", id: hoveredStateId },
+            { source: "features", id: hoveredFeatureID },
             { hover: false }
           );
         }
-        hoveredStateId = features[0].id;
+        hoveredFeatureID = features[0].id;
 
         map.setFeatureState(
-          { source: "features", id: hoveredStateId },
+          { source: "features", id: hoveredFeatureID },
           { hover: true }
         );
       }

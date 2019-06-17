@@ -11,7 +11,8 @@ export const filterFeatureData = data => {
       properties: {
         pam: "true",
         nodeKind: feature.nodeKind,
-        nodeFunctionKind: feature.nodeFunctionKind
+        nodeFunctionKind: feature.nodeFunctionKind,
+        segmentKind: feature.segmentKind
       }
     };
     return geojsonFeature;

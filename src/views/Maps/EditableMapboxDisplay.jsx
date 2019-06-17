@@ -79,18 +79,16 @@ const EditableMapboxDisplay = props => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
         const feature = features[0];
-        setCurrentFeature(feature)
-        console.log('setCurrentFeature')
-        console.log(currentFeature)
+        setCurrentFeature(feature);
         if (features.length > 0) {
-          if (selectedFeatureID !== null) {
+          if (selectedFeatureID) {
             map.setFeatureState(
               { source: "features", id: selectedFeatureID },
               { selected: false }
             );
           }
-          selectedFeatureID = features[0].id;
-  
+          selectedFeatureID = feature.id;
+
           map.setFeatureState(
             { source: "features", id: selectedFeatureID },
             { selected: true }
@@ -102,13 +100,14 @@ const EditableMapboxDisplay = props => {
     map.on("mousemove", e => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
-        if (hoveredFeatureID !== null) {
+        const feature = features[0];
+        if (hoveredFeatureID) {
           map.setFeatureState(
             { source: "features", id: hoveredFeatureID },
             { hover: false }
           );
         }
-        hoveredFeatureID = features[0].id;
+        hoveredFeatureID = feature.id;
 
         map.setFeatureState(
           { source: "features", id: hoveredFeatureID },

@@ -1,21 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
-import { useStateValue } from "../../hooks/state.jsx";
 import * as MapboxGLRedux from "@mapbox/mapbox-gl-redux";
 import { newDraw } from "../../lib/draw";
 import addUneditableFeatureLayers from "../../lib/mapbox/layers";
 import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import CurrentFeatureContext from "../../contexts/CurrentFeatureContext";
 
 function configureDraw(map, props) {
   const editableFeatures = props.editableFeatures;
   const draw = newDraw({ permissions: props.permissions });
   map.addControl(draw);
-  editableFeatures.map((feature, i) => draw.add(feature));
+  editableFeatures.map(feature => draw.add(feature));
 
-  map.on("draw.modechange", e => {
+  map.on("draw.modechange", () => {
     const currentMode = draw.getMode();
 
     if (currentMode === "draw_point") draw.changeMode("snap_point");
@@ -36,7 +36,9 @@ function configureDraw(map, props) {
 }
 
 const EditableMapboxDisplay = props => {
-  const [{ currentFeatureId }, dispatch] = useStateValue();
+  const { currentFeature, setCurrentFeature } = React.useContext(
+    CurrentFeatureContext
+  );
   var hoveredStateId = null;
 
   React.useLayoutEffect(() => {
@@ -74,10 +76,7 @@ const EditableMapboxDisplay = props => {
     map.on("click", e => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
-        dispatch({
-          type: "changeCurrentFeatureId",
-          currentFeatureId: features[0].id
-        });
+        setCurrentFeature(features[0])
       }
     });
 
@@ -99,9 +98,7 @@ const EditableMapboxDisplay = props => {
         );
       }
     });
-    // this means don't call redraw unless props change
-    // if getting weird re-renders, could be from here
-  }, [props]);
+  }, []);
 
   return <div id={props.container} style={{ width: "100%", height: "100%" }} />;
 };

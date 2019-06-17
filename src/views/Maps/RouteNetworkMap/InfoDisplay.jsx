@@ -1,21 +1,25 @@
 import React from "react";
 import Card from "../../../components/Card/Card.jsx";
-import { useStateValue } from "../../../hooks/state.jsx";
+import CurrentFeatureContext from "../../../contexts/CurrentFeatureContext";
 
-function InfoDisplay() {
-  const [{ currentFeatureId, features }, dispatch] = useStateValue();
-
+function InfoDisplay({useCurrentFeature}) {
   return (
-    <Card
-      title="Card Heading"
-      category="Card category"
-      content={
-        <div>
-          {`Current Feature Id: ${currentFeatureId}`}
-          <p className="category">Header 1</p>
-        </div>
+    <CurrentFeatureContext.Consumer>
+      {({currentFeature, setCurrentFeature}) => 
+        <Card
+          title="Card Heading"
+          category="Card category"
+          content={
+            <div>
+              {currentFeature &&
+                `Current Feature Id: ${currentFeature.id}`
+              }
+              <p className="category">Header 1</p>
+            </div>
+          }
+        />
       }
-    />
+    </CurrentFeatureContext.Consumer>
   );
 }
 

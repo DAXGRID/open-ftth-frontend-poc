@@ -1,19 +1,19 @@
-export const filterFeatureData = (data) => {
-  const features = data.routeNodes.concat(data.routeSegments)
+export const filterFeatureData = data => {
+  const features = data.routeNodes.concat(data.routeSegments);
   return features.map((feature, index) => {
     var geojsonFeature = {
       id: index,
-      type: 'Feature',
+      type: "Feature",
       geometry: {
         type: feature.geometry.type,
         coordinates: JSON.parse(feature.geometry.coordinates)
       },
       properties: {
-        pam: 'true',
+        pam: "true",
         nodeKind: feature.nodeKind,
-        nodeFunctionKind: feature.nodeFunctionKind,
+        nodeFunctionKind: feature.nodeFunctionKind
       }
-    }
-    return geojsonFeature
-  })
-}
+    };
+    return geojsonFeature;
+  });
+};

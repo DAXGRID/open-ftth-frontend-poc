@@ -1,71 +1,71 @@
 /*eslint-disable*/
-import React, { Component } from "react"
-import { Collapse } from "react-bootstrap"
-import { NavLink } from "react-router-dom"
+import React, { Component } from "react";
+import { Collapse } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 // this is used to create scrollbars on windows devices like the ones from apple devices
-import PerfectScrollbar from "perfect-scrollbar"
-import "perfect-scrollbar/css/perfect-scrollbar.css"
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.jsx"
-import SidebarUserMenu from "./UserMenu"
+import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.jsx";
+import SidebarUserMenu from "./UserMenu";
 
 // image for avatar in Sidebar
-import avatar from "assets/img/default-avatar.png"
+import avatar from "assets/img/default-avatar.png";
 // logo for sidebar
-import logo from "logo.svg"
+import logo from "logo.svg";
 
-import routes from "routes.js"
+import routes from "routes.js";
 
-var ps
+var ps;
 
 class Sidebar extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       ...this.getCollapseStates(routes),
       openAvatar: false,
       isWindows: navigator.platform.indexOf("Win") > -1 ? true : false,
       width: window.innerWidth
-    }
+    };
   }
   // this creates the intial state of this component based on the collapse routes
   // that it gets through this.props.routes
   getCollapseStates = routes => {
-    let initialState = {}
+    let initialState = {};
     routes.map((prop, key) => {
       if (prop.collapse) {
         initialState = {
           [prop.state]: this.getCollapseInitialState(prop.views),
           ...this.getCollapseStates(prop.views),
           ...initialState
-        }
+        };
       }
-      return null
-    })
-    return initialState
-  }
+      return null;
+    });
+    return initialState;
+  };
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
   // while on the src/views/forms/RegularForms.jsx - route /admin/regular-forms
   getCollapseInitialState(routes) {
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse && this.getCollapseInitialState(routes[i].views)) {
-        return true
+        return true;
       } else if (window.location.href.indexOf(routes[i].path) !== -1) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = routes => {
     return routes.map((prop, key) => {
       if (prop.redirect) {
-        return null
+        return null;
       }
       if (prop.collapse) {
-        var st = {}
-        st[prop["state"]] = !this.state[prop.state]
+        var st = {};
+        st[prop["state"]] = !this.state[prop.state];
         return (
           <li
             className={this.getCollapseInitialState(prop.views) ? "active" : ""}
@@ -74,8 +74,8 @@ class Sidebar extends Component {
             <a
               href="#pablo"
               onClick={e => {
-                e.preventDefault()
-                this.setState(st)
+                e.preventDefault();
+                this.setState(st);
               }}
             >
               <i className={prop.icon} />
@@ -92,7 +92,7 @@ class Sidebar extends Component {
               <ul className="nav">{this.createLinks(prop.views)}</ul>
             </Collapse>
           </li>
-        )
+        );
       }
       return (
         <li className={this.activeRoute(prop.layout + prop.path)} key={key}>
@@ -114,42 +114,42 @@ class Sidebar extends Component {
             )}
           </NavLink>
         </li>
-      )
-    })
-  }
+      );
+    });
+  };
   // verifies if routeName is the one active (in browser input)
   activeRoute = routeName => {
-    return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : ""
-  }
+    return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
+  };
   // if the windows width changes CSS has to make some changes
   // this functions tell react what width is the window
   updateDimensions() {
-    this.setState({ width: window.innerWidth })
+    this.setState({ width: window.innerWidth });
   }
   componentDidUpdate() {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
-        ps.update()
-      }, 350)
+        ps.update();
+      }, 350);
     }
   }
   componentDidMount() {
-    this.updateDimensions()
+    this.updateDimensions();
     // add event listener for windows resize
-    window.addEventListener("resize", this.updateDimensions.bind(this))
+    window.addEventListener("resize", this.updateDimensions.bind(this));
     // if you are using a Windows Machine, the scrollbars will have a Mac look
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebarWrapper, {
         suppressScrollX: true,
         suppressScrollY: false
-      })
+      });
     }
   }
   componentWillUnmount() {
     // we need to destroy the false scrollbar when we navigate
     // to a page that doesn't have this component rendered
     if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy()
+      ps.destroy();
     }
   }
   render() {
@@ -168,23 +168,16 @@ class Sidebar extends Component {
           ""
         )}
         <div className="logo">
-          <a
-            href="/"
-            className="simple-text logo-mini"
-          >
+          <a href="/" className="simple-text logo-mini">
             <div className="logo-img">
               <img src={logo} alt="react-logo" />
             </div>
           </a>
-          <a
-            href="/"
-            className="simple-text logo-normal"
-          >
+          <a href="/" className="simple-text logo-normal">
             OpenFTTH
           </a>
         </div>
         <div className="sidebar-wrapper" ref="sidebarWrapper">
-
           <SidebarUserMenu />
 
           <ul className="nav">
@@ -202,8 +195,8 @@ class Sidebar extends Component {
           </ul>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Sidebar
+export default Sidebar;

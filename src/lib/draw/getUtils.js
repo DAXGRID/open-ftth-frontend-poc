@@ -1,4 +1,4 @@
-import CommonSelectors from '@mapbox/mapbox-gl-draw/src/lib/common_selectors'
+import CommonSelectors from "@mapbox/mapbox-gl-draw/src/lib/common_selectors";
 
 /**
 * Returns existing point feature under a click event if there are any,
@@ -7,11 +7,14 @@ import CommonSelectors from '@mapbox/mapbox-gl-draw/src/lib/common_selectors'
 * @param e
 * @returns GeoJSONFeature
 */
-export const getPointFromEvent = (e) => {
-  if (CommonSelectors.isFeature(e) && e.featureTarget.geometry.type === "Point") {
-    return e.featureTarget
+export const getPointFromEvent = e => {
+  if (
+    CommonSelectors.isFeature(e) &&
+    e.featureTarget.geometry.type === "Point"
+  ) {
+    return e.featureTarget;
   }
-}
+};
 
 /**
 * Returns existing point features from coordinates if there are any
@@ -20,10 +23,10 @@ export const getPointFromEvent = (e) => {
 * @param coords
 * @returns [GeoJSONFeature]
 */
-export const getPointsFromCoords = ({map, coords, layers=[]}) => {
-  if (!layers.length) layers = ['gl-draw-point-point-stroke-inactive.cold']
-  return getFeaturesFromCoords({map, coords, layers})
-}
+export const getPointsFromCoords = ({ map, coords, layers = [] }) => {
+  if (!layers.length) layers = ["gl-draw-point-point-stroke-inactive.cold"];
+  return getFeaturesFromCoords({ map, coords, layers });
+};
 
 /**
 * Returns existing line features from coordinates if there are any
@@ -32,10 +35,10 @@ export const getPointsFromCoords = ({map, coords, layers=[]}) => {
 * @param coords
 * @returns [GeoJSONFeature]
 */
-export const getLinesFromCoords = ({map, coords, layers=[]}) => {
-  if (!layers.length) layers = ['gl-draw-line-inactive.cold']
-  return getFeaturesFromCoords({map, coords, layers})
-}
+export const getLinesFromCoords = ({ map, coords, layers = [] }) => {
+  if (!layers.length) layers = ["gl-draw-line-inactive.cold"];
+  return getFeaturesFromCoords({ map, coords, layers });
+};
 
 /**
 * Returns existing features from coordinates if there are any
@@ -45,25 +48,24 @@ export const getLinesFromCoords = ({map, coords, layers=[]}) => {
 * @param [layers]
 * @returns [GeoJSONFeature]
 */
-export const getFeaturesFromCoords = ({map, coords, layers=[]}) => {
-  if (map == null) return
-  const xypoint = map.project(coords)
-  const existing = map.queryRenderedFeatures(xypoint, {layers: layers})
+export const getFeaturesFromCoords = ({ map, coords, layers = [] }) => {
+  if (map == null) return;
+  const xypoint = map.project(coords);
+  const existing = map.queryRenderedFeatures(xypoint, { layers: layers });
 
-  if (existing.length > 0) return existing
-}
+  if (existing.length > 0) return existing;
+};
 
-export const getFeaturesFromEvent = ({map, e}) => {
-  const bboxSize = 3
-  const layers = ['features-nodes', 'features-segments']
-  const features = map.queryRenderedFeatures(bbox(e, bboxSize), {
-  })
-  return features
-}
+export const getFeaturesFromEvent = ({ map, e }) => {
+  const bboxSize = 3;
+  // const layers = ["features-nodes", "features-segments"];
+  const features = map.queryRenderedFeatures(bbox(e, bboxSize), {});
+  return features;
+};
 
 const bbox = (e, bboxSize) => {
   return [
     [e.point.x - bboxSize, e.point.y - bboxSize],
     [e.point.x + bboxSize, e.point.y + bboxSize]
-  ]
-}
+  ];
+};

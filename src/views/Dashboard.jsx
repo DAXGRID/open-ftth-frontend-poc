@@ -5,8 +5,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="main-content">
-        <Grid fluid>
-        </Grid>
+        <Grid fluid />
       </div>
     );
   }

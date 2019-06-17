@@ -1,51 +1,49 @@
-const defaultLayers = (map) => {
+const defaultLayers = map => {
   map.addLayer({
-    id: 'features-segments',
-    type: 'line',
-    source: 'features',
-    filter: ['all',
-      ['==', '$type', 'LineString'],
-      ['!has', 'physicalType']
-    ],
-    'layout': {
-      'line-cap': 'round',
-      'line-join': 'round'
+    id: "features-segments",
+    type: "line",
+    source: "features",
+    filter: ["all", ["==", "$type", "LineString"], ["!has", "physicalType"]],
+    layout: {
+      "line-cap": "round",
+      "line-join": "round"
     },
-    'paint': {
-      'line-color': ['case',
-        ['boolean', ['feature-state', 'hover'], false],
-        '#bbc',
-        '#111'
+    paint: {
+      "line-color": [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
+        "#bbc",
+        "#111"
       ],
-      'line-width': ['case',
-        ['boolean', ['feature-state', 'hover'], false],
+      "line-width": [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
         5,
         2
       ]
     }
-  })
+  });
 
   map.addLayer({
-    id: 'features-nodes',
-    type: 'circle',
-    source: 'features',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!has', 'physicalType']
-    ],
-    'paint': {
-      'circle-color': ['case',
-        ['boolean', ['feature-state', 'hover'], false],
-        '#bbc',
-        '#111'
+    id: "features-nodes",
+    type: "circle",
+    source: "features",
+    filter: ["all", ["==", "$type", "Point"], ["!has", "physicalType"]],
+    paint: {
+      "circle-color": [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
+        "#bbc",
+        "#111"
       ],
-      'circle-radius': ['case',
-        ['boolean', ['feature-state', 'hover'], false],
+      "circle-radius": [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
         6,
         3
       ]
     }
-  })
-}
+  });
+};
 
-export default defaultLayers
+export default defaultLayers;

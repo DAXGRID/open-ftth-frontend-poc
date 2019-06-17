@@ -1,27 +1,27 @@
-import React, { Component } from "react"
-import { Switch, Route } from "react-router-dom"
+import React, { Component } from "react";
+import { Switch, Route } from "react-router-dom";
 // this is used to create scrollbars on windows devices like the ones from apple devices
-import PerfectScrollbar from "perfect-scrollbar"
-import "perfect-scrollbar/css/perfect-scrollbar.css"
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
-import NotificationSystem from "react-notification-system"
+import NotificationSystem from "react-notification-system";
 
-import Sidebar from "components/Sidebar/Sidebar.jsx"
-import AdminNavbar from "components/Navbars/AdminNavbar.jsx"
+import Sidebar from "components/Sidebar/Sidebar.jsx";
+import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 
-import image from "assets/img/fiber.jpg"
+import image from "assets/img/fiber.jpg";
 
 // dinamically create dashboard routes
-import routes from "routes.js"
+import routes from "routes.js";
 
 // style for notifications
-import { style } from "variables/Variables.jsx"
+import { style } from "variables/Variables.jsx";
 
-var ps
+var ps;
 
 class Dashboard extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       _notificationSystem: null,
       image: image,
@@ -29,63 +29,63 @@ class Dashboard extends Component {
       hasImage: true,
       navbar: false,
       mini: true
-    }
+    };
   }
   componentDidMount() {
-    this.setState({ _notificationSystem: this.refs.notificationSystem })
+    this.setState({ _notificationSystem: this.refs.notificationSystem });
     if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(this.refs.mainPanel)
+      ps = new PerfectScrollbar(this.refs.mainPanel);
     }
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy()
+      ps.destroy();
     }
   }
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
-        ps.update()
-      }, 350)
+        ps.update();
+      }, 350);
     }
     if (e.history.action === "PUSH") {
-      document.documentElement.scrollTop = 0
-      document.scrollingElement.scrollTop = 0
-      this.refs.mainPanel.scrollTop = 0
+      document.documentElement.scrollTop = 0;
+      document.scrollingElement.scrollTop = 0;
+      this.refs.mainPanel.scrollTop = 0;
     }
     if (
       window.innerWidth < 993 &&
       e.history.action === "PUSH" &&
       document.documentElement.className.indexOf("nav-open") !== -1
     ) {
-      document.documentElement.classList.toggle("nav-open")
+      document.documentElement.classList.toggle("nav-open");
     }
   }
   componentWillMount() {
-    document.body.classList.toggle("sidebar-mini")
+    document.body.classList.toggle("sidebar-mini");
     if (document.documentElement.className.indexOf("nav-open") !== -1) {
-      document.documentElement.classList.toggle("nav-open")
+      document.documentElement.classList.toggle("nav-open");
     }
   }
   // function that shows/hides notifications - it was put here, because the wrapper div has to be outside the main-panel class div
   handleNotificationClick = position => {
-    var color = Math.floor(Math.random() * 4 + 1)
-    var level
+    var color = Math.floor(Math.random() * 4 + 1);
+    var level;
     switch (color) {
       case 1:
-        level = "success"
-        break
+        level = "success";
+        break;
       case 2:
-        level = "warning"
-        break
+        level = "warning";
+        break;
       case 3:
-        level = "error"
-        break
+        level = "error";
+        break;
       case 4:
-        level = "info"
-        break
+        level = "info";
+        break;
       default:
-        break
+        break;
     }
     this.state._notificationSystem.addNotification({
       title: <span data-notify="icon" className="pe-7s-gift" />,
@@ -98,28 +98,28 @@ class Dashboard extends Component {
       level: level,
       position: position,
       autoDismiss: 15
-    })
-  }
+    });
+  };
   handleImageClick = image => {
-    this.setState({ image: image })
-  }
+    this.setState({ image: image });
+  };
   handleColorClick = color => {
-    this.setState({ color: color })
-  }
+    this.setState({ color: color });
+  };
   handleHasImage = hasImage => {
-    this.setState({ hasImage: hasImage })
-  }
+    this.setState({ hasImage: hasImage });
+  };
   handleNavbarClick = navbar => {
-    this.setState({ navbar: navbar })
-  }
+    this.setState({ navbar: navbar });
+  };
   handleMiniClick = () => {
-    this.setState({ mini: !this.state.mini })
-    document.body.classList.toggle("sidebar-mini")
-  }
+    this.setState({ mini: !this.state.mini });
+    document.body.classList.toggle("sidebar-mini");
+  };
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
-        return this.getRoutes(prop.views)
+        return this.getRoutes(prop.views);
       }
       if (prop.layout === "/admin") {
         return (
@@ -133,12 +133,12 @@ class Dashboard extends Component {
               />
             )}
           />
-        )
+        );
       } else {
-        return null
+        return null;
       }
-    })
-  }
+    });
+  };
   render() {
     return (
       <div className="wrapper">
@@ -169,8 +169,8 @@ class Dashboard extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Dashboard
+export default Dashboard;

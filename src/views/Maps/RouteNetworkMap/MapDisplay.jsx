@@ -1,18 +1,22 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { createFeatures, updateFeatures, deleteFeatures } from '../../../redux/actions'
-import { editableFeature } from '../../../lib/draw/permissions'
-import EditableMapboxDisplay from '../EditableMapboxDisplay'
+import React from "react";
+import { connect } from "react-redux";
+import {
+  createFeatures,
+  updateFeatures,
+  deleteFeatures
+} from "../../../redux/actions";
+import { editableFeature } from "../../../lib/draw/permissions";
+import EditableMapboxDisplay from "../EditableMapboxDisplay";
 
-const container = 'mapbox-map'
+const container = "mapbox-map";
 
-var MapDisplay = (props) => {
-  const editableFeatures = props.features.filter((feature) => {
-    editableFeature(feature, props.currentUser.permissions)
-  })
+function MapDisplay(props) {
+  const editableFeatures = props.features.filter(feature => {
+    return editableFeature(feature, props.currentUser.permissions);
+  });
 
   return (
-    <div style={{width: '100%', height: '100%'}}>
+    <div style={{ width: "100%", height: "100%" }}>
       <EditableMapboxDisplay
         viewport={props.viewport}
         editableFeatures={editableFeatures}
@@ -21,9 +25,10 @@ var MapDisplay = (props) => {
         createFeatures={props.createFeatures}
         updateFeatures={props.updateFeatures}
         deleteFeatures={props.deleteFeatures}
-        container={container}/>
+        container={container}
+      />
     </div>
-  )
+  );
 }
 
 const mapStateToProps = state => {
@@ -36,17 +41,20 @@ const mapStateToProps = state => {
       zoom: 15,
       styleID: "mapbox/streets-v9"
     }
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     createFeatures: features => dispatch(createFeatures(features)),
     updateFeatures: features => dispatch(updateFeatures(features)),
     deleteFeatures: features => dispatch(deleteFeatures(features))
-  }
-}
+  };
+};
 
-MapDisplay = connect(mapStateToProps, mapDispatchToProps)(MapDisplay)
+MapDisplay = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MapDisplay);
 
-export default MapDisplay
+export default MapDisplay;

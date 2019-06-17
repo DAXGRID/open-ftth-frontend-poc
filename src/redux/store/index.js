@@ -1,25 +1,27 @@
-import { createStore } from 'redux'
-import reducer from '../reducers'
-import throttle from 'lodash/throttle'
-import { loadState, saveState } from './localStorage'
+import { createStore } from "redux";
+import reducer from "../reducers";
+import throttle from "lodash/throttle";
+import { loadState, saveState } from "./localStorage";
 
 const configureStore = () => {
-  const persistedState = loadState()
+  const persistedState = loadState();
   const store = createStore(
     reducer,
     persistedState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  );
 
-  store.subscribe(throttle(() => {
-    saveState({
-      features: store.getState().features,
-      users: store.getState().users,
-      currentUserID: store.getState().currentUserID
-    })
-  }, 1000))
+  store.subscribe(
+    throttle(() => {
+      saveState({
+        features: store.getState().features,
+        users: store.getState().users,
+        currentUserID: store.getState().currentUserID
+      });
+    }, 1000)
+  );
 
-  return store
-}
+  return store;
+};
 
-export default configureStore
+export default configureStore;

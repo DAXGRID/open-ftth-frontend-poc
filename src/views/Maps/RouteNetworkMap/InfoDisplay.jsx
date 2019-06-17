@@ -1,8 +1,8 @@
-import React from 'react'
-import Card from '../../../components/Card/Card.jsx'
-import { useStateValue } from '../../../hooks/state.jsx'
+import React from "react";
+import Card from "../../../components/Card/Card.jsx";
+import { useStateValue } from "../../../hooks/state.jsx";
 
-const InfoDisplay = () => {
+function InfoDisplay() {
   const [{ currentFeatureId, features }, dispatch] = useStateValue();
 
   return (
@@ -16,7 +16,7 @@ const InfoDisplay = () => {
         </div>
       }
     />
-  )
+  );
 }
 
-export default InfoDisplay
+export default InfoDisplay;

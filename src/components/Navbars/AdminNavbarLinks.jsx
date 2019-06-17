@@ -1,19 +1,13 @@
 import React, { Component } from "react";
-import {
-  Nav,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-} from "react-bootstrap";
-
+import { Nav, NavItem, NavDropdown, MenuItem } from "react-bootstrap";
 
 class HeaderLinks extends Component {
   resetLocalStorage = e => {
-    if (window.confirm('Resetting drawn lines!')) {
-      localStorage.removeItem('state')
-      window.location.reload()
+    if (window.confirm("Resetting drawn lines!")) {
+      localStorage.removeItem("state");
+      window.location.reload();
     }
-  }
+  };
 
   render() {
     return (
@@ -71,7 +65,6 @@ class HeaderLinks extends Component {
               </div>
             </MenuItem>
           </NavDropdown>
-
         </Nav>
       </div>
     );

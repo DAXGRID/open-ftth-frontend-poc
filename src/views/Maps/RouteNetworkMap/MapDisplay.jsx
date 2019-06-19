@@ -39,7 +39,7 @@ const mapStateToProps = state => {
       latitude: "55.746384700121446",
       longitude: "9.6377473217318386",
       zoom: 15,
-      styleID: "mapbox/streets-v9"
+      styleID: "tamimitchell/cjx2ss4or057d1cnqj9j62jwl"
     }
   };
 };

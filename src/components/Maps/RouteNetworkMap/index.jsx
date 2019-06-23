@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Col } from "react-bootstrap";
 import MediaQuery from "react-responsive";
 import MapDisplay from "./MapDisplay";
-import InfoDisplay from "./InfoDisplay";
+import InfoDisplay from "../../InfoDisplay";
 import CurrentFeatureContext from "../../../contexts/CurrentFeatureContext";
 
 function RouteNetworkMap({ features }) {

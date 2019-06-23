@@ -79,6 +79,8 @@ const EditableMapboxDisplay = props => {
       const features = getFeaturesFromEvent({ map, e });
       if (features.length > 0) {
         const feature = features[0];
+
+        console.log(feature);
         setCurrentFeature(feature);
         if (features.length > 0) {
           if (selectedFeatureID) {

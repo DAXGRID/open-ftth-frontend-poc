@@ -10,7 +10,7 @@ import EditableMapboxDisplay from "../EditableMapboxDisplay";
 
 const container = "mapbox-map";
 
-function MapDisplay(props) {
+let MapDisplay = (props) => {
   const editableFeatures = props.features.filter(feature => {
     return editableFeature(feature, props.currentUser.permissions);
   });

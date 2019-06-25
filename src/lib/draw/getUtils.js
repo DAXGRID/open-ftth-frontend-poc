@@ -57,9 +57,13 @@ export const getFeaturesFromCoords = ({ map, coords, layers = [] }) => {
 };
 
 export const getFeaturesFromEvent = ({ map, e }) => {
+  var features = [];
   const bboxSize = 3;
-  // const layers = ["features-nodes", "features-segments"];
-  const features = map.queryRenderedFeatures(bbox(e, bboxSize), {});
+  const layers = ["featureSegments", "featureNodes"];
+  const mapLayer = map.getLayer(layers[0]);
+  if (typeof mapLayer !== "undefined") {
+    features = map.queryRenderedFeatures(bbox(e, bboxSize), { layers });
+  };
   return features;
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import useRouteFeatures from "../../hooks/useRouteFeatures";
-import { filterFeatureData } from "../../lib/filters/filterData";
+import { filterFeatureSegments, filterFeatureNodes } from "../../lib/filters/filterData";
 import RouteNetworkMap from "../../components/Maps/RouteNetworkMap";
 
 function RouteNetworkPage() {
@@ -17,7 +17,10 @@ function RouteNetworkPage() {
   if (loading || !data) return <p>Loading...</p>;
 
   if (data) {
-    const features = filterFeatureData(data);
+    const features = {
+      nodes: filterFeatureNodes(data),
+      segments: filterFeatureSegments(data)
+    }
     if (features) return <RouteNetworkMap features={features} />;
   }
 };

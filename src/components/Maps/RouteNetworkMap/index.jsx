@@ -36,7 +36,7 @@ function RouteNetworkMap({ features }) {
 }
 
 RouteNetworkMap.propTypes = {
-  features: PropTypes.array
+  features: PropTypes.object
 };
 
 export default RouteNetworkMap;

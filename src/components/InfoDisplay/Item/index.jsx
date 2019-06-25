@@ -7,7 +7,8 @@ import RouteNetworkTab from "./RouteNetworkTab";
 
 const ItemInfo = ({ currentFeature }) => {
   const props = currentFeature.properties;
-  const title = props.segmentKind ? props.segmentKind : props.nodeKind;
+  var title = props.segmentKind ? props.segmentKind : props.nodeKind;
+  title += ` ID: ${currentFeature.id}`;
   const category = props.nodeFunctionKind ? props.nodeFunctionKind : "";
 
   return (

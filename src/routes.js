@@ -1,6 +1,7 @@
 import Dashboard from "views/Dashboard.jsx";
 import RouteNetworkPage from "views/Pages/RouteNetworkPage.jsx";
 import Buttons from "views/Components/Buttons.jsx";
+import Diagrams from "views/Components/Diagrams.jsx";
 import GridSystem from "views/Components/GridSystem.jsx";
 import Panels from "views/Components/Panels.jsx";
 import SweetAlert from "views/Components/SweetAlertPage.jsx";
@@ -46,6 +47,13 @@ var routes = [
     state: "openComponents",
     icon: "pe-7s-plugin",
     views: [
+      {
+        path: "/diagrams",
+        layout: "/admin",
+        name: "Diagrams",
+        mini: "D",
+        component: Diagrams
+      },
       {
         path: "/buttons",
         layout: "/admin",

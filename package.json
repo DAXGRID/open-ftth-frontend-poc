@@ -42,6 +42,7 @@
     "react-tagsinput": "3.19.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "storm-react-diagrams": "^5.2.1",
     "wnumb": "1.1.0"
   },
   "scripts": {

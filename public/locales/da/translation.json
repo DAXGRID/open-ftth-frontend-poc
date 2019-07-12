@@ -1,0 +1,10 @@
+{
+    "test": {
+        "hello": "Hej",
+        "blue": "Blå"
+    },
+    "maps": {
+        "route_network\n": "",
+        "route_network_map\n": ""
+    }
+}

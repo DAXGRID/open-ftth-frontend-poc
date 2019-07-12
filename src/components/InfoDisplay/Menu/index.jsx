@@ -1,13 +1,17 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import SummaryTab from "./SummaryTab";
 import WorkListTab from "./WorkListTab";
 
+
 const MenuItem = ({ currentFeature, setCurrentFeature }) => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Card
-      title="Route Network Map"
+      title="{t('test.blue')}"
       ctFullWidth
       content={
         <Tab.Container id="menuItem" defaultActiveKey="summary">

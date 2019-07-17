@@ -30,7 +30,7 @@ const HeaderLinks = () => {
   return (
     <div>
       <Nav pullRight>
-        <NavItem onClick={resetLocalStorage}>Reset Data</NavItem>
+        <NavItem onClick={resetLocalStorage}>{t('general.reset_data')}</NavItem>
         <NavDropdown
           onSelect={e => changeLanguage(e)}
           title={
@@ -39,7 +39,7 @@ const HeaderLinks = () => {
                 <img src={flags[currentLang()]} width="16" height="16" />
               </div>
               <p className="hidden-md hidden-lg">
-                Language Selector
+                {t('general.language_selector')}
                 <b className="caret" />
               </p>
             </div>

@@ -17,7 +17,7 @@ i18n
   .init({
     fallbackLng: 'en-uk',
     preload: ['en-uk', 'da'],
-    saveMissing: true,
+    saveMissing: false,
     debug: true,
 
     interpolation: {

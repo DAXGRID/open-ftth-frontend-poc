@@ -1,10 +1,14 @@
 {
-  "test": {
-    "hello": "Hello",
-    "blue": "Blue"
+  "general": {
+    "connectivity": "",
+    "language_selector": "",
+    "network": "",
+    "openftth": "OpenFTTH",
+    "reset_data": "",
+    "route_network": "",
+    "route_network_map": "",
+    "summary": "",
+    "work_list": ""
   },
-  "maps": {
-    "routeNetwork": "",
-    "routeNetworkMap": "Foo"
-  }
+  "users": {}
 }

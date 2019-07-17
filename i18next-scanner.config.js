@@ -3,7 +3,7 @@ module.exports = {
     debug: true,
     sort: true,
     func: {
-      list: ["_t"],
+      list: ["t"],
       extensions: [".js", ".jsx"]
     },
     trans: false,
@@ -16,7 +16,7 @@ module.exports = {
     // Location of translation files
     resource: {
       loadPath: "public/locales/{{lng}}/{{ns}}.json",
-      savePath: "public/locales/{{lng}}/{{ns}}.missing.json",
+      savePath: "public/locales/{{lng}}/{{ns}}.json",
       jsonIndent: 2
     },
     nsSeparator: ":",

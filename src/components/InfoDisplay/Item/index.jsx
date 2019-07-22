@@ -4,8 +4,10 @@ import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import SummaryTab from "./SummaryTab";
 import ConnectivityTab from "./ConnectivityTab";
 import RouteNetworkTab from "./RouteNetworkTab";
+import { useTranslation } from 'react-i18next';
 
 const ItemInfo = ({ currentFeature }) => {
+  const { t } = useTranslation();
   const props = currentFeature.properties;
   var title = props.segmentKind ? props.segmentKind : props.nodeKind;
   title += ` ID: ${currentFeature.id}`;
@@ -21,9 +23,9 @@ const ItemInfo = ({ currentFeature }) => {
           <Row className="clearfix">
             <Col sm={12}>
               <Nav bsStyle="tabs">
-                <NavItem eventKey="summary">Summary</NavItem>
-                <NavItem eventKey="connectivity">Connectivity</NavItem>
-                <NavItem eventKey="routeNetwork">Network</NavItem>
+                <NavItem eventKey="summary">{t('general.summary')}</NavItem>
+                <NavItem eventKey="connectivity">{t('general.connectivity')}</NavItem>
+                <NavItem eventKey="routeNetwork">{t('general.network')}</NavItem>
               </Nav>
             </Col>
             <Col sm={12}>

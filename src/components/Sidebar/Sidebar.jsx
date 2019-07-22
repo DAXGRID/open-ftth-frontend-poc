@@ -15,6 +15,7 @@ import avatar from "assets/img/default-avatar.png";
 import logo from "logo.svg";
 
 import routes from "routes.js";
+import { Translation } from "react-i18next";
 
 var ps;
 
@@ -174,7 +175,9 @@ class Sidebar extends Component {
             </div>
           </a>
           <a href="/" className="simple-text logo-normal">
-            OpenFTTH
+            <Translation>
+              {(t, { i18n }) => <p>{t("general.openftth")}</p>}
+            </Translation>
           </a>
         </div>
         <div className="sidebar-wrapper" ref="sidebarWrapper">

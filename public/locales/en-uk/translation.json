@@ -1,0 +1,14 @@
+{
+  "general": {
+    "Dashboard": "Dashboard",
+    "connectivity": "Connectivity",
+    "language_selector": "Language Selector",
+    "network": "Network",
+    "openftth": "OpenFTTH",
+    "reset_data": "Reset Data",
+    "route_network": "Route Network",
+    "route_network_map": "Route Network Map",
+    "summary": "Summary",
+    "work_list": "Work List"
+  }
+}

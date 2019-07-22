@@ -18,7 +18,7 @@ i18n
     fallbackLng: 'en-uk',
     preload: ['en-uk', 'da'],
     saveMissing: false,
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
@@ -26,7 +26,10 @@ i18n
 
     backend: {
       loadPath: `/locales/{{lng}}/{{ns}}.json`,
-      addPath: `/locales/{{lng}}/{{ns}}.missing.json`,
+      // TODO: 
+      // get lambda service parsing new terms and uploading to POEditor
+      // ideally download data from POEditor instead of static files
+      // addPath: `https://sz0aswgib8.execute-api.us-west-2.amazonaws.com/dev/add_terms`,
     },
 
     detection: {

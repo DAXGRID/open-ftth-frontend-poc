@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import SummaryTab from "./SummaryTab";
 import ConnectivityTab from "./ConnectivityTab";
 import RouteNetworkTab from "./RouteNetworkTab";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
-const ItemInfo = ({ currentFeature }) => {
+const FeatureInfoPanel = ({ currentFeature, setCurrentFeatureID }) => {
   const { t } = useTranslation();
-  const props = currentFeature.properties;
+  console.log('feature')
+  console.log(currentFeature)
+
+  const props = currentFeature.routeNode;
   var title = props.segmentKind ? props.segmentKind : props.nodeKind;
-  title += ` ID: ${currentFeature.id}`;
+  title += ` ID: ${props.id}`;
   const category = props.nodeFunctionKind ? props.nodeFunctionKind : "";
 
   return (
@@ -51,4 +54,4 @@ const ItemInfo = ({ currentFeature }) => {
   );
 };
 
-export default ItemInfo;
+export default FeatureInfoPanel;

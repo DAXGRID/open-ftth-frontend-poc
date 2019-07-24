@@ -5,7 +5,7 @@ import SummaryTab from "./SummaryTab";
 import WorkListTab from "./WorkListTab";
 import { useTranslation } from 'react-i18next';
 
-const MenuItem = ({ currentFeature, setCurrentFeature }) => {
+const FeatureListInfoPanel = ({ setCurrentFeatureID }) => {
   const { t } = useTranslation();
 
   return (
@@ -24,13 +24,11 @@ const MenuItem = ({ currentFeature, setCurrentFeature }) => {
             <Col sm={12}>
               <Tab.Content animation>
                 <SummaryTab
-                  currentFeature={currentFeature}
-                  setCurrentFeature={setCurrentFeature}
+                  setCurrentFeature={setCurrentFeatureID}
                   eventKey="summary"
                 />
                 <WorkListTab
-                  currentFeature={currentFeature}
-                  setCurrentFeature={setCurrentFeature}
+                  setCurrentFeature={setCurrentFeatureID}
                   eventKey="workList"
                 />
               </Tab.Content>
@@ -42,4 +40,4 @@ const MenuItem = ({ currentFeature, setCurrentFeature }) => {
   );
 };
 
-export default MenuItem;
+export default FeatureListInfoPanel;

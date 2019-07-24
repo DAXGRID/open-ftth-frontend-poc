@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Collapse } from "react-bootstrap";
-import CurrentUserContext from "../../hooks/CurrentUserContext";
+import CurrentUserContext from "hooks/CurrentUserContext";
 
 class SidebarUserMenu extends Component {
   state = {

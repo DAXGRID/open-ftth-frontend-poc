@@ -15,15 +15,16 @@ export const filterFeatureSegments = data => {
     "lineColor": "#111"
   };
 
-  return features.map((feature, index) => {
+  return features.map((feature) => {
     const geojsonFeature = {
-      id: index,
+      id: feature.id,
       type: "Feature",
       geometry: {
         type: feature.geometry.type,
         coordinates: JSON.parse(feature.geometry.coordinates)
       },
       properties: {
+        id: feature.id,
         pam: "true",
         segmentKind: feature.segmentKind,
         ...styles
@@ -40,15 +41,16 @@ export const filterFeatureNodes = data => {
     "circleColor": "#111"
   };
 
-  return features.map((feature, index) => {
+  return features.map((feature) => {
     const geojsonFeature = {
-      id: index,
+      id: feature.id,
       type: "Feature",
       geometry: {
         type: feature.geometry.type,
         coordinates: JSON.parse(feature.geometry.coordinates)
       },
       properties: {
+        id: feature.id,
         pam: "true",
         nodeKind: feature.nodeKind,
         nodeFunctionKind: feature.nodeFunctionKind,

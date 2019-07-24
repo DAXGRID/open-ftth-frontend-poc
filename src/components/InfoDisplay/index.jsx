@@ -1,11 +1,10 @@
 import React from "react";
-import CurrentFeatureContext from "../../contexts/CurrentFeatureContext";
+import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 import ItemInfo from "./Item";
 import InfoMenu from "./Menu";
 
 function InfoDisplay() {
   return (
-
     <CurrentFeatureContext.Consumer>
       {({ currentFeature, setCurrentFeature }) => {
         if (currentFeature) {

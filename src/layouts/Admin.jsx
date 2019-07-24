@@ -6,6 +6,8 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
 
+import { CurrentUserProvider } from "hooks/CurrentUserContext";
+
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 
@@ -142,32 +144,35 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="wrapper">
-        <NotificationSystem ref="notificationSystem" style={style} />
-        <Sidebar
-          {...this.props}
-          image={this.state.image}
-          color={this.state.color}
-          hasImage={this.state.hasImage}
-          mini={this.state.mini}
-        />
-        <div
-          className={
-            "main-panel" +
-            (this.props.location.pathname === "/maps/full-screen-maps"
-              ? " main-panel-maps"
-              : "")
-          }
-          ref="mainPanel"
-        >
-          <AdminNavbar
+        {/* It seems like it would be nicer to put this in index.js - but it doens't work. */}
+        <CurrentUserProvider>
+          <NotificationSystem ref="notificationSystem" style={style} />
+          <Sidebar
             {...this.props}
-            handleMiniClick={this.handleMiniClick}
-            navbar={this.state.navbar}
+            image={this.state.image}
+            color={this.state.color}
+            hasImage={this.state.hasImage}
+            mini={this.state.mini}
           />
-          <div className="main-content">
-            <Switch>{this.getRoutes(routes)}</Switch>
+          <div
+            className={
+              "main-panel" +
+              (this.props.location.pathname === "/maps/full-screen-maps"
+                ? " main-panel-maps"
+                : "")
+            }
+            ref="mainPanel"
+          >
+            <AdminNavbar
+              {...this.props}
+              handleMiniClick={this.handleMiniClick}
+              navbar={this.state.navbar}
+            />
+            <div className="main-content">
+              <Switch>{this.getRoutes(routes)}</Switch>
+            </div>
           </div>
-        </div>
+        </CurrentUserProvider>
       </div>
     );
   }

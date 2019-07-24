@@ -5,7 +5,7 @@ import * as MapboxGLRedux from "@mapbox/mapbox-gl-redux";
 import configureDraw from "../../lib/draw";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import CurrentFeatureContext from "../../contexts/CurrentFeatureContext";
+import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 import { nodesLayer } from "../../lib/mapbox/layers/nodes";
 import { segmentsLayer } from "../../lib/mapbox/layers/segments";

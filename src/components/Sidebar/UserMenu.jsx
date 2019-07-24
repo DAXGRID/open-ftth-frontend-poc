@@ -1,18 +1,18 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { updateCurrentUser } from "../../redux/actions";
 import { Collapse } from "react-bootstrap";
+import CurrentUserContext from "../../hooks/CurrentUserContext";
 
 class SidebarUserMenu extends Component {
   state = {
     openAvatar: false
   };
+  static contextType = CurrentUserContext;
 
   render() {
     return (
       <div className="user">
         <div className="photo">
-          <img src={this.props.currentUser.avatar} alt="Avatar" />
+          <img src={this.context.currentUser.avatar} alt="Avatar" />
         </div>
         <div className="info">
           <a
@@ -23,7 +23,7 @@ class SidebarUserMenu extends Component {
             }}
           >
             <span>
-              {this.props.currentUser.name}
+              {this.context.currentUser.name}
               <b
                 className={this.state.openAvatar ? "caret rotate-180" : "caret"}
               />
@@ -35,7 +35,7 @@ class SidebarUserMenu extends Component {
                 <a
                   href="#planner"
                   onClick={e => {
-                    this.props.updateCurrentUser(0);
+                    this.context.setCurrentUserID(1);
                   }}
                 >
                   <span className="sidebar-mini">P</span>
@@ -44,7 +44,7 @@ class SidebarUserMenu extends Component {
                 <a
                   href="#installer"
                   onClick={e => {
-                    this.props.updateCurrentUser(1);
+                    this.context.setCurrentUserID(2);
                   }}
                 >
                   <span className="sidebar-mini">I</span>
@@ -53,7 +53,7 @@ class SidebarUserMenu extends Component {
                 <a
                   href="#viewer"
                   onClick={e => {
-                    this.props.updateCurrentUser(2);
+                    this.context.setCurrentUserID(3);
                   }}
                 >
                   <span className="sidebar-mini">V</span>
@@ -67,22 +67,5 @@ class SidebarUserMenu extends Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    currentUser: state.users[state.currentUserID]
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    updateCurrentUser: id => dispatch(updateCurrentUser(id))
-  };
-};
-
-SidebarUserMenu = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SidebarUserMenu);
 
 export default SidebarUserMenu;

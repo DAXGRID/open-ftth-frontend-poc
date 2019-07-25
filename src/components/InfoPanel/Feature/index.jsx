@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
-import SummaryTab from "./SummaryTab";
-import ConnectivityTab from "./ConnectivityTab";
-import RouteNetworkTab from "./RouteNetworkTab";
+import ConduitsTab from "./ConduitsTab";
+import EquipmentTab from "./EquipmentTab";
+import CircuitsTab from "./CircuitsTab";
 import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +12,7 @@ const FeatureInfoPanel = () => {
   const {
     currentFeature,
     currentFeatureError,
-    currentFeatureLoading,
+    currentFeatureLoading
   } = useContext(CurrentFeatureContext);
   const feature = currentFeature.routeNode || currentFeature.routeSegment;
 
@@ -33,9 +33,47 @@ const FeatureInfoPanel = () => {
     }
 
     if (feature) {
-      title = feature.segmentKind ? feature.segmentKind : feature.nodeKind;
-      title += ` ID: ${feature.id}`;
-      category = feature.nodeFunctionKind ? feature.nodeFunctionKind : "";
+      title = feature.name ? feature.name : feature.id;
+
+      const address = feature.locationInfo.accessAddress;
+      category = (
+        <dl>
+          <dt>ID: </dt>
+          <dd>{feature.id}</dd>
+
+          <dt>Kind: </dt>
+          {feature.nodeKind && <dd>{feature.nodeKind}</dd>}
+          {feature.segmentKind && <dd>{feature.segmentKind}</dd>}
+
+          <dt>Function: </dt>
+          {feature.nodeFunctionKind && <dd>{feature.nodeFunctionKind}</dd>}
+          {feature.segmentFunctionKind && (
+            <dd>{feature.segmentFunctionKind}</dd>
+          )}
+
+          {address && (
+            <>
+              <dt>Address: </dt>
+              <dd>
+                {address.houseNumber} {address.streetName}
+              </dd>
+              <dd>
+                {address.municipalRoadCode} {address.municipalCode}
+              </dd>
+              <dd>
+                {address.postalName} {address.postalCode}
+              </dd>
+            </>
+          )}
+
+          {feature.direction && (
+            <>
+              <dt>Direction</dt>
+              <dd>{feature.direction}</dd>
+            </>
+          )}
+        </dl>
+      );
     }
 
     return { title, category };
@@ -47,33 +85,20 @@ const FeatureInfoPanel = () => {
       category={cardHeader().category}
       ctFullWidth
       content={
-        <Tab.Container id="itemInfo" defaultActiveKey="summary">
+        <Tab.Container id="itemInfo" defaultActiveKey="conduits">
           <Row className="clearfix">
             <Col sm={12}>
               <Nav bsStyle="tabs">
-                <NavItem eventKey="summary">{t("general.summary")}</NavItem>
-                <NavItem eventKey="connectivity">
-                  {t("general.connectivity")}
-                </NavItem>
-                <NavItem eventKey="routeNetwork">
-                  {t("general.network")}
-                </NavItem>
+                <NavItem eventKey="conduits">{t("general.conduits")}</NavItem>
+                <NavItem eventKey="equipment">{t("general.equipment")}</NavItem>
+                <NavItem eventKey="circuits">{t("general.circuits")}</NavItem>
               </Nav>
             </Col>
             <Col sm={12}>
               <Tab.Content animation>
-                <SummaryTab
-                  currentFeature={feature}
-                  eventKey="summary"
-                />
-                <ConnectivityTab
-                  currentFeature={feature}
-                  eventKey="connectivity"
-                />
-                <RouteNetworkTab
-                  currentFeature={feature}
-                  eventKey="routeNetwork"
-                />
+                <ConduitsTab currentFeature={feature} eventKey="conduits" />
+                <EquipmentTab currentFeature={feature} eventKey="equipment" />
+                <CircuitsTab currentFeature={feature} eventKey="circuits" />
               </Tab.Content>
             </Col>
           </Row>

@@ -25,7 +25,7 @@ const GET_ROUTE_FEATURE = gql`
 
 export default id => {
   // React complains if we conditionally call this hook
-  const skipQuery = (!id) 
+  const skipQuery = !id;
   return useQuery(GET_ROUTE_FEATURE, {
     variables: { id },
     skip: skipQuery

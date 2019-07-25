@@ -9,6 +9,10 @@
     "route_network": "Route Network",
     "route_network_map": "Route Network Map",
     "summary": "Summary",
-    "work_list": "Work List"
+    "work_list": "Work List",
+    "conduits": "Conduits",
+    "equipment": "Equipment",
+    "circuits": "Circuits"
+
   }
 }

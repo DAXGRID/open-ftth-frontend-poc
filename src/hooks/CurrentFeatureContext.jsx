@@ -5,6 +5,8 @@ export default CurrentFeatureContext;
 export const CurrentFeatureProvider = props => {
   const [currentFeatureID, setCurrentFeatureID] = useState();
   const [currentFeature, setCurrentFeature] = useState();
+  const [currentFeatureError, setCurrentFeatureError] = useState();
+  const [currentFeatureLoading, setCurrentFeatureLoading] = useState();
 
   return (
     <CurrentFeatureContext.Provider
@@ -12,7 +14,11 @@ export const CurrentFeatureProvider = props => {
         currentFeatureID,
         setCurrentFeatureID,
         currentFeature,
-        setCurrentFeature
+        setCurrentFeature,
+        currentFeatureError,
+        setCurrentFeatureError,
+        currentFeatureLoading,
+        setCurrentFeatureLoading
       }}
     >
       {props.children}

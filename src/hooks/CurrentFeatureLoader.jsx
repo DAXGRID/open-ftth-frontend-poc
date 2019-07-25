@@ -8,13 +8,18 @@ import useRouteFeature from "./useRouteFeature";
 // map and info panel
 
 const CurrentFeatureLoader = props => {
-  const { currentFeatureID, setCurrentFeature } = useContext(
-    CurrentFeatureContext
-  );
+  const {
+    currentFeatureID,
+    setCurrentFeature,
+    setCurrentFeatureError,
+    setCurrentFeatureLoading
+  } = useContext(CurrentFeatureContext);
 
   const { data, error, loading } = useRouteFeature(currentFeatureID);
 
-  // TODO handle error & loading somehow? Probably more setStates
+  // allowing this state to be set to null is good, will clean info panel
+  setCurrentFeatureError(error);
+  setCurrentFeatureLoading(loading);
   setCurrentFeature(data);
 
   return <>{props.children}</>;

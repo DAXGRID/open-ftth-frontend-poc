@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React from "react";
 import { Col } from "react-bootstrap";
 import MediaQuery from "react-responsive";
 import { FeatureProvider } from "hooks/FeatureContext.jsx";

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import client from "./redux/store/apolloClient";
+import client from "./apolloClient";
 import { ApolloProvider } from "react-apollo-hooks";
 import AdminLayout from "layouts/Admin.jsx";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";

@@ -1,24 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import SummaryTab from "./SummaryTab";
 import WorkListTab from "./WorkListTab";
-import { useTranslation } from 'react-i18next';
+import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
+import { useTranslation } from "react-i18next";
 
-const FeatureListInfoPanel = ({ setCurrentFeatureID }) => {
+const FeatureListInfoPanel = () => {
   const { t } = useTranslation();
-
+  const { setCurrentFeatureID } = useContext(CurrentFeatureContext);
   return (
     <Card
-      title={t('general.route_network_map')}
+      title={t("general.route_network_map")}
       ctFullWidth
       content={
         <Tab.Container id="menuItem" defaultActiveKey="summary">
           <Row className="clearfix">
             <Col sm={12}>
               <Nav bsStyle="tabs">
-                <NavItem eventKey="summary">{t('general.summary')}</NavItem>
-                <NavItem eventKey="workList">{t('general.work_list')}</NavItem>
+                <NavItem eventKey="summary">{t("general.summary")}</NavItem>
+                <NavItem eventKey="workList">{t("general.work_list")}</NavItem>
               </Nav>
             </Col>
             <Col sm={12}>

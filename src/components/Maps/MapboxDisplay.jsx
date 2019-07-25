@@ -54,9 +54,11 @@ const MapboxDisplay = props => {
 
     map.on("click", e => {
       const features = getFeaturesFromEvent({ map, e });
-      if (features) {
+      if (features.length > 0) {
         const feature = features[0];
         setCurrentFeatureID(feature.properties.id);
+      } else {
+        setCurrentFeatureID(null);        
       }
     });
 

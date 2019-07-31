@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
-import ConduitsTab from "./ConduitsTab";
+import ConduitsTab from "./ConduitsTab/index";
 import EquipmentTab from "./EquipmentTab";
 import CircuitsTab from "./CircuitsTab";
 import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";

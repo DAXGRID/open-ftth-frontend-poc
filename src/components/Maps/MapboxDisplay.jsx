@@ -13,9 +13,9 @@ import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
 const MapboxDisplay = props => {
   const container = "mapbox-map";
   const viewport = {
-    latitude: "55.746384700121446",
-    longitude: "9.6377473217318386",
-    zoom: 15,
+    latitude: "55.7473",
+    longitude: "9.639",
+    zoom: 16,
     styleID: "tamimitchell/cjx2ss4or057d1cnqj9j62jwl"
   };
   

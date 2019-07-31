@@ -1,0 +1,25 @@
+table tr td.reset-expansion-style {
+  padding: 5px !important;
+  background: $medium-gray;
+}
+
+.color-swatch {
+  display: block;
+  height: 44px;
+  width: 15px;
+  border-top: 7px solid;
+  border-bottom: 7px solid;
+  margin: -13px -8px;
+  position: relative;
+}
+
+.react-bootstrap-table th, .react-bootstrap-table tr {
+  outline: none;
+  cursor: pointer;
+}
+
+.react-bootstrap-table th:last-child,
+.react-bootstrap-table td:last-child {
+  margin-right: 0;
+  padding: 0 !important;
+}

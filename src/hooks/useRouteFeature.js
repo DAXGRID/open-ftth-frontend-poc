@@ -17,7 +17,60 @@ const GET_ROUTE_FEATURE = gql`
           postalCode
           postalName
         }
-        direction
+      }
+      relatedConduits(
+        includeMultiConduits: true
+        includeInnerConduits: false
+        includeSingleConduits: true
+      ) {
+        conduitSegment {
+          children {
+            line {
+              allConduitSegments {
+                allRouteSegments {
+                  length
+                }
+              }
+            }
+            conduit {
+              id
+              name
+              color
+              colorMarking
+              position
+            }
+          }
+          line {
+            allConduitSegments {
+              allRouteSegments {
+                length
+              }
+            }
+          }
+          conduit {
+            id
+            assetInfo {
+              model {
+                name
+              }
+            }
+            color
+            colorMarking
+            position
+            name
+            allRouteSegments {
+              length
+            }
+            toRouteNode {
+              locationInfo {
+                accessAddress {
+                  houseNumber
+                  streetName
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

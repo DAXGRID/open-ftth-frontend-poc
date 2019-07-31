@@ -57,19 +57,6 @@ const FeatureInfoPanel = () => {
               <dd>
                 {address.houseNumber} {address.streetName}
               </dd>
-              <dd>
-                {address.municipalRoadCode} {address.municipalCode}
-              </dd>
-              <dd>
-                {address.postalName} {address.postalCode}
-              </dd>
-            </>
-          )}
-
-          {feature.direction && (
-            <>
-              <dt>Direction</dt>
-              <dd>{feature.direction}</dd>
             </>
           )}
         </dl>

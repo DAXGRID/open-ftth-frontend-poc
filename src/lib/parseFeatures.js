@@ -42,6 +42,8 @@ export const filterFeatureNodes = data => {
   };
 
   return features.map((feature) => {
+    const iconName = icons[feature.nodeKind] ? icons[feature.nodeKind] : null
+    const iconHoverName = iconName ? `${iconName.split('Active')[0]}Hover` : null
     const geojsonFeature = {
       id: feature.id,
       type: "Feature",
@@ -54,7 +56,9 @@ export const filterFeatureNodes = data => {
         pam: "true",
         nodeKind: feature.nodeKind,
         nodeFunctionKind: feature.nodeFunctionKind,
-        icon: icons[feature.nodeKind],
+        icon: iconName,
+        // this is not great, clean up icon names later
+        iconHover: iconHoverName,
         ...styles
       }
     };

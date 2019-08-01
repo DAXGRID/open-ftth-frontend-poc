@@ -27,13 +27,15 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
   const selectRow = {
     mode: "checkbox",
     clickToSelect: true,
-    clickToExpand: true,
     hideSelectColumn: true,
+    // TODO fix expand/or select but not both bug (should do both at once, maybe just hooks issue?)
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
         setHighlightedFeature(row);
       }
-    }
+    },
+    clickToExpand: true,
+
   };
 
   const nonExpandableIDs = data

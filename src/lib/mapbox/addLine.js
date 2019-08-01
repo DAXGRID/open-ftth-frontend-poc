@@ -1,7 +1,6 @@
 const layerID = "highlightedFeature";
 
 const addLine = ({ map, highlightedFeature }) => {
-  // probably don't need to pass options?
   if (!map || !map.isStyleLoaded()) return;
 
   const mapLayer = map.getLayer(layerID);
@@ -28,10 +27,6 @@ const addHighlightedLineLayer = (map, lineConduitSegments) => {
         type: "FeatureCollection",
         features: lineConduitSegments
       }
-    },
-    layout: {
-      "line-join": "round",
-      "line-cap": "round"
     },
     paint: {
       "line-width": ["get", "lineWidth"],

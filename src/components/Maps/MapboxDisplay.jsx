@@ -8,6 +8,7 @@ import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 import { nodesLayer } from "../../lib/mapbox/layers/nodes";
 import { segmentsLayer } from "../../lib/mapbox/layers/segments";
 import addLine from "../../lib/mapbox/addLine";
+import highlightNode from "../../lib/mapbox/highlightNode";
 import FeatureContext from "hooks/FeatureContext.jsx";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
 
@@ -18,13 +19,13 @@ const MapboxDisplay = props => {
   const viewport = {
     latitude: "55.7473",
     longitude: "9.639",
-    zoom: 17,
+    zoom: 16,
     styleID: "tamimitchell/cjx2ss4or057d1cnqj9j62jwl"
   };
 
   const { features } = useContext(FeatureContext);
   const {
-    // currentFeature,
+    currentFeature,
     highlightedFeature,
     setHighlightedFeature,
     setCurrentFeatureID
@@ -63,15 +64,16 @@ const MapboxDisplay = props => {
 
     map.on("click", e => {
       setHighlightedFeature();
-      const features = getFeaturesFromEvent({ map, e });
+      setCurrentFeatureID();
+    });
+
+    map.on("click", "featureNodes", e => {
       // console.log("clicked features");
-      // console.log(features);
-      if (features.length > 0) {
-        const feature = features[0];
-        setCurrentFeatureID(feature.properties.id);
-      } else {
-        setCurrentFeatureID();
-      }
+      // console.log(e.features);
+      const feature = e.features[0];
+      highlightNode(map, feature);
+      map.flyTo({ center: feature.geometry.coordinates, zoom: 16.5, speed: 0.8 });
+      setCurrentFeatureID(feature.properties.id);
     });
 
     map.on("mousemove", e => {
@@ -89,6 +91,15 @@ const MapboxDisplay = props => {
   React.useEffect(() => {
     addLine({ map, highlightedFeature });
   }, [highlightedFeature]);
+
+  React.useEffect(() => {
+    // console.log('updated currentFeature')
+    // console.log(currentFeature)
+    // if(!currentFeature) return;
+    // if(currentFeature.routeNode) {highlightNode(map, currentFeature.routeNode )};
+    // TODO
+    // if(currentFeature.routeSegment) highlightSegment({ map, currentFeature.routeNode });
+  }, [currentFeature]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

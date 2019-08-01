@@ -1,4 +1,5 @@
 import React from "react";
+import { colorMap } from "lib/mapbox/constants";
 
 export const conduitType = conduit => {
   if (conduit.assetInfo) {
@@ -13,11 +14,9 @@ export const conduitToLocation = conduit => {
   return `${address.houseNumber} ${address.streetName}`;
 };
 
-
 export const sortCaret = (order, column) => {
   if (!order) return <span style={{ cursor: "pointer" }}>▼</span>;
-  else if (order === "asc")
-    return <span style={{ cursor: "pointer" }}>▼</span>;
+  else if (order === "asc") return <span style={{ cursor: "pointer" }}>▼</span>;
   else if (order === "desc")
     return <span style={{ cursor: "pointer" }}>▲</span>;
   return null;
@@ -25,21 +24,6 @@ export const sortCaret = (order, column) => {
 
 export const colorFormatter = (cell, row) => {
   let title, borderColor;
-  const colorMap = {
-    CLEAR: "#eeeeee",
-    AQUA: "#00FFFF",
-    WHITE: "#ffffff",
-    BROWN: "#964B00",
-    RED: "#FF0000",
-    YELLOW: "#FFFF00",
-    BLUE: "#0000FF",
-    ORANGE: "#FF7F00",
-    GREEN: "#00B200",
-    PINK: "#ff5def",
-    BLACK: "#000",
-    GREY: "#808080",
-    VIOLET: "#7F00FF"
-  };
 
   const backgroundColor = colorMap[cell];
   if (cell === "CLEAR") {
@@ -63,4 +47,22 @@ export const lineLength = line => {
   const conduitSegment = line.allConduitSegments.slice(-1)[0];
   if (conduitSegment)
     return conduitSegment.allRouteSegments[0].length.toFixed(2);
+};
+
+export const lineConduitSegments = line => {
+  const featureArrays = line.allConduitSegments.map(conduitSegment =>
+    conduitSegment.allRouteSegments.map(routeSegment => ({
+      id: routeSegment.id,
+      geometry: {
+        coordinates: JSON.parse(routeSegment.geometry.coordinates),
+        type: routeSegment.geometry.type
+      },
+      properties: {
+        lineWidth: 4,
+        lineColor: colorMap[conduitSegment.conduit.color]
+      }
+    }))
+  );
+
+  return featureArrays.reduce((a, b) => a.concat(b), []);
 };

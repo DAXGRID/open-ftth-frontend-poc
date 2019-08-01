@@ -5,6 +5,7 @@ import ConduitsTab from "./ConduitsTab/index";
 import EquipmentTab from "./EquipmentTab";
 import CircuitsTab from "./CircuitsTab";
 import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
+
 import { useTranslation } from "react-i18next";
 
 const FeatureInfoPanel = () => {

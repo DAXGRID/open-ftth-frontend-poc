@@ -37,12 +37,12 @@ const Diagram = props => {
 
   engine.setDiagramModel(model);
 
-  var props = {
-    diagramEngine: engine,
-    allowLooseLinks: false,
-    allowCanvasTranslation: false,
-    allowCanvasZoom: false
-  };
+  // var props = {
+  //   diagramEngine: engine,
+  //   allowLooseLinks: false,
+  //   allowCanvasTranslation: false,
+  //   allowCanvasZoom: false
+  // };
 
   return (
     <div className="docs-preview-wrapper">

@@ -23,12 +23,64 @@ const GET_ROUTE_FEATURE = gql`
         includeInnerConduits: false
         includeSingleConduits: true
       ) {
+        conduit {
+          id
+          assetInfo {
+            model {
+              name
+            }
+          }
+          color
+          colorMarking
+          position
+          name
+          allRouteSegments {
+            length
+          }
+          toRouteNode {
+            locationInfo {
+              accessAddress {
+                houseNumber
+                streetName
+              }
+            }
+          }
+        }
         conduitSegment {
+          line {
+            allConduitSegments {
+              conduit {
+                id
+                name
+                color
+                colorMarking
+              }
+              allRouteSegments {
+                id
+                length
+                geometry {
+                  coordinates
+                  type
+                }
+              }
+            }
+          }
           children {
             line {
               allConduitSegments {
+                conduit {
+                  id
+                  name
+                  color
+                  colorMarking
+                }
                 allRouteSegments {
+                  id
                   length
+                  geometry {
+                    coordinates
+                    type
+                  }
                 }
               }
             }
@@ -38,36 +90,6 @@ const GET_ROUTE_FEATURE = gql`
               color
               colorMarking
               position
-            }
-          }
-          line {
-            allConduitSegments {
-              allRouteSegments {
-                length
-              }
-            }
-          }
-          conduit {
-            id
-            assetInfo {
-              model {
-                name
-              }
-            }
-            color
-            colorMarking
-            position
-            name
-            allRouteSegments {
-              length
-            }
-            toRouteNode {
-              locationInfo {
-                accessAddress {
-                  houseNumber
-                  streetName
-                }
-              }
             }
           }
         }

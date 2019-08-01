@@ -3,7 +3,8 @@ import {
   sortCaret,
   conduitType,
   conduitToLocation,
-  lineLength
+  lineLength,
+  lineConduitSegments
 } from "./decorators";
 
 export const conduitsColumns = [
@@ -33,8 +34,7 @@ export const conduitsColumns = [
 ];
 
 export const conduitsData = (conduits) => {
-  return conduits.map(({ conduitSegment }) => {
-    const conduit = conduitSegment.conduit;
+  return conduits.map(({ conduit, conduitSegment }) => {
     const line = conduitSegment.line;
 
     return {
@@ -43,6 +43,7 @@ export const conduitsData = (conduits) => {
       colorMarking: conduit.colorMarking,
       type: conduitType(conduit),
       length: lineLength(line),
+      lineConduitSegments: lineConduitSegments(line),
       toLocation: conduitToLocation(conduit),
       innerConduits: innerConduitsData(conduitSegment.children)
     };
@@ -52,15 +53,13 @@ export const conduitsData = (conduits) => {
 
 const innerConduitsData = children => {
   if (!children) return;
-  return children.map(child => {
-    const line = child.line;
-    const conduit = child.conduit;
-
+  return children.map(({line, conduit}) => {
     return {
       id: conduit.id,
       color: conduit.color,
       type: conduitType(conduit),
-      length: lineLength(line)
+      length: lineLength(line),
+      lineConduitSegments: lineConduitSegments(line),
       // location: location(conduit)
     };
   });

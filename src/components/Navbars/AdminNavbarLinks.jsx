@@ -36,7 +36,7 @@ const HeaderLinks = () => {
           title={
             <div>
               <div className="flag">
-                <img src={flags[currentLang()]} width="16" height="16" />
+                <img alt={currentLang()} src={flags[currentLang()]} width="16" height="16" />
               </div>
               <p className="hidden-md hidden-lg">
                 {t('general.language_selector')}

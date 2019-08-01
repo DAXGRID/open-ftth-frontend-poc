@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import mapboxgl from "mapbox-gl";
 import * as MapboxGLRedux from "@mapbox/mapbox-gl-redux";
 import configureDraw from "../../lib/draw";
@@ -7,22 +7,31 @@ import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 import { nodesLayer } from "../../lib/mapbox/layers/nodes";
 import { segmentsLayer } from "../../lib/mapbox/layers/segments";
+import addLine from "../../lib/mapbox/addLine";
 import FeatureContext from "hooks/FeatureContext.jsx";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
+
+let map;
 
 const MapboxDisplay = props => {
   const container = "mapbox-map";
   const viewport = {
     latitude: "55.7473",
     longitude: "9.639",
-    zoom: 16,
+    zoom: 17,
     styleID: "tamimitchell/cjx2ss4or057d1cnqj9j62jwl"
   };
-  
+
   const { features } = useContext(FeatureContext);
-  const { currentFeature, setCurrentFeatureID } = useContext(
-    CurrentFeatureContext
-  );
+  const {
+    // currentFeature,
+    highlightedFeature,
+    setHighlightedFeature,
+    setCurrentFeatureID
+  } = useContext(CurrentFeatureContext);
+
+  // console.log("features");
+  // console.log(features);
 
   // Can't use hooks inside this effect without redrawing map
   React.useLayoutEffect(() => {
@@ -38,7 +47,7 @@ const MapboxDisplay = props => {
       zoom
     };
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
-    const map = new mapboxgl.Map(mapConfig);
+    map = new mapboxgl.Map(mapConfig);
     map.addControl(MapboxReduxControl);
 
     map.on("load", () => {
@@ -53,12 +62,15 @@ const MapboxDisplay = props => {
     });
 
     map.on("click", e => {
+      setHighlightedFeature();
       const features = getFeaturesFromEvent({ map, e });
+      // console.log("clicked features");
+      // console.log(features);
       if (features.length > 0) {
         const feature = features[0];
         setCurrentFeatureID(feature.properties.id);
       } else {
-        setCurrentFeatureID(null);        
+        setCurrentFeatureID();
       }
     });
 
@@ -70,7 +82,13 @@ const MapboxDisplay = props => {
         map.getCanvas().style.cursor = "";
       }
     });
+    // anything other than empty array redraws map at unwanted times
+    // eslint-disable-next-line
   }, []);
+
+  React.useEffect(() => {
+    addLine({ map, highlightedFeature });
+  }, [highlightedFeature]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

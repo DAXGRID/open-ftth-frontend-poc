@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { Tab } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
+import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
 import { conduitsData, conduitsColumns } from "./data";
 
 const ConduitsTab = ({ currentFeature, eventKey }) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
+
   const conduits = currentFeature.relatedConduits;
   const data = conduitsData(conduits);
+
+  const { highlightedFeature, setHighlightedFeature } = useContext(
+    CurrentFeatureContext
+  );
+
   console.log("conduits");
   console.log(conduits);
 
-  console.log("conduitsData");
+  console.log("formatted conduitsData");
   console.log(data);
+
+  console.log("highlightedFeature");
+  console.log(highlightedFeature);
 
   const selectRow = {
     mode: "checkbox",
@@ -21,11 +31,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
     hideSelectColumn: true,
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
-        console.log("selected row");
-        console.log(row.id);
-      } else {
-        console.log("unselected row");
-        console.log(row.id);
+        setHighlightedFeature(row);
       }
     }
   };

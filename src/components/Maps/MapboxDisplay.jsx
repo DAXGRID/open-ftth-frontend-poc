@@ -72,7 +72,6 @@ const MapboxDisplay = props => {
       // console.log(e.features);
       const feature = e.features[0];
       highlightNode(map, feature);
-      map.flyTo({ center: feature.geometry.coordinates, zoom: 16.5, speed: 0.8 });
       setCurrentFeatureID(feature.properties.id);
     });
 

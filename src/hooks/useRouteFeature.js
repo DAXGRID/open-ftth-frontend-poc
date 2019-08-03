@@ -23,6 +23,7 @@ const GET_ROUTE_FEATURE = gql`
         includeInnerConduits: false
         includeSingleConduits: true
       ) {
+        relationType
         conduit {
           id
           assetInfo {
@@ -37,17 +38,27 @@ const GET_ROUTE_FEATURE = gql`
           allRouteSegments {
             length
           }
-          toRouteNode {
-            locationInfo {
-              accessAddress {
-                houseNumber
-                streetName
-              }
-            }
-          }
         }
         conduitSegment {
           line {
+            startRouteNode {
+              name
+              locationInfo {
+                accessAddress {
+                  houseNumber
+                  streetName
+                }
+              }
+            }
+         	  endRouteNode {
+              name
+              locationInfo {
+                accessAddress {
+                  houseNumber
+                  streetName
+                }
+              }
+            }
             allConduitSegments {
               conduit {
                 id
@@ -67,6 +78,24 @@ const GET_ROUTE_FEATURE = gql`
           }
           children {
             line {
+              startRouteNode {
+                name
+                locationInfo {
+                  accessAddress {
+                    houseNumber
+                    streetName
+                  }
+                }
+              }
+               endRouteNode {
+                name
+                locationInfo {
+                  accessAddress {
+                    houseNumber
+                    streetName
+                  }
+                }
+              }
               allConduitSegments {
                 conduit {
                   id
@@ -90,6 +119,11 @@ const GET_ROUTE_FEATURE = gql`
               color
               colorMarking
               position
+              assetInfo {
+                model {
+                  name
+                }
+              }
             }
           }
         }

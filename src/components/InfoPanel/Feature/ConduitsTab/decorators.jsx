@@ -1,17 +1,31 @@
 import React from "react";
 import { colorMap } from "lib/mapbox/constants";
 
-export const conduitType = conduit => {
+export const conduitName = conduit => {
   if (conduit.assetInfo) {
     return conduit.assetInfo.model.name;
-  } else {
-    return conduit.name;
   }
 };
 
-export const conduitToLocation = conduit => {
-  const address = conduit.toRouteNode.locationInfo.accessAddress;
-  return `${address.houseNumber} ${address.streetName}`;
+export const lineLocation = (line, relationType) => {
+  let node;
+
+  if (
+    (relationType === "INCOMMING" || relationType === "INCOMING") &&
+    line.startRouteNode
+  ) {
+    node = line.startRouteNode;
+  } else if (relationType === "OUTGOING" && line.endRouteNode) {
+    node = line.endRouteNode;
+  }
+
+  if (node && node.locationInfo) {
+    const address = node.locationInfo.accessAddress;
+    return {
+      address: `${address.streetName} ${address.houseNumber}`,
+      name: node.name
+    };
+  }
 };
 
 export const sortCaret = (order, column) => {
@@ -44,9 +58,24 @@ export const colorFormatter = (cell, row) => {
 
 export const lineLength = line => {
   // get last conduitSegment because child conduits return parent conduitSegment first (?)
+  // nope
   const conduitSegment = line.allConduitSegments.slice(-1)[0];
   if (conduitSegment)
     return conduitSegment.allRouteSegments[0].length.toFixed(2);
+};
+
+export const routeSegments = conduit => {
+  return conduit.allRouteSegments.map(routeSegment => ({
+    id: routeSegment.id,
+    geometry: {
+      coordinates: JSON.parse(routeSegment.geometry.coordinates),
+      type: routeSegment.geometry.type
+    },
+    properties: {
+      lineWidth: 4,
+      lineColor: colorMap[conduit.color]
+    }
+  }));
 };
 
 export const lineConduitSegments = line => {

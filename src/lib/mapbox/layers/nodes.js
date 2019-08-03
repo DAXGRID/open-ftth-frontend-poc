@@ -5,9 +5,6 @@ export const nodesLayer = features => {
     layout: {
       "icon-image": "{icon}",
       "icon-allow-overlap": true,
-      "icon-size": {
-        stops: [[10, 0.3], [13, 0.5], [17, 1.25], [20, 3]]
-      }
     },
     source: {
       type: "geojson",

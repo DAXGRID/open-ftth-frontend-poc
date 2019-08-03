@@ -1,66 +1,74 @@
+import { useTranslation } from "react-i18next";
 import {
   colorFormatter,
-  sortCaret,
-  conduitType,
-  conduitToLocation,
+  conduitName,
+  lineLocation,
   lineLength,
   lineConduitSegments
 } from "./decorators";
+const { t } = useTranslation();
 
 export const conduitsColumns = [
+  {
+    text: "",
+    dataField: "position",
+    sort: true,
+    hidden: true
+  },
   {
     text: "",
     dataField: "color",
     formatter: colorFormatter
   },
   {
-    text: "Type",
-    dataField: "type",
-    sort: true,
-    sortCaret: sortCaret
+    text: t("Name"),
+    dataField: "name"
   },
   {
-    text: "To Location",
-    dataField: "toLocation",
-    sort: true,
-    sortCaret: sortCaret
+    text: t("Address"),
+    dataField: "address"
   },
   {
-    text: "Length",
-    dataField: "length",
-    sort: true,
-    sortCaret: sortCaret
+    text: t("Installation"),
+    dataField: "installationName"
   }
 ];
 
-export const conduitsData = (conduits) => {
-  return conduits.map(({ conduit, conduitSegment }) => {
+export const conduitsData = conduits => {
+  return conduits.map(({ conduit, conduitSegment, relationType }) => {
     const line = conduitSegment.line;
+    const locationName = lineLocation(line, relationType).name;
+    const locationAddress = lineLocation(line, relationType).address;
 
     return {
       id: conduit.id,
       color: conduit.color,
       colorMarking: conduit.colorMarking,
-      type: conduitType(conduit),
+      name: conduitName(conduit),
+      address: locationAddress,
+      installationName: locationName,
       length: lineLength(line),
-      lineConduitSegments: lineConduitSegments(line),
-      toLocation: conduitToLocation(conduit),
-      innerConduits: innerConduitsData(conduitSegment.children)
+      innerConduits: innerConduitsData(conduitSegment.children, relationType),
+      lineConduitSegments: lineConduitSegments(line)
     };
   });
 };
 
-
-const innerConduitsData = children => {
+const innerConduitsData = (children, relationType) => {
   if (!children) return;
-  return children.map(({line, conduit}) => {
+  return children.map(({ line, conduit }) => {
+    const locationName = lineLocation(line, relationType).name;
+    const locationAddress = lineLocation(line, relationType).address;
+
     return {
       id: conduit.id,
+      position: parseInt(conduit.position),
       color: conduit.color,
-      type: conduitType(conduit),
+      name: conduit.name,
+      address: locationAddress,
+      installationName: locationName,
       length: lineLength(line),
-      lineConduitSegments: lineConduitSegments(line),
-      // location: location(conduit)
+      lineConduitSegments: lineConduitSegments(line)
     };
   });
 };

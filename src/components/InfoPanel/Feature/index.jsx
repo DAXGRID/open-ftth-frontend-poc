@@ -56,7 +56,7 @@ const FeatureInfoPanel = () => {
             <>
               <dt>Address: </dt>
               <dd>
-                {address.houseNumber} {address.streetName}
+                {address.streetName} {address.houseNumber} 
               </dd>
             </>
           )}

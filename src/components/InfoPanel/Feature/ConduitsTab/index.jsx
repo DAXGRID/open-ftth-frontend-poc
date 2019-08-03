@@ -44,6 +44,11 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
 
   const rowStyle = { cursor: "pointer" };
 
+  const defaultSorted = [{
+    dataField: 'position',
+    order: 'asc'
+  }];
+
   const expandRow = {
     onlyOneExpanding: true,
     showExpandColumn: true,
@@ -55,6 +60,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
         keyField="id"
         data={row.innerConduits}
         columns={conduitsColumns}
+        defaultSorted={ defaultSorted } 
         selectRow={selectRow}
         rowStyle={rowStyle}
         bordered={false}
@@ -71,6 +77,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
         keyField="id"
         data={data}
         columns={conduitsColumns}
+        defaultSorted={ defaultSorted } 
         selectRow={selectRow}
         expandRow={expandRow}
         rowStyle={rowStyle}

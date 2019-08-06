@@ -5,6 +5,8 @@ import ConduitsTab from "./ConduitsTab/index";
 import EquipmentTab from "./EquipmentTab";
 import CircuitsTab from "./CircuitsTab";
 import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import { useTranslation } from "react-i18next";
 
@@ -56,7 +58,7 @@ const FeatureInfoPanel = () => {
             <>
               <dt>Address: </dt>
               <dd>
-                {address.streetName} {address.houseNumber} 
+                {address.streetName} {address.houseNumber}
               </dd>
             </>
           )}
@@ -66,6 +68,12 @@ const FeatureInfoPanel = () => {
 
     return { title, category };
   };
+
+  React.useLayoutEffect(() => {
+    new PerfectScrollbar("#scroll-container", {
+      minScrollbarLength: 20
+    });
+  }, [currentFeature]);
 
   return (
     <Card
@@ -83,7 +91,7 @@ const FeatureInfoPanel = () => {
               </Nav>
             </Col>
             <Col sm={12}>
-              <Tab.Content animation>
+              <Tab.Content animation id="scroll-container" style={{height: "47vh", position: "relative" }}>
                 <ConduitsTab currentFeature={feature} eventKey="conduits" />
                 <EquipmentTab currentFeature={feature} eventKey="equipment" />
                 <CircuitsTab currentFeature={feature} eventKey="circuits" />

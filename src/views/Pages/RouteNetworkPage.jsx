@@ -13,7 +13,7 @@ function RouteNetworkPage() {
       <CurrentFeatureProvider>
         <CurrentFeatureLoader>
           <MediaQuery minWidth={1224}>
-            <Col lg={8} md={12} style={{ height: "80vh" }}>
+            <Col lg={8} md={12} style={{ height: "85vh" }}>
               <MapboxDisplay />
             </Col>
           </MediaQuery>

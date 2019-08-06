@@ -58,9 +58,10 @@ const MapboxDisplay = props => {
       console.log("features");
       console.log(features);
       if (uneditableFeatures) {
-        if (uneditableFeatures.segments)
+        if (uneditableFeatures.segments) {
           map.addLayer(segmentsLayer(uneditableFeatures.segments));
-        map.addLayer(segmentLabelsLayer(uneditableFeatures.segments));
+          map.addLayer(segmentLabelsLayer(uneditableFeatures.segments));
+        }
         if (uneditableFeatures.nodes)
           map.addLayer(nodesLayer(uneditableFeatures.nodes));
       }
@@ -117,7 +118,7 @@ const MapboxDisplay = props => {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <div id={container} style={{ width: "100%", height: "100%" }} />;
+      <div id={container} style={{ width: "100%", height: "100%" }} />
     </div>
   );
 };

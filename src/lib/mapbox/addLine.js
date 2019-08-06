@@ -32,5 +32,5 @@ const addHighlightedLineLayer = (map, lineConduitSegments) => {
       "line-width": ["get", "lineWidth"],
       "line-color": ["get", "lineColor"]
     }
-  });
+  }, 'featureNodes');
 };

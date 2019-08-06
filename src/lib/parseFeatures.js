@@ -25,6 +25,7 @@ export const filterFeatureSegments = data => {
       },
       properties: {
         id: feature.id,
+        name: feature.name,
         pam: "true",
         segmentKind: feature.segmentKind,
         ...styles
@@ -42,8 +43,8 @@ export const filterFeatureNodes = data => {
   };
 
   return features.map((feature) => {
-    const iconName = icons[feature.nodeKind] ? icons[feature.nodeKind] : null
-    const iconHoverName = iconName ? `${iconName.split('Active')[0]}Hover` : null
+    const iconName = icons[feature.nodeKind] ? icons[feature.nodeKind] : 'dot-11'
+    const iconHoverName = icons[feature.nodeKind] ? `${iconName.split('Active')[0]}Hover` : 'border-dot-13'
     const geojsonFeature = {
       id: feature.id,
       type: "Feature",
@@ -53,6 +54,7 @@ export const filterFeatureNodes = data => {
       },
       properties: {
         id: feature.id,
+        name: feature.name,
         pam: "true",
         nodeKind: feature.nodeKind,
         nodeFunctionKind: feature.nodeFunctionKind,

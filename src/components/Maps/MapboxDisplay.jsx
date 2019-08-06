@@ -6,7 +6,10 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 import { nodesLayer } from "../../lib/mapbox/layers/nodes";
-import { segmentsLayer } from "../../lib/mapbox/layers/segments";
+import {
+  segmentsLayer,
+  segmentLabelsLayer
+} from "../../lib/mapbox/layers/segments";
 import addLine from "../../lib/mapbox/addLine";
 import highlightNode from "../../lib/mapbox/highlightNode";
 import FeatureContext from "hooks/FeatureContext.jsx";
@@ -52,9 +55,12 @@ const MapboxDisplay = props => {
     map.addControl(MapboxReduxControl);
 
     map.on("load", () => {
+      console.log("features");
+      console.log(features);
       if (uneditableFeatures) {
         if (uneditableFeatures.segments)
           map.addLayer(segmentsLayer(uneditableFeatures.segments));
+        map.addLayer(segmentLabelsLayer(uneditableFeatures.segments));
         if (uneditableFeatures.nodes)
           map.addLayer(nodesLayer(uneditableFeatures.nodes));
       }
@@ -62,14 +68,23 @@ const MapboxDisplay = props => {
       if (editableFeatureTypes) configureDraw(map, props);
     });
 
-    map.on("click", e => {
+    map.on("click", "featureSegmentLabels", e => {
+      console.log("clicked features");
+      console.log(e.features);
+      setHighlightedFeature();
+      setCurrentFeatureID();
+    });
+
+    map.on("click", "featureSegments", e => {
+      console.log("clicked features");
+      console.log(e.features);
       setHighlightedFeature();
       setCurrentFeatureID();
     });
 
     map.on("click", "featureNodes", e => {
-      // console.log("clicked features");
-      // console.log(e.features);
+      console.log("clicked features");
+      console.log(e.features);
       const feature = e.features[0];
       highlightNode(map, feature);
       setCurrentFeatureID(feature.properties.id);

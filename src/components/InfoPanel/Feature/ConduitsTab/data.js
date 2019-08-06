@@ -37,8 +37,12 @@ export const conduitsColumns = [
 export const conduitsData = conduits => {
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
     const line = conduitSegment.line;
-    const locationName = lineLocation(line, relationType).name;
-    const locationAddress = lineLocation(line, relationType).address;
+    let locationName, locationAddress;
+
+    if (lineLocation(line, relationType)) {
+      locationName = lineLocation(line, relationType).name;
+      locationAddress = lineLocation(line, relationType).address;
+    }
 
     return {
       id: conduit.id,
@@ -57,8 +61,12 @@ export const conduitsData = conduits => {
 const innerConduitsData = (children, relationType) => {
   if (!children) return;
   return children.map(({ line, conduit }) => {
-    const locationName = lineLocation(line, relationType).name;
-    const locationAddress = lineLocation(line, relationType).address;
+    let locationName, locationAddress;
+
+    if (lineLocation(line, relationType)) {
+      locationName = lineLocation(line, relationType).name;
+      locationAddress = lineLocation(line, relationType).address;
+    }
 
     return {
       id: conduit.id,

@@ -36,7 +36,11 @@ const GET_ROUTE_FEATURE = gql`
           position
           name
           allRouteSegments {
-            length
+            id
+            geometry {
+              coordinates
+              type
+            }
           }
         }
         conduitSegment {

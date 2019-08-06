@@ -4,7 +4,8 @@ import {
   conduitName,
   lineLocation,
   lineLength,
-  lineConduitSegments
+  lineConduitSegments,
+  routeSegments
 } from "./decorators";
 const { t } = useTranslation();
 
@@ -53,7 +54,8 @@ export const conduitsData = conduits => {
       installationName: locationName,
       length: lineLength(line),
       innerConduits: innerConduitsData(conduitSegment.children, relationType),
-      lineConduitSegments: lineConduitSegments(line)
+      lineConduitSegments: conduitSegment.children ? routeSegments(conduit) : lineConduitSegments(line)
+      // TODO - leave a nice explanation as to why we can't look for route features in the same place for a multi and a single conduit
     };
   });
 };

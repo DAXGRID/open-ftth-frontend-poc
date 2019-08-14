@@ -3,6 +3,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { Tab } from "react-bootstrap";
 // import { useTranslation } from "react-i18next";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
+import ConduitDetail from "./ConduitDetail.jsx"
 import { conduitsData, conduitsColumns } from "./data";
 
 const ConduitsTab = ({ currentFeature, eventKey }) => {
@@ -15,8 +16,8 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
     CurrentFeatureContext
   );
 
-  console.log("conduits");
-  console.log(conduits);
+  // console.log("conduits");
+  // console.log(conduits);
 
   console.log("formatted conduitsData");
   console.log(data);
@@ -34,8 +35,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
         setHighlightedFeature(row);
       }
     },
-    clickToExpand: true,
-
+    clickToExpand: true
   };
 
   const nonExpandableIDs = data
@@ -44,31 +44,39 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
 
   const rowStyle = { cursor: "pointer" };
 
-  const defaultSorted = [{
-    dataField: 'position',
-    order: 'asc'
-  }];
+  const defaultSorted = [
+    {
+      dataField: "position",
+      order: "asc"
+    }
+  ];
 
   const expandRow = {
-    onlyOneExpanding: true,
     showExpandColumn: true,
     expandColumnPosition: "right",
-    nonExpandable: nonExpandableIDs,
+    // nonExpandable: nonExpandableIDs,
 
-    renderer: row => (
-      <BootstrapTable
-        keyField="id"
-        data={row.innerConduits}
-        columns={conduitsColumns}
-        defaultSorted={ defaultSorted } 
-        selectRow={selectRow}
-        rowStyle={rowStyle}
-        bordered={false}
-        striped
-        hover
-        condensed
-      />
-    )
+    renderer: row => {
+      if (row.innerConduits) {
+        return (
+          <BootstrapTable
+            keyField="id"
+            data={row.innerConduits}
+            columns={conduitsColumns}
+            defaultSorted={defaultSorted}
+            selectRow={selectRow}
+            expandRow={expandRow}
+            rowStyle={rowStyle}
+            bordered={false}
+            striped
+            hover
+            condensed
+          />
+        );
+      } else {
+        return( <ConduitDetail data={row} /> )
+      }
+    }
   };
 
   return (
@@ -77,7 +85,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
         keyField="id"
         data={data}
         columns={conduitsColumns}
-        defaultSorted={ defaultSorted } 
+        defaultSorted={defaultSorted}
         selectRow={selectRow}
         expandRow={expandRow}
         rowStyle={rowStyle}

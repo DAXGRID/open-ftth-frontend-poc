@@ -95,3 +95,11 @@ export const lineConduitSegments = line => {
 
   return featureArrays.reduce((a, b) => a.concat(b), []);
 };
+
+// export const conduitDetails = (line, conduit) => {
+//   return {
+//     conduitSegments: line.allConduitSegments.map(conduitSegment => ({
+//       conduitSegment.
+//     })
+//   }
+// }

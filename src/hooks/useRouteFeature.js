@@ -67,8 +67,16 @@ const GET_ROUTE_FEATURE = gql`
               conduit {
                 id
                 name
+                kind
                 color
                 colorMarking
+                parent {
+                  id
+                  name
+                  kind
+                  color
+                  colorMarking
+                }
               }
               allRouteSegments {
                 id
@@ -91,7 +99,7 @@ const GET_ROUTE_FEATURE = gql`
                   }
                 }
               }
-               endRouteNode {
+              endRouteNode {
                 name
                 locationInfo {
                   accessAddress {
@@ -104,8 +112,16 @@ const GET_ROUTE_FEATURE = gql`
                 conduit {
                   id
                   name
+                  kind
                   color
                   colorMarking
+                  parent {
+                    id
+                    name
+                    kind
+                    color
+                    colorMarking
+                  }
                 }
                 allRouteSegments {
                   id
@@ -120,9 +136,17 @@ const GET_ROUTE_FEATURE = gql`
             conduit {
               id
               name
+              kind
               color
               colorMarking
               position
+              parent {
+                id
+                name
+                kind
+                color
+                colorMarking
+              }
               assetInfo {
                 model {
                   name

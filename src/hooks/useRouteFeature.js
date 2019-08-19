@@ -18,6 +18,7 @@ const GET_ROUTE_FEATURE = gql`
           postalName
         }
       }
+      conduitClosure { id }
       relatedConduits(
         includeMultiConduits: true
         includeInnerConduits: false

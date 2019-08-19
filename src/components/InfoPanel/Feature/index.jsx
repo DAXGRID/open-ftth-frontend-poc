@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
+import cardHeader from "./cardHeader";
 import ConduitsTab from "./ConduitsTab/index";
+import ClosuresTab from "./ClosuresTab/index";
 import EquipmentTab from "./EquipmentTab";
 import CircuitsTab from "./CircuitsTab";
 import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
@@ -18,56 +20,12 @@ const FeatureInfoPanel = () => {
     currentFeatureLoading
   } = useContext(CurrentFeatureContext);
   const feature = currentFeature.routeNode || currentFeature.routeSegment;
-
-  console.log("feature");
-  console.log(feature);
-
-  const cardHeader = () => {
-    let title, category;
-
-    if (currentFeatureError) {
-      title = "Error Loading Item: ";
-      category = currentFeatureError;
-    }
-
-    if (currentFeatureLoading) {
-      title = "";
-      category = "Loading...";
-    }
-
-    if (feature) {
-      title = feature.name ? feature.name : feature.id;
-
-      const address = feature.locationInfo.accessAddress;
-      category = (
-        <dl>
-          <dt>ID: </dt>
-          <dd>{feature.id}</dd>
-
-          <dt>Kind: </dt>
-          {feature.nodeKind && <dd>{feature.nodeKind}</dd>}
-          {feature.segmentKind && <dd>{feature.segmentKind}</dd>}
-
-          <dt>Function: </dt>
-          {feature.nodeFunctionKind && <dd>{feature.nodeFunctionKind}</dd>}
-          {feature.segmentFunctionKind && (
-            <dd>{feature.segmentFunctionKind}</dd>
-          )}
-
-          {address && (
-            <>
-              <dt>Address: </dt>
-              <dd>
-                {address.streetName} {address.houseNumber}
-              </dd>
-            </>
-          )}
-        </dl>
-      );
-    }
-
-    return { title, category };
-  };
+  const header = cardHeader(
+    feature,
+    currentFeatureError,
+    currentFeatureLoading
+  );
+  const [activeKey, setActiveKey] = React.useState();
 
   React.useLayoutEffect(() => {
     new PerfectScrollbar("#scroll-container", {
@@ -75,25 +33,52 @@ const FeatureInfoPanel = () => {
     });
   }, [currentFeature]);
 
+  const handleSelect = selectedKey => {
+    setActiveKey(selectedKey);
+  };
+
   return (
     <Card
-      title={cardHeader().title}
-      category={cardHeader().category}
+      title={header.title}
+      category={header.category}
       ctFullWidth
       content={
-        <Tab.Container id="itemInfo" defaultActiveKey="conduits">
+        <Tab.Container
+          id="itemInfo"
+          defaultActiveKey="conduits"
+          onSelect={handleSelect}
+        >
           <Row className="clearfix">
             <Col sm={12}>
               <Nav bsStyle="tabs">
                 <NavItem eventKey="conduits">{t("general.conduits")}</NavItem>
+
+                {feature.conduitClosure && (
+                  <NavItem eventKey="closure">{t("general.closure")}</NavItem>
+                )}
+
                 <NavItem eventKey="equipment">{t("general.equipment")}</NavItem>
+
                 <NavItem eventKey="circuits">{t("general.circuits")}</NavItem>
               </Nav>
             </Col>
+
             <Col sm={12}>
-              <Tab.Content animation id="scroll-container" style={{height: "47vh", position: "relative" }}>
+              <Tab.Content
+                animation
+                id="scroll-container"
+                style={{ height: "47vh", position: "relative" }}
+              >
                 <ConduitsTab currentFeature={feature} eventKey="conduits" />
+
+                <ClosuresTab
+                  currentFeatureID={feature.id}
+                  active={activeKey === "closure"}
+                  eventKey="closure"
+                />
+
                 <EquipmentTab currentFeature={feature} eventKey="equipment" />
+
                 <CircuitsTab currentFeature={feature} eventKey="circuits" />
               </Tab.Content>
             </Col>

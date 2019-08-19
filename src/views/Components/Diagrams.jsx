@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Row, Col } from "react-bootstrap";
 
-import Diagram from "components/Diagrams/Diagram.jsx";
+import ConnectionDiagram from "components/Diagrams/ConnectionDiagram";
 
 const Diagrams = () => {
   const ports = [
@@ -19,17 +19,21 @@ const Diagrams = () => {
     }
   ];
   
-  const data = {
+  const standardData = {
     nodes: [
       {
         name: "Point A",
         color: "rgb(0,192,255)",
+        positionX: "5%",
+        positionY: "10%",
         out: ports,
         in: []
       },
       {
         name: "Point B",
-        color: "rgb(0,192,255)",
+        color: "rgb(172, 223, 135)",
+        positionX: "62%",
+        positionY: "10%",
         out: [],
         in: ports
       }
@@ -48,7 +52,14 @@ const Diagrams = () => {
                     <h4 className="title">Standard</h4>
                   </div>
                   <div className="content">
-                    <Diagram data={data} />
+                  <ConnectionDiagram
+                      width="100%"
+                      height="400px"
+                      containerID="connection-diagram"
+                      data={standardData}
+                      styleClass="diagram-widget-taller"
+                      columns="2"
+                    />
                   </div>
                 </Col>
               </Row>

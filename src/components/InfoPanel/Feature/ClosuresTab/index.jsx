@@ -1,6 +1,7 @@
 import React from "react";
 import { Tab } from "react-bootstrap";
 import useClosure from "hooks/useNodeWithClosure";
+import ClosureDiagram from "components/Diagrams/ClosureDiagram.jsx";
 
 // import { useTranslation } from "react-i18next";
 
@@ -18,8 +19,7 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   return (
     <Tab.Pane eventKey={eventKey}>
       {loading && <p>Loading...</p>}
-
-      {data && <p>Closures</p>}
+      {!loading && data && <p>Closures</p>}
     </Tab.Pane>
   );
 };

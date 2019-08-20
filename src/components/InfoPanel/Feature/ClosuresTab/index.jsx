@@ -19,7 +19,7 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
     <Tab.Pane eventKey={eventKey}>
       {loading && <p>Loading...</p>}
 
-      {data && <p>Hi</p>}
+      {data && <p>Closures</p>}
     </Tab.Pane>
   );
 };

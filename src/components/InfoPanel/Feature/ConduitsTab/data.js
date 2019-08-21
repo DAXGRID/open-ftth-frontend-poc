@@ -23,15 +23,15 @@ export const conduitsColumns = [
     formatter: colorFormatter
   },
   {
-    text: t("Name"),
+    text: t("Type"),
     dataField: "name"
   },
   {
-    text: t("Address"),
+    text: t("End Address"),
     dataField: "address"
   },
   {
-    text: t("Installation"),
+    text: t("End Point"),
     dataField: "installationName"
   }
 ];

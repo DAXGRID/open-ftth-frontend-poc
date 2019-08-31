@@ -53,7 +53,7 @@ const ExampleDiagram = data => {
   return (
     <CytoscapeComponent
       elements={elements}
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ width: `${width}px`, height: `${height}px`, backgroundColor: "#eee" }}
     />
   );
 };

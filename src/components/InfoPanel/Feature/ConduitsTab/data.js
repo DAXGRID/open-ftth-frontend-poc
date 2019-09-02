@@ -1,3 +1,4 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   colorFormatter,
@@ -5,8 +6,7 @@ import {
   lineLocation,
   lineLength,
   lineConduitSegments,
-  routeSegments,
-  conduitDetails
+  routeSegments
 } from "./decorators";
 const { t } = useTranslation();
 
@@ -36,7 +36,7 @@ export const conduitsColumns = [
   }
 ];
 
-export const conduitsData = conduits => {
+export const conduitsData = (conduits, nodeID) => {
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
     const line = conduitSegment.line;
     let locationName, locationAddress;
@@ -54,7 +54,7 @@ export const conduitsData = conduits => {
       address: locationAddress,
       installationName: locationName,
       length: lineLength(line),
-      innerConduits: innerConduitsData(conduitSegment.children, relationType),
+      innerConduits: innerConduitsData(conduit.id, nodeID, conduitSegment.children, relationType),
       // TODO - leave a nice explanation as to why we can't look for route features in the same place for a multi and a single conduit
       lineConduitSegments: conduitSegment.children
         ? routeSegments(conduit)
@@ -65,13 +65,12 @@ export const conduitsData = conduits => {
   });
 };
 
-const innerConduitsData = (children, relationType) => {
+const innerConduitsData = (id, nodeID, children, relationType) => {
   if (!children) return;
   return children.map(conduitSegment => {
     const line = conduitSegment.line;
-    const conduit = conduitSegment.conduit
+    const conduit = conduitSegment.conduit;
 
-    
     let locationName, locationAddress;
 
     if (lineLocation(line, relationType)) {
@@ -81,6 +80,8 @@ const innerConduitsData = (children, relationType) => {
 
     return {
       id: conduit.id,
+      multiConduitID: id,
+      nodeID: nodeID,
       position: parseInt(conduit.position),
       color: conduit.color,
       name: conduit.name,

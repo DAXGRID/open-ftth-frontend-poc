@@ -1,20 +1,22 @@
 import React, { useContext } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { Tab } from "react-bootstrap";
+import { Button, ButtonToolbar, Tab, Panel } from "react-bootstrap";
 // import { useTranslation } from "react-i18next";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
-import ConduitDetail from "./ConduitDetail.jsx"
+import ConduitDetail from "./ConduitDetail.jsx";
 import { conduitsData, conduitsColumns } from "./data";
 
 const ConduitsTab = ({ currentFeature, eventKey }) => {
   // const { t } = useTranslation();
 
   const conduits = currentFeature.relatedConduits;
-  const data = conduitsData(conduits);
+  const data = conduitsData(conduits, currentFeature.id);
 
-  const { highlightedFeature, setHighlightedFeature } = useContext(
-    CurrentFeatureContext
-  );
+  const {
+    highlightedFeature,
+    setHighlightedFeature,
+    setBreakoutToSplicePoint
+  } = useContext(CurrentFeatureContext);
 
   // console.log("conduits");
   // console.log(conduits);
@@ -24,6 +26,14 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
 
   console.log("highlightedFeature");
   console.log(highlightedFeature);
+
+  const breakoutToSplicePoint = ({ id, nodeID, name, multiConduitID }) => {
+    setBreakoutToSplicePoint({ id, nodeID, name, multiConduitID });
+    console.log("breakoutToSplicePoint");
+    console.log(id);
+    console.log(name);
+    console.log(currentFeature);
+  };
 
   const selectRow = {
     mode: "checkbox",
@@ -74,7 +84,12 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
           />
         );
       } else {
-        return( <ConduitDetail data={row} /> )
+        return (
+          <ConduitDetail
+            data={row}
+            breakoutToSplicePoint={breakoutToSplicePoint}
+          />
+        );
       }
     }
   };

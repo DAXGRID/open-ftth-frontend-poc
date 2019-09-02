@@ -13,17 +13,17 @@ function RouteNetworkPage() {
       <CurrentFeatureProvider>
         <CurrentFeatureLoader>
           <MediaQuery minWidth={1224}>
-            <Col lg={8} md={12} style={{ height: "85vh" }}>
+            <Col lg={7} md={12} style={{ height: "85vh" }}>
               <MapboxDisplay />
             </Col>
           </MediaQuery>
           <MediaQuery maxWidth={1224}>
-            <Col lg={8} md={12} style={{ height: "50vh" }}>
+            <Col lg={7} md={12} style={{ height: "50vh" }}>
               <MapboxDisplay />
             </Col>
           </MediaQuery>
         </CurrentFeatureLoader>
-        <Col lg={4} md={12} className="pt-3">
+        <Col lg={5} md={12} className="pt-3">
           <InfoPanel />
         </Col>
       </CurrentFeatureProvider>

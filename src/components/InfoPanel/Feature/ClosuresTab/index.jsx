@@ -14,8 +14,6 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
     console.log(error);
   }
 
-  console.log('data')
-  console.log(data);
   return (
     <Tab.Pane eventKey={eventKey}>
       {loading && <p>Loading...</p>}

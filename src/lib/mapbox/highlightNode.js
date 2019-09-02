@@ -10,9 +10,6 @@ const highlightNode = (map, highlightedNode) => {
   }
 
   if (!highlightedNode) return;
-  console.log("highlightedNode");
-
-  console.log(highlightedNode);
   addHighlightedNodeLayer(map, highlightedNode);
 };
 

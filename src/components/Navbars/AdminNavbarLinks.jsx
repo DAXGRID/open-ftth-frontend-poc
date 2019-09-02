@@ -32,8 +32,6 @@ const HeaderLinks = () => {
 
   const callResetMutation = useMutation(RESET_DEMO_DATA, {
     update: (proxy, mutationResult) => {
-      console.log("callResetMutation");
-      console.log(mutationResult);
       window.location.reload();
     }
   });

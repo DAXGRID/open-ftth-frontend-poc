@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 
-const GET_ROUTE_FEATURE = gql`
+export const GET_ROUTE_FEATURE = gql`
   query GetRouteFeature($id: ID!) {
     routeNode(id: $id) {
       id

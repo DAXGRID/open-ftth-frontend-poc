@@ -21,20 +21,6 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
   // console.log("conduits");
   // console.log(conduits);
 
-  console.log("formatted conduitsData");
-  console.log(data);
-
-  console.log("highlightedFeature");
-  console.log(highlightedFeature);
-
-  const breakoutToSplicePoint = ({ id, nodeID, name, multiConduitID }) => {
-    setBreakoutToSplicePoint({ id, nodeID, name, multiConduitID });
-    console.log("breakoutToSplicePoint");
-    console.log(id);
-    console.log(name);
-    console.log(currentFeature);
-  };
-
   const selectRow = {
     mode: "checkbox",
     clickToSelect: true,

@@ -35,7 +35,7 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
 
   const { t } = useTranslation();
   const [inputs, setInputs] = React.useState({});
-  const { setBreakoutToSplicePoint } = useContext(CurrentFeatureContext);
+  const { setBreakoutToSplicePoint, setCurrentFeatureID } = useContext(CurrentFeatureContext);
   
   const handleInputChange = (event) => {
     event.persist();
@@ -48,7 +48,17 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
       // only create closure if doesn't exist data.createClosure
       // chain here
     },
-    variables: { nodeID: currentFeature.routeNode.id }
+    variables: { nodeID: currentFeature.routeNode.id },
+    refetchQueries: [{
+      query: gql`
+        query UpdateCache($id: ID!) {
+          routeNode(id: $id) {
+            id
+            conduitClosure { id }
+          }
+        }
+      `, 
+      variables: {id: currentFeature.routeNode.id}}]
   });
 
   const createBreakoutToSplicePoint = () => {

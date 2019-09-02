@@ -6,13 +6,8 @@ import closureElementFormatter from "./closureElementFormatter";
 const ClosureDiagram = ({ data, width, height }) => {
   if (!data || !data.routeNode || !data.routeNode.conduitClosure) return;
 
-  console.log("have data");
-  console.log(data);
   const closureData = data.routeNode.conduitClosure;
   const [elements, cols, rows] = closureElementFormatter({ closureData, width, height });
-  // debugger
-
-  console.log(elements);
   return (
     <CytoscapeComponent
       elements={elements}

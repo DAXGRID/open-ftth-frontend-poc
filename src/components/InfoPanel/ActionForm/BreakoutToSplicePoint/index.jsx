@@ -14,14 +14,67 @@ import { useMutation } from "react-apollo-hooks";
 import CurrentFeatureContext from "../../../../hooks/CurrentFeatureContext";
 
 const PLACE_CLOSURE = gql`
-  mutation placeClosure($nodeID: ID!) {
+  mutation placeClosureMutation($nodeID: ID!) {
     conduitService {
       conduitClosure {
         placeConduitClosure(pointOfInterestId: $nodeID) {
           id
-          sides {
-            digramLabel
+        }
+      }
+    }
+  }
+`;
+
+const ATTACH_PASSBY = gql`
+  mutation attachPassby($closureID: ID!, $conduitID: ID!) {
+    conduitService {
+      conduitClosure {
+        attachPassByConduitToClosure(
+          conduitClosureId: $closureID
+          conduitId: $conduitID
+          incommingSide: LEFT
+          outgoingSide: RIGHT
+        ) {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const UPDATE_CONDUIT_QUERY = gql`
+  query UpdateCache($id: ID!) {
+    routeNode(id: $id) {
+      id
+      conduitClosure {
+        id
+        sides {
+          position
+          ports {
             position
+            diagramLabel
+            connectionKind
+            connectedToPort
+            connectedToSide
+            multiConduitSegment {
+              conduit {
+                name
+                color
+              }
+            }
+            terminals {
+              position
+              diagramLabel
+              connectionKind
+              connectedToTerminal
+              connectedToPort
+              lineSegment {
+                conduit {
+                  name
+                  color
+                }
+              }
+            }
           }
         }
       }
@@ -35,42 +88,67 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
 
   const { t } = useTranslation();
   const [inputs, setInputs] = React.useState({});
-  const { setBreakoutToSplicePoint, setCurrentFeatureID } = useContext(CurrentFeatureContext);
-  
-  const handleInputChange = (event) => {
+  const { setBreakoutToSplicePoint, setCurrentFeatureID } = useContext(
+    CurrentFeatureContext
+  );
+
+  const handleInputChange = event => {
     event.persist();
-    setInputs(inputs => ({...inputs, [event.target.name]: event.target.value}));
-  }
-  const placeClosure = useMutation(PLACE_CLOSURE, {
+    setInputs(inputs => ({
+      ...inputs,
+      [event.target.name]: event.target.value
+    }));
+  };
+
+  const placeClosureMutation = useMutation(PLACE_CLOSURE, {
     update: (proxy, mutationResult) => {
-      console.log("placeClosure");
+      console.log("placeClosureMutation");
       console.log(mutationResult);
+      // figure out how to check if this should be done or not
+
+      attachPassByMutation();
       // only create closure if doesn't exist data.createClosure
       // chain here
     },
     variables: { nodeID: currentFeature.routeNode.id },
-    refetchQueries: [{
-      query: gql`
-        query UpdateCache($id: ID!) {
-          routeNode(id: $id) {
-            id
-            conduitClosure { id }
-          }
-        }
-      `, 
-      variables: {id: currentFeature.routeNode.id}}]
+    refetchQueries: [
+      {
+        query: UPDATE_CONDUIT_QUERY,
+        variables: { id: currentFeature.routeNode.id }
+      }
+    ]
+  });
+
+  const attachPassByMutation = useMutation(ATTACH_PASSBY, {
+    update: (proxy, mutationResult) => {
+      console.log("attachPassByMutation");
+      console.log(mutationResult);
+    },
+    variables: {
+      closureID: currentFeature.routeNode.conduitClosure.id ? currentFeature.routeNode.conduitClosure.id : null,
+      conduitID: data.multiConduitID
+    },
+    refetchQueries: [
+      {
+        query: UPDATE_CONDUIT_QUERY,
+        variables: { id: currentFeature.routeNode.id }
+      }
+    ]
   });
 
   const createBreakoutToSplicePoint = () => {
-    console.log('createBreakoutToSplicePoint currentFeature')
-    console.log(currentFeature)
-    if(!currentFeature.routeNode.conduitClosure) {
-      placeClosure();
+    console.log("createBreakoutToSplicePoint currentFeature");
+    console.log(currentFeature);
+    if (!currentFeature.routeNode.conduitClosure) {
+      placeClosureMutation();
+    } else {
+      // figure out how to check if this should be done or not
+      attachPassByMutation();      
     }
 
     setBreakoutToSplicePoint(null);
-  }
-  
+  };
+
   return (
     <Card
       title={`Breakout ${data.name} To Splice Point`}
@@ -101,7 +179,11 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
                   </Col>
                 </FormGroup>
                 <FormGroup>
-                  <Button onClick={createBreakoutToSplicePoint} bsStyle="info" fill>
+                  <Button
+                    onClick={createBreakoutToSplicePoint}
+                    bsStyle="info"
+                    fill
+                  >
                     Submit
                   </Button>
                 </FormGroup>

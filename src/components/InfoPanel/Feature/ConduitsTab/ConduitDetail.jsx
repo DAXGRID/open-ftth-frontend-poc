@@ -33,7 +33,6 @@ const ConduitDetail = ({ data, breakoutToSplicePoint }) => {
                 breakoutToSplicePoint({
                   id: data.id,
                   name: data.name,
-                  nodeID: data.nodeID,
                   multiConduitID: data.multiConduitID
                 })
               }

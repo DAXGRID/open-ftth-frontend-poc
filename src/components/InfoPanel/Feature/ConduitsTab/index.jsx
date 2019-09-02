@@ -21,6 +21,14 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
   // console.log("conduits");
   // console.log(conduits);
 
+  const breakoutToSplicePoint = ({ id, name, multiConduitID }) => {
+    setBreakoutToSplicePoint({ id, name, multiConduitID });
+    console.log("breakoutToSplicePoint");
+    console.log(id);
+    console.log(name);
+    console.log(currentFeature);
+  };
+
   const selectRow = {
     mode: "checkbox",
     clickToSelect: true,

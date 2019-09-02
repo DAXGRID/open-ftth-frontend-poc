@@ -27,11 +27,16 @@ const HeaderLinks = () => {
   const resetDemoData = e => {
     if (window.confirm("Resetting demo database!")) {
       callResetMutation();
-      window.location.reload();
     }
   }
 
-  const callResetMutation = useMutation(RESET_DEMO_DATA);
+  const callResetMutation = useMutation(RESET_DEMO_DATA, {
+    update: (proxy, mutationResult) => {
+      console.log("callResetMutation");
+      console.log(mutationResult);
+      window.location.reload();
+    }
+  });
 
   const changeLanguage = e => {
     i18n.changeLanguage(e);

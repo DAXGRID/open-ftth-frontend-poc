@@ -3,8 +3,20 @@ import { Nav, NavItem, NavDropdown, MenuItem } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import da from "../../assets/img/flags/da-round.png";
 import uk from "../../assets/img/flags/uk-round.png";
+import { gql } from "apollo-boost";
+import { useMutation } from "react-apollo-hooks";
+
+const RESET_DEMO_DATA = gql`
+  mutation {
+    demoNetwork {
+      rebuild
+    }
+  }
+`
 
 const HeaderLinks = () => {
+  const { t, i18n } = useTranslation();
+
   const resetLocalStorage = e => {
     if (window.confirm("Resetting drawn lines!")) {
       localStorage.removeItem("state");
@@ -12,7 +24,14 @@ const HeaderLinks = () => {
     }
   };
 
-  const { t, i18n } = useTranslation();
+  const resetDemoData = e => {
+    if (window.confirm("Resetting demo database!")) {
+      callResetMutation();
+      window.location.reload();
+    }
+  }
+
+  const callResetMutation = useMutation(RESET_DEMO_DATA);
 
   const changeLanguage = e => {
     i18n.changeLanguage(e);
@@ -30,7 +49,8 @@ const HeaderLinks = () => {
   return (
     <div>
       <Nav pullRight>
-        <NavItem onClick={resetLocalStorage}>{t('general.reset_data')}</NavItem>
+        <NavItem onClick={resetDemoData}>{t('general.reset_demo_data')}</NavItem>
+        <NavItem onClick={resetLocalStorage}>{t('general.reset_cache')}</NavItem>
         <NavDropdown
           onSelect={e => changeLanguage(e)}
           title={

@@ -53,7 +53,8 @@ const FeatureInfoPanel = () => {
               <Nav bsStyle="tabs">
                 <NavItem eventKey="conduits">{t("general.conduits")}</NavItem>
 
-                {feature.conduitClosure && (
+                {/* Only allow for SP1010 for now */}
+                {feature.conduitClosure && (feature.id == "0b2168f2-d9be-455c-a4de-e9169f000122") && (
                   <NavItem eventKey="closure">{t("general.closure")}</NavItem>
                 )}
 
@@ -67,7 +68,7 @@ const FeatureInfoPanel = () => {
               <Tab.Content
                 animation
                 id="scroll-container"
-                style={{ height: "47vh", position: "relative" }}
+                style={{ height: "65vh", position: "relative" }}
               >
                 <ConduitsTab currentFeature={feature} eventKey="conduits" />
 

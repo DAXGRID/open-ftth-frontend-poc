@@ -1,7 +1,7 @@
 import React from "react";
-import { Table } from "react-bootstrap";
+import { Button, ButtonToolbar, Tab, Panel } from "react-bootstrap";
 
-const ConduitDetail = ({ data }) => {
+const ConduitDetail = ({ data, breakoutToSplicePoint }) => {
   const line = data.conduitSegment.line;
   const lineConduitSegments = line.allConduitSegments;
   const conduit = data.conduit;
@@ -25,19 +25,33 @@ const ConduitDetail = ({ data }) => {
 
   return (
     <div>
-      <div
-        className="panel panel-default"
-        style={{ margin: "0" }}
-        key={conduit.id}
-      >
-        <div class="panel-body">
+      <Panel style={{ margin: "0" }} key={conduit.id}>
+        <Panel.Body>
+          <ButtonToolbar>
+            <Button
+              onClick={() =>
+                breakoutToSplicePoint({
+                  id: data.id,
+                  name: data.name,
+                  nodeID: data.nodeID,
+                  multiConduitID: data.multiConduitID
+                })
+              }
+              bsStyle="default"
+              bsSize="small"
+            >
+              <i className="fa fa-upload"></i>
+              Breakout to Splice Point
+            </Button>
+          </ButtonToolbar>
+          <hr />
           <strong>
             <span>Segments</span>
             <span className="pull-right">Total Dist: {totalLength}</span>
           </strong>
-        </div>
+        </Panel.Body>
 
-        <ul class="list-group">
+        <ul className="list-group">
           {lineConduitSegments.map(lineConduitSegment => {
             const conduit = lineConduitSegment.conduit;
             const parent = lineConduitSegment.conduit.parent;
@@ -49,7 +63,7 @@ const ConduitDetail = ({ data }) => {
 
             if (parent) {
               return (
-                <li class="list-group-item" key={conduit.id}>
+                <li className="list-group-item" key={conduit.id}>
                   <dt>
                     {parent.kind}
                     <span className="pull-right">{length}</span>
@@ -67,7 +81,7 @@ const ConduitDetail = ({ data }) => {
               );
             } else {
               return (
-                <li class="list-group-item" key={conduit.id}>
+                <li className="list-group-item" key={conduit.id}>
                   <dt>
                     {conduit.kind}
                     <span className="pull-right">{length}</span>
@@ -81,7 +95,7 @@ const ConduitDetail = ({ data }) => {
             }
           })}
         </ul>
-      </div>
+      </Panel>
     </div>
   );
 };

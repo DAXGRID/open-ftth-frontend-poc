@@ -11,6 +11,7 @@ export const CurrentFeatureProvider = props => {
   const [currentFeatureError, setCurrentFeatureError] = useState();
   const [currentFeatureLoading, setCurrentFeatureLoading] = useState();
   const [highlightedFeature, setHighlightedFeature] = useState();
+  const [breakoutToSplicePoint, setBreakoutToSplicePoint] = useState();
 
   return (
     <CurrentFeatureContext.Provider
@@ -26,7 +27,9 @@ export const CurrentFeatureProvider = props => {
         currentFeatureLoading,
         setCurrentFeatureLoading,
         highlightedFeature,
-        setHighlightedFeature
+        setHighlightedFeature,
+        breakoutToSplicePoint,
+        setBreakoutToSplicePoint
       }}
     >
       {props.children}

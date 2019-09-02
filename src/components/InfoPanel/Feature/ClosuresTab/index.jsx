@@ -22,7 +22,7 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
       {!loading && data && (
         <>
           <p>Closures</p>
-          <Diagram data={data} width={325} height={500}/>
+          <Diagram data={data} width={425} height={400}/>
         </>
 
       )}

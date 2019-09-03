@@ -10,7 +10,7 @@ const ConduitsTab = ({ currentFeature, eventKey }) => {
   // const { t } = useTranslation();
 
   const conduits = currentFeature.relatedConduits;
-  const data = conduitsData(conduits, currentFeature.id);
+  const data = conduitsData(conduits, currentFeature.id, currentFeature.conduitClosure);
 
   const {
     highlightedFeature,

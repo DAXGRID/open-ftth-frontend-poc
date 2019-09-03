@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Card from "../../../Card/Card.jsx";
 import { Row, Col, Form, FormGroup, ControlLabel } from "react-bootstrap";
+import Select from "react-select";
 
 import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
@@ -34,6 +35,22 @@ const ATTACH_PASSBY = gql`
           conduitId: $conduitID
           incommingSide: LEFT
           outgoingSide: RIGHT
+        ) {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const ATTACH_TO_END_CONDUIT = gql`
+  mutation {
+    conduitService {
+      conduitClosure {
+        attachConduitEndToClosure(
+          conduitClosureId: $closureID
+          conduitId: $conduitID
+          side: TOP
         ) {
           id
         }
@@ -92,6 +109,8 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
     CurrentFeatureContext
   );
 
+  let closureID;
+
   const handleInputChange = event => {
     event.persist();
     setInputs(inputs => ({
@@ -100,53 +119,115 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
     }));
   };
 
-  const placeClosureMutation = useMutation(PLACE_CLOSURE, {
-    update: (proxy, mutationResult) => {
-      console.log("placeClosureMutation");
-      console.log(mutationResult);
-      // figure out how to check if this should be done or not
+  // const placeClosureMutation = useMutation(PLACE_CLOSURE, {
+  //   update: (proxy, mutationResult) => {
+  //     console.log("placeClosureMutation");
+  //     console.log(mutationResult);
+  //   },
+  //   variables: { nodeID: currentFeature.routeNode.id },
+  //   // refetchQueries: [
+  //   //   {
+  //   //     query: UPDATE_CONDUIT_QUERY,
+  //   //     variables: { id: currentFeature.routeNode.id }
+  //   //   }
+  //   // ]
+  // });
 
-      attachPassByMutation();
-      // only create closure if doesn't exist data.createClosure
-      // chain here
-    },
-    variables: { nodeID: currentFeature.routeNode.id },
-    refetchQueries: [
-      {
-        query: UPDATE_CONDUIT_QUERY,
-        variables: { id: currentFeature.routeNode.id }
-      }
-    ]
-  });
+  // const attachPassByMutation = useMutation(ATTACH_PASSBY, {
+  //   update: (proxy, mutationResult) => {
+  //     console.log("attachPassByMutation");
+  //     console.log(mutationResult);
+  //   },
+  //   variables: {
+  //     closureID: closureID,
+  //     conduitID: data.multiConduitID
+  //   },
+  //   refetchQueries: [
+  //     {
+  //       query: UPDATE_CONDUIT_QUERY,
+  //       variables: { id: currentFeature.routeNode.id }
+  //     }
+  //   ]
+  // });
 
-  const attachPassByMutation = useMutation(ATTACH_PASSBY, {
-    update: (proxy, mutationResult) => {
-      console.log("attachPassByMutation");
-      console.log(mutationResult);
-    },
-    variables: {
-      closureID: currentFeature.routeNode.conduitClosure.id ? currentFeature.routeNode.conduitClosure.id : null,
-      conduitID: data.multiConduitID
-    },
-    refetchQueries: [
-      {
-        query: UPDATE_CONDUIT_QUERY,
-        variables: { id: currentFeature.routeNode.id }
-      }
-    ]
-  });
+  // const attachToEndConduit = useMutation(ATTACH_TO_END_CONDUIT, {
+  //   update: (proxy, mutationResult) => {
+  //     console.log("attachToEndConduit");
+  //     console.log(mutationResult);
+  //   },
+  //   variables: {
+  //     closureID: closureID,
+  //     conduitID: inputs["endConduit"]
+  //   },
+  //   skip: !closureID || !inputs["endConduit"],
+  //   refetchQueries: [
+  //     {
+  //       query: UPDATE_CONDUIT_QUERY,
+  //       variables: { id: currentFeature.routeNode.id }
+
+  //     }
+  //   ]
+  // });
+
+  // React.useLayoutEffect(() => {
+  //   console.log("closureID");
+  //   console.log(closureID);
+  //   placeClosureMutation();
+  // });
+
+  // React.useEffect(() => {
+  //   attachToEndConduit()
+  // }, [closureID]);
 
   const createBreakoutToSplicePoint = () => {
-    console.log("createBreakoutToSplicePoint currentFeature");
-    console.log(currentFeature);
-    if (!currentFeature.routeNode.conduitClosure) {
-      placeClosureMutation();
-    } else {
-      // figure out how to check if this should be done or not
-      attachPassByMutation();      
-    }
-
+    // console.log("createBreakoutToSplicePoint currentFeature");
+    // console.log(currentFeature);
+    // // if (!currentFeature.routeNode.conduitClosure) {
+    // // placeClosureMutation();
+    // attachPassByMutation();
+    // // }
+    // // Handle these cases later
+    // //  else if (currentFeature.routeNode.conduitClosure) {
+    // //   if (!passThroughIDs().includes(data.multiConduitID)) {
+    // //     attachPassByMutation();
+    // //   }
+    // // }
     setBreakoutToSplicePoint(null);
+  };
+
+  // const passThroughIDs = () => {
+  //   if (!currentFeature.routeNode.conduitClosure) return;
+  //   return currentFeature.routeNode.conduitClosure.sides.flatMap(side => {
+  //     return side.ports
+  //       .filter(port => {
+  //         if (port.connectionKind === "PASS_THROUGH") {
+  //           return port;
+  //         }
+  //       })
+  //       .map(port => {
+  //         return port.multiConduitSegment.conduit.id;
+  //       });
+  //   });
+  // };
+
+  const outgoingConduitOptions = () => {
+    if (!currentFeature.routeNode) return;
+    const outgoingConduits = currentFeature.routeNode.relatedConduits.filter(
+      conduit => {
+        if (conduit.relationType === "OUTGOING") {
+          return conduit;
+        }
+      }
+    );
+
+    const options = outgoingConduits.map(conduit => {
+      return {
+        value: conduit.conduit.id,
+        label: `${conduit.conduit.assetInfo.model.name} ${conduit.conduit.name}`
+      };
+    });
+
+    return options;
   };
 
   return (
@@ -158,7 +239,7 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
             <Form>
               <fieldset>
                 <FormGroup>
-                  <ControlLabel>Choose Conduit End</ControlLabel>
+                  <ControlLabel>Choose Incoming Conduit End</ControlLabel>
                   <Col sm={10}>
                     <Radio
                       // number="5"
@@ -177,6 +258,18 @@ const BreakoutToSplicePointForm = ({ data, currentFeature }) => {
                       label="Transit Pipe"
                     />
                   </Col>
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>Choose Outgoing Conduit</ControlLabel>
+                  <Select
+                    className="react-select primary"
+                    classNamePrefix="react-select"
+                    name="endConduit"
+                    value={inputs["endConduit"]}
+                    onChange={value => setInputs({ endConduit: value })}
+                    options={outgoingConduitOptions()}
+                    placeholder="Single Select"
+                  />
                 </FormGroup>
                 <FormGroup>
                   <Button

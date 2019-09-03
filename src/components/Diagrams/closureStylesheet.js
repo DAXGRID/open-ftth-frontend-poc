@@ -74,6 +74,15 @@ const closureStylesheet = ({ width, height, cols, rows }) => {
       }
     },
     {
+      selector: "node[id *= 'port-top']",
+      style: {
+        width: 30,
+        height: 10,
+        content: "data(name)",
+        "text-valign": "center"
+      }
+    },
+    {
       selector: "node[id *= 'terminal']",
       style: {
         shape: "rectangle",
@@ -83,6 +92,22 @@ const closureStylesheet = ({ width, height, cols, rows }) => {
         "z-index": 1,
         "font-size": 10,
         "text-valign": "center",
+        "text-outline-width": 2,
+        "text-outline-color": "#ddd"
+      }
+    },
+    {
+      selector: "node[id *= 'terminal-top']",
+      style: {
+        shape: "rectangle",
+        width: 10,
+        height: 15,
+        label: "data(name)",
+        "z-index": 3,
+        "font-size": 10,
+        "text-valign": "bottom",
+        "text-halign": "right",
+        "text-margin-x": 5,
         "text-outline-width": 2,
         "text-outline-color": "#ddd"
       }

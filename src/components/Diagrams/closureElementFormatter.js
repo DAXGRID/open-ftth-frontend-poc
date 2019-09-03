@@ -165,7 +165,10 @@ const closureElementFormatter = ({ closureData, width, height }) => {
       const sideID = `side-${sideName}`;
 
       side.ports.map(port => {
-        const portColor = port.multiConduitSegment.conduit.color;
+        console.log('port')
+        console.log(port)
+
+        const portColor = port.multiConduitSegment ? port.multiConduitSegment.conduit.color : "ORANGE";
         // ex. 'port-left-1'
         const portID = `port-${sideName}-${port.position}-${portColor}`;
 

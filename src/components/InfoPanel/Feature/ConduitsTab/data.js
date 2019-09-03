@@ -36,7 +36,7 @@ export const conduitsColumns = [
   }
 ];
 
-export const conduitsData = (conduits, nodeID) => {
+export const conduitsData = (conduits, nodeID, conduitClosure) => {
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
     const line = conduitSegment.line;
     let locationName, locationAddress;
@@ -60,7 +60,9 @@ export const conduitsData = (conduits, nodeID) => {
         ? routeSegments(conduit)
         : lineConduitSegments(line),
       conduit,
-      conduitSegment
+      conduitSegment,
+      relationType: relationType,
+      closure: conduitClosure
     };
   });
 };
@@ -90,7 +92,8 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
       length: lineLength(line),
       lineConduitSegments: lineConduitSegments(line),
       conduit,
-      conduitSegment
+      conduitSegment,
+      relationType
     };
   });
 };

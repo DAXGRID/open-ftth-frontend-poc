@@ -6,11 +6,8 @@ import BreakoutToSplicePointForm from "./ActionForm/BreakoutToSplicePoint";
 
 const FeatureContextSwitcher = () => {
   const { currentFeature, breakoutToSplicePoint } = useContext(CurrentFeatureContext);
-  console.log('FeatureContextSwitcher')
-  console.log(currentFeature)
 
   if (currentFeature && breakoutToSplicePoint) {
-    console.log('breakoutToSplicePoint')
     return (
       <BreakoutToSplicePointForm
         data={breakoutToSplicePoint}

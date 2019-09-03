@@ -18,7 +18,19 @@ export const GET_ROUTE_FEATURE = gql`
           postalName
         }
       }
-      conduitClosure { id }
+      conduitClosure {
+        id
+        sides {
+          ports {
+            connectionKind
+            multiConduitSegment {
+              conduit {
+                id
+              }
+            }
+          }
+        }
+      }
       relatedConduits(
         includeMultiConduits: true
         includeInnerConduits: false
@@ -27,6 +39,7 @@ export const GET_ROUTE_FEATURE = gql`
         relationType
         conduit {
           id
+          kind
           assetInfo {
             model {
               name
@@ -55,7 +68,7 @@ export const GET_ROUTE_FEATURE = gql`
                 }
               }
             }
-         	  endRouteNode {
+            endRouteNode {
               name
               locationInfo {
                 accessAddress {

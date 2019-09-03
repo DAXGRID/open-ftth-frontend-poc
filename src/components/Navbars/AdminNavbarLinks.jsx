@@ -52,7 +52,7 @@ const HeaderLinks = () => {
   return (
     <div>
       <Nav pullRight>
-        <NavItem onClick={resetDemoData}>{t('general.reset_demo_data')}</NavItem>
+        {/* <NavItem onClick={resetDemoData}>{t('general.reset_demo_data')}</NavItem> */}
         <NavItem onClick={resetLocalStorage}>{t('general.reset_cache')}</NavItem>
         <NavDropdown
           onSelect={e => changeLanguage(e)}

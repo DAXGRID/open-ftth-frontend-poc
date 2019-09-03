@@ -18,6 +18,7 @@ const GET_NODE_WITH_CONDUIT_CLOSURE = gql`
             connectedToSide
             multiConduitSegment {
               conduit {
+                id
                 color
               }
             }

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Tab } from "react-bootstrap";
+import _ from "lodash";
 import ConduitsTable from "./ConduitsTable";
 import ConduitDetail from "./ConduitDetail";
 import conduitsData from "./tableData/conduitsData";
@@ -9,8 +10,12 @@ const ConduitsTab = ({ eventKey }) => {
   const { currentFeature, setHighlightedFeature } = useContext(
     CurrentFeatureContext
   );
-  const data = conduitsData(currentFeature);
+  const conduits = conduitsData(currentFeature);
+  const conduitsByRelation = _(conduits)
+    .groupBy(conduit => conduit.relationType)
+    .value();
 
+  console.log(conduitsByRelation);
   const expandedRow = row => {
     if (row.innerConduits) {
       return (
@@ -27,11 +32,20 @@ const ConduitsTab = ({ eventKey }) => {
 
   return (
     <Tab.Pane eventKey={eventKey}>
-      <ConduitsTable
-        data={data}
-        onSelectRow={setHighlightedFeature}
-        expandedRow={expandedRow}
-      />
+      {_.keysIn(conduitsByRelation).sort().map(relationType => {
+        return (
+          <div key={relationType}>
+            <h5 className="title">{_.capitalize(relationType)}</h5>
+            <ConduitsTable
+              data={conduitsByRelation[relationType]}
+              onSelectRow={setHighlightedFeature}
+              expandedRow={expandedRow}
+            />
+            <br />
+            <br />
+          </div>
+        );
+      })}
     </Tab.Pane>
   );
 };

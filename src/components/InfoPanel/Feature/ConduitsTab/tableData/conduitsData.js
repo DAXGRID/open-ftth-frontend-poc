@@ -28,9 +28,10 @@ const conduitsData = currentFeature => {
         relationType
       ),
       // TODO - explain why we can't look for route features in the same place for a multi and a single conduit
-      lineConduitSegments: conduitSegment.children
+      lineConduitSegments: isMultiConduit(conduitSegment)
         ? routeSegments(conduit)
         : lineConduitSegments(line),
+      isMultiConduit: isMultiConduit(conduitSegment),
       conduitSegment,
       conduit,
       relationType: relationType
@@ -52,11 +53,17 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
       to: toLocation(line),
       from: fromLocation(line),
       lineConduitSegments: lineConduitSegments(line),
+      isMultiConduit: isMultiConduit(conduitSegment),
       conduitSegment,
       conduit,
       relationType
     };
   });
 };
+
+const isMultiConduit = (conduitSegment) => {
+  // TODO - adjust when we actually get cable children?
+  return conduitSegment.children && conduitSegment.children.count > 0
+}
 
 export default conduitsData;

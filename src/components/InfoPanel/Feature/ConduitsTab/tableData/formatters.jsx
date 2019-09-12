@@ -15,19 +15,29 @@ export const addressFormatter = (cell, row) => {
 };
 
 export const iconFormatter = (cell, row) => {
-  return "64";
+  if (row.isMultiConduit) {
+    return multiConduitIcon(cell, row);
+  } else {
+    return singleConduitIcon(cell, row);
+  }
 };
 
-export const colorFormatter = (cell, row) => {
-  let title, borderColor;
+const multiConduitIcon = (cell, row) => {
+ 
+};
 
-  const backgroundColor = colorMap[cell];
-  if (cell === "CLEAR") {
-    title = `CLEAR WITH ${row.colorMarking} MARKING`;
-    borderColor = colorMap[row.colorMarking];
+const singleConduitIcon = (cell, row) => {
+  let title, borderColor;
+  const color = row.conduit.color;
+  const colorMarking = row.conduit.colorMarking;
+  const backgroundColor = colorMap[color];
+  
+  if (color === "CLEAR") {
+    title = `CLEAR WITH ${colorMarking} MARKING`;
+    borderColor = colorMap[colorMarking];
   } else {
-    title = cell;
-    borderColor = colorMap[cell];
+    title = color;
+    borderColor = colorMap[color];
   }
   return (
     <span

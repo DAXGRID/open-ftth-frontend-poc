@@ -39,6 +39,8 @@ const ConduitsTable = ({ data, onSelectRow, expandedRow }) => {
     // TODO fix expand/or select but not both bug (should do both at once, maybe just hooks issue?)
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
+        console.log("Selected Row:");
+        console.log(row);
         onSelectRow(row);
       }
     },

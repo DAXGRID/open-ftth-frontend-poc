@@ -1,12 +1,10 @@
 import React from "react";
-import { Button, ButtonToolbar, Tab, Panel } from "react-bootstrap";
+import { Button, ButtonToolbar, Panel } from "react-bootstrap";
 
 const ConduitDetail = ({ data, breakoutToSplicePoint }) => {
   const line = data.conduitSegment.line;
-  const lineConduitSegments = line.allConduitSegments;
   const conduit = data.conduit;
-  console.log('conduitDetail')
-  console.log(data)
+  const lineConduitSegments = line.allConduitSegments;
 
   const colorLabel = conduit => {
     let label = conduit.color;
@@ -29,27 +27,27 @@ const ConduitDetail = ({ data, breakoutToSplicePoint }) => {
     <div>
       <Panel style={{ margin: "0" }} key={conduit.id}>
         <Panel.Body>
-            {data.relationType === "PASS_THROUGH" && !data.closure && (
-              <>
-                <ButtonToolbar>
-                  <Button
-                    onClick={() =>
-                      breakoutToSplicePoint({
-                        id: data.id,
-                        name: data.name,
-                        multiConduitID: data.multiConduitID
-                      })
-                    }
-                    bsStyle="default"
-                    bsSize="small"
-                  >
-                    <i className="fa fa-upload"></i>
-                    Breakout to Splice Point
-                  </Button>
-                </ButtonToolbar>
-                <hr />
-              </>
-            )}
+          {data.relationType === "PASS_THROUGH" && !data.closure && (
+            <>
+              <ButtonToolbar>
+                <Button
+                  onClick={() =>
+                    breakoutToSplicePoint({
+                      id: data.id,
+                      name: data.name,
+                      multiConduitID: data.multiConduitID
+                    })
+                  }
+                  bsStyle="default"
+                  bsSize="small"
+                >
+                  <i className="fa fa-upload"></i>
+                  Breakout to Splice Point
+                </Button>
+              </ButtonToolbar>
+              <hr />
+            </>
+          )}
           <strong>
             <span>Segments</span>
             <span className="pull-right">Total Dist: {totalLength}</span>

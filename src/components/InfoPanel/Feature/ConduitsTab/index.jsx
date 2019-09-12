@@ -1,107 +1,36 @@
 import React, { useContext } from "react";
-import BootstrapTable from "react-bootstrap-table-next";
-import { Button, ButtonToolbar, Tab, Panel } from "react-bootstrap";
-// import { useTranslation } from "react-i18next";
+import { Tab } from "react-bootstrap";
+import ConduitsTable from "./ConduitsTable";
+import ConduitDetail from "./ConduitDetail";
+import conduitsData from "./tableData/conduitsData";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
-import ConduitDetail from "./ConduitDetail.jsx";
-import { conduitsData, conduitsColumns } from "./data";
 
-const ConduitsTab = ({ currentFeature, eventKey }) => {
-  // const { t } = useTranslation();
+const ConduitsTab = ({ eventKey }) => {
+  const { currentFeature, setHighlightedFeature } = useContext(
+    CurrentFeatureContext
+  );
+  const data = conduitsData(currentFeature);
 
-  const conduits = currentFeature.relatedConduits;
-  const data = conduitsData(conduits, currentFeature.id, currentFeature.conduitClosure);
-
-  const {
-    highlightedFeature,
-    setHighlightedFeature,
-    setBreakoutToSplicePoint
-  } = useContext(CurrentFeatureContext);
-
-  // console.log("conduits");
-  // console.log(conduits);
-
-  const breakoutToSplicePoint = ({ id, name, multiConduitID }) => {
-    setBreakoutToSplicePoint({ id, name, multiConduitID });
-    console.log("breakoutToSplicePoint");
-    console.log(id);
-    console.log(name);
-    console.log(currentFeature);
-  };
-
-  const selectRow = {
-    mode: "checkbox",
-    clickToSelect: true,
-    hideSelectColumn: true,
-    // TODO fix expand/or select but not both bug (should do both at once, maybe just hooks issue?)
-    onSelect: (row, isSelect, rowIndex, e) => {
-      if (isSelect) {
-        setHighlightedFeature(row);
-      }
-    },
-    clickToExpand: true
-  };
-
-  const nonExpandableIDs = data
-    .filter(item => !item.innerConduits)
-    .map(item => item.id);
-
-  const rowStyle = { cursor: "pointer" };
-
-  const defaultSorted = [
-    {
-      dataField: "position",
-      order: "asc"
-    }
-  ];
-
-  const expandRow = {
-    showExpandColumn: true,
-    expandColumnPosition: "right",
-    // nonExpandable: nonExpandableIDs,
-
-    renderer: row => {
-      if (row.innerConduits) {
-        return (
-          <BootstrapTable
-            keyField="id"
-            data={row.innerConduits}
-            columns={conduitsColumns}
-            defaultSorted={defaultSorted}
-            selectRow={selectRow}
-            expandRow={expandRow}
-            rowStyle={rowStyle}
-            bordered={false}
-            striped
-            hover
-            condensed
-          />
-        );
-      } else {
-        return (
-          <ConduitDetail
-            data={row}
-            breakoutToSplicePoint={breakoutToSplicePoint}
-          />
-        );
-      }
+  const expandedRow = row => {
+    if (row.innerConduits) {
+      return (
+        <ConduitsTable
+          data={row.innerConduits}
+          onSelectRow={setHighlightedFeature}
+          expandedRow={expandedRow}
+        />
+      );
+    } else {
+      return <ConduitDetail data={row} />;
     }
   };
 
   return (
     <Tab.Pane eventKey={eventKey}>
-      <BootstrapTable
-        keyField="id"
+      <ConduitsTable
         data={data}
-        columns={conduitsColumns}
-        defaultSorted={defaultSorted}
-        selectRow={selectRow}
-        expandRow={expandRow}
-        rowStyle={rowStyle}
-        bordered={false}
-        striped
-        hover
-        condensed
+        onSelectRow={setHighlightedFeature}
+        expandedRow={expandedRow}
       />
     </Tab.Pane>
   );

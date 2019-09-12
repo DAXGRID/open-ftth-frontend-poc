@@ -70,7 +70,7 @@ const FeatureInfoPanel = () => {
                 id="scroll-container"
                 style={{ height: "65vh", position: "relative" }}
               >
-                <ConduitsTab currentFeature={feature} eventKey="conduits" />
+                <ConduitsTab eventKey="conduits" />
 
                 <ClosuresTab
                   currentFeatureID={feature.id}

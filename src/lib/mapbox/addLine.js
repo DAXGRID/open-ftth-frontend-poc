@@ -16,8 +16,6 @@ const addLine = ({ map, highlightedFeature }) => {
 export default addLine;
 
 const addHighlightedLineLayer = (map, lineConduitSegments) => {
-  console.log("lineConduitSegments");
-  console.log(lineConduitSegments);
   map.addLayer({
     id: layerID,
     type: "line",

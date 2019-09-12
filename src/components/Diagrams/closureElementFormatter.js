@@ -58,8 +58,8 @@ const closureElementFormatter = ({ closureData, width, height }) => {
         break;
       }
       default: {
-        console.log("Invalid side");
-        console.log(name);
+        console.error("Invalid side");
+        console.error(name);
         break;
       }
     }
@@ -99,8 +99,8 @@ const closureElementFormatter = ({ closureData, width, height }) => {
         break;
       }
       default: {
-        console.log("Invalid port");
-        console.log(name);
+        console.error("Invalid port");
+        console.error(name);
         break;
       }
     }
@@ -144,8 +144,8 @@ const closureElementFormatter = ({ closureData, width, height }) => {
         break;
       }
       default: {
-        console.log("Invalid port");
-        console.log(name);
+        console.error("Invalid port");
+        console.error(name);
         break;
       }
     }
@@ -165,8 +165,8 @@ const closureElementFormatter = ({ closureData, width, height }) => {
       const sideID = `side-${sideName}`;
 
       side.ports.map(port => {
-        console.log('port')
-        console.log(port)
+        console.error('port')
+        console.error(port)
 
         const portColor = port.multiConduitSegment ? port.multiConduitSegment.conduit.color : "ORANGE";
         // ex. 'port-left-1'

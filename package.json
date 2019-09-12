@@ -19,6 +19,7 @@
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^3.0.0",
     "immutable": "^4.0.0-rc.12",
+    "lerna": "^3.16.4",
     "lodash": "^4.17.11",
     "mapbox-gl": "^1.0.0",
     "moment": "2.24.0",

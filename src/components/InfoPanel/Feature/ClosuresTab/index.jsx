@@ -10,8 +10,8 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   const { data, error, loading } = useClosure(featureID);
 
   if (error) {
-    console.log("Error Loading Item: ");
-    console.log(error);
+    console.error("Error Loading Item: ");
+    console.error(error);
   }
 
   return (

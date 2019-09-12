@@ -1,5 +1,3 @@
-import React from "react";
-
 const cardHeader = (feature, error, loading) => {
   let title, category;
 

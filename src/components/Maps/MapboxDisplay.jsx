@@ -55,8 +55,6 @@ const MapboxDisplay = props => {
     map.addControl(MapboxReduxControl);
 
     map.on("load", () => {
-      console.log("features");
-      console.log(features);
       if (uneditableFeatures) {
         if (uneditableFeatures.segments) {
           map.addLayer(segmentsLayer(uneditableFeatures.segments));
@@ -70,22 +68,16 @@ const MapboxDisplay = props => {
     });
 
     map.on("click", "featureSegmentLabels", e => {
-      console.log("clicked features");
-      console.log(e.features);
       setHighlightedFeature();
       setCurrentFeatureID();
     });
 
     map.on("click", "featureSegments", e => {
-      console.log("clicked features");
-      console.log(e.features);
       setHighlightedFeature();
       setCurrentFeatureID();
     });
 
     map.on("click", "featureNodes", e => {
-      console.log("clicked features");
-      console.log(e.features);
       const feature = e.features[0];
       highlightNode(map, feature);
       setCurrentFeatureID(feature.properties.id);

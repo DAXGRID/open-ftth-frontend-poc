@@ -84,13 +84,6 @@ export const GET_ROUTE_FEATURE = gql`
                 kind
                 color
                 colorMarking
-                parent {
-                  id
-                  name
-                  kind
-                  color
-                  colorMarking
-                }
               }
               allRouteSegments {
                 id

@@ -1,7 +1,8 @@
 import Dashboard from "views/Dashboard.jsx";
 import RouteNetworkPage from "views/Pages/RouteNetworkPage.jsx";
-import Buttons from "views/Components/Buttons.jsx";
 import Diagrams from "views/Components/Diagrams.jsx";
+import ConduitIcons from "views/Components/ConduitIcons.jsx";
+import Buttons from "views/Components/Buttons.jsx";
 import GridSystem from "views/Components/GridSystem.jsx";
 import Panels from "views/Components/Panels.jsx";
 import SweetAlert from "views/Components/SweetAlertPage.jsx";
@@ -53,6 +54,13 @@ var routes = [
         name: "Diagrams",
         mini: "D",
         component: Diagrams
+      },
+      {
+        path: "/conduit-icons",
+        layout: "/admin",
+        name: "Conduit Icons",
+        mini: "CI",
+        component: ConduitIcons
       },
       {
         path: "/buttons",

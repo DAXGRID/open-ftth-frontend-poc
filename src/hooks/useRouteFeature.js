@@ -147,6 +147,9 @@ export const GET_ROUTE_FEATURE = gql`
               color
               colorMarking
               position
+              children {
+                kind
+              }
               parent {
                 id
                 name

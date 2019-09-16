@@ -1,5 +1,6 @@
 import React from "react";
 import { colorMap } from "lib/mapbox/constants";
+import ConduitIcon from "components/ConduitIcon";
 
 export const addressFormatter = (cell, row) => {
   if (cell) {
@@ -15,23 +16,29 @@ export const addressFormatter = (cell, row) => {
 };
 
 export const iconFormatter = (cell, row) => {
-  if (row.isMultiConduit) {
-    return multiConduitIcon(cell, row);
-  } else {
-    return singleConduitIcon(cell, row);
+  let cableSize;
+  // TODO this is probably not the right logic
+  if (row.conduit.children && row.conduit.children.first.kind === "CABLE") {
+    cableSize = row.conduit.children.first.cableSize;
   }
+
+  const iconOptions = {
+    color: row.conduit.color,
+    colorMarking: row.conduit.colorMarking,
+    cableSize
+  };
+
+  return <ConduitIcon {...iconOptions} />;
 };
 
-const multiConduitIcon = (cell, row) => {
- 
-};
+const multiConduitIcon = (cell, row) => {};
 
 const singleConduitIcon = (cell, row) => {
   let title, borderColor;
   const color = row.conduit.color;
   const colorMarking = row.conduit.colorMarking;
   const backgroundColor = colorMap[color];
-  
+
   if (color === "CLEAR") {
     title = `CLEAR WITH ${colorMarking} MARKING`;
     borderColor = colorMap[colorMarking];

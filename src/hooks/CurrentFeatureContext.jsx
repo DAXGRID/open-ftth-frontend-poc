@@ -6,7 +6,7 @@ export default CurrentFeatureContext;
 
 export const CurrentFeatureProvider = props => {
   const [map, setMap] = useState();
-  const [currentFeatureID, setCurrentFeatureID] = useState();
+  const [currentFeatureID, setCurrentFeatureID] = useState({id: null, type: null});
   const [currentFeature, setCurrentFeature] = useState();
   const [currentFeatureError, setCurrentFeatureError] = useState();
   const [currentFeatureLoading, setCurrentFeatureLoading] = useState();

@@ -15,12 +15,15 @@ const CurrentFeatureLoader = props => {
     setCurrentFeatureLoading
   } = useContext(CurrentFeatureContext);
 
-  const { data, error, loading } = useRouteFeature(currentFeatureID);
-
+  const response = useRouteFeature(currentFeatureID);
+  
   // allowing this state to be set to null is good, will clean info panel
-  setCurrentFeatureError(error);
-  setCurrentFeatureLoading(loading);
-  setCurrentFeature(data);
+  setCurrentFeatureError(response.error);
+  setCurrentFeatureLoading(response.loading);
+  setCurrentFeature(response.data);
+
+  console.log('loaded feature data')
+  console.log(response.data)
 
   return <>{props.children}</>;
 };

@@ -11,6 +11,7 @@ const ConduitsTab = ({ eventKey }) => {
     CurrentFeatureContext
   );
   const conduits = conduitsData(currentFeature);
+  const showRelationHeader = currentFeature.__typename === "RouteNodeType";
   const conduitsByRelation = _(conduits)
     .groupBy(conduit => conduit.relationType)
     .value();
@@ -32,20 +33,24 @@ const ConduitsTab = ({ eventKey }) => {
 
   return (
     <Tab.Pane eventKey={eventKey}>
-      {_.keysIn(conduitsByRelation).sort().map(relationType => {
-        return (
-          <div key={relationType}>
-            <h5 className="title">{_.capitalize(relationType)}</h5>
-            <ConduitsTable
-              data={conduitsByRelation[relationType]}
-              onSelectRow={setHighlightedFeature}
-              expandedRow={expandedRow}
-            />
-            <br />
-            <br />
-          </div>
-        );
-      })}
+      {_.keysIn(conduitsByRelation)
+        .sort()
+        .map(relationType => {
+          return (
+            <div key={relationType}>
+              {showRelationHeader && (
+                <h5 className="title">{_.capitalize(relationType)}</h5>
+              )}
+              <ConduitsTable
+                data={conduitsByRelation[relationType]}
+                onSelectRow={setHighlightedFeature}
+                expandedRow={expandedRow}
+              />
+              <br />
+              <br />
+            </div>
+          );
+        })}
     </Tab.Pane>
   );
 };

@@ -1,9 +1,9 @@
-export const segmentsLayer = features => {
+export const routeSegmentsLayer = (features, layerID) => {
   return {
-    id: "featureSegments",
+    id: layerID,
     type: "line",
     paint: {
-      "line-width": ["get", "lineWidth"],
+      "line-width": 3,
       "line-color": ["get", "lineColor"]
     },
     source: {
@@ -16,9 +16,9 @@ export const segmentsLayer = features => {
   };
 };
 
-export const segmentLabelsLayer = features => {
+export const routeSegmentLabelsLayer = features => {
   return {
-    id: "featureSegmentLabels",
+    id: "routeSegmentLabels",
     type: "symbol",
     layout: {
       "symbol-placement": "line",

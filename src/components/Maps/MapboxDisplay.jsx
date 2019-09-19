@@ -1,116 +1,114 @@
-import React, { useContext } from "react";
+import React from "react";
 import mapboxgl from "mapbox-gl";
-import * as MapboxGLRedux from "@mapbox/mapbox-gl-redux";
-import configureDraw from "../../lib/draw";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
-import { nodesLayer } from "../../lib/mapbox/layers/nodes";
-import {
-  segmentsLayer,
-  segmentLabelsLayer
-} from "../../lib/mapbox/layers/segments";
-import addLine from "../../lib/mapbox/addLine";
-import highlightNode from "../../lib/mapbox/highlightNode";
-import FeatureContext from "hooks/FeatureContext.jsx";
+import addUneditableFeatures from "lib/mapbox/addUneditableFeatures";
+import addEditableFeatures from "lib/mapbox/addEditableFeatures";
+import highlightRouteFeature from "lib/mapbox/highlightRouteFeature";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
+import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 
-let map;
+const MapboxDisplay = ({
+  config,
+  uneditableFeatures,
+  editableFeatures,
+  editableFeatureTypes
+}) => {
+  const [map, setMap] = React.useState();
+  const routeNodesID = "routeNodesID";
+  const routeSegmentsID = "routeSegmentsID";
+  const drawEnabled = editableFeatures && editableFeatureTypes;
+  const { highlightedFeature, setCurrentFeatureID } = React.useContext(
+    CurrentFeatureContext
+  );
 
-const MapboxDisplay = props => {
-  const container = "mapbox-map";
-  const viewport = {
-    latitude: "55.7473",
-    longitude: "9.639",
-    zoom: 16,
-    styleID: "tamimitchell/cjx2ss4or057d1cnqj9j62jwl"
-  };
-
-  const { features } = useContext(FeatureContext);
-  const {
-    currentFeature,
-    highlightedFeature,
-    setHighlightedFeature,
-    setCurrentFeatureID
-  } = useContext(CurrentFeatureContext);
-
-  // console.log("features");
-  // console.log(features);
-
-  // Can't use hooks inside this effect without redrawing map
   React.useLayoutEffect(() => {
-    const MapboxReduxControl = new MapboxGLRedux.ReduxMapControl(container);
-    const uneditableFeatures = features;
-    const editableFeatureTypes = null; // props.permissions.editableFeatureTypes;
-
-    const { longitude, latitude, zoom, styleID } = viewport;
-    const mapConfig = {
-      container: container,
-      style: `mapbox://styles/${styleID}`,
-      center: [longitude, latitude],
-      zoom
-    };
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
-    map = new mapboxgl.Map(mapConfig);
-    map.addControl(MapboxReduxControl);
+    setMap(new mapboxgl.Map(config));
+  }, [config]);
+
+  React.useEffect(() => {
+    loadFeatures(map);
+    setupOnMousemove(map);
+    setupOnClick(map);
+
+  // not sure why it wants to include functions
+  // eslint-disable-next-line 
+  }, [map]);
+
+  React.useEffect(() => {
+    highlightRouteFeature(map, highlightedFeature);
+  }, [map, highlightedFeature]);
+
+  // Ideally the following functions would be imported for a cleaner file,
+  // but we're using hooks that need to be in a React component, and they're 
+  // using logic that isn't allowed directly in the useEffect hooks.
+  const loadFeatures = map => {
+    if (!map || !uneditableFeatures) return;
 
     map.on("load", () => {
-      if (uneditableFeatures) {
-        if (uneditableFeatures.segments) {
-          map.addLayer(segmentsLayer(uneditableFeatures.segments));
-          map.addLayer(segmentLabelsLayer(uneditableFeatures.segments));
-        }
-        if (uneditableFeatures.nodes)
-          map.addLayer(nodesLayer(uneditableFeatures.nodes));
+      addUneditableFeatures({
+        map,
+        uneditableFeatures,
+        routeNodesID,
+        routeSegmentsID
+      });
+
+      if (drawEnabled) {
+        addEditableFeatures(map, editableFeatures);
+        // configureDraw(map, props);
       }
-
-      if (editableFeatureTypes) configureDraw(map, props);
     });
+  };
 
-    map.on("click", "featureSegmentLabels", e => {
-      setHighlightedFeature();
-      setCurrentFeatureID();
-    });
+  const setupOnMousemove = map => {
+    if (!map) return;
 
-    map.on("click", "featureSegments", e => {
-      setHighlightedFeature();
-      setCurrentFeatureID();
-    });
-
-    map.on("click", "featureNodes", e => {
-      const feature = e.features[0];
-      highlightNode(map, feature);
-      setCurrentFeatureID(feature.properties.id);
-    });
+    const layers = [routeSegmentsID, routeNodesID];
 
     map.on("mousemove", e => {
-      const features = getFeaturesFromEvent({ map, e });
+      const features = getFeaturesFromEvent( map, e, layers );
       if (features.length > 0) {
         map.getCanvas().style.cursor = "pointer";
       } else {
         map.getCanvas().style.cursor = "";
       }
     });
-    // anything other than empty array redraws map at unwanted times
-    // eslint-disable-next-line
-  }, []);
+  };
 
-  React.useEffect(() => {
-    addLine({ map, highlightedFeature });
-  }, [highlightedFeature]);
+  const setupOnClick = map => {
+    if (!map) return;
+    const highlightedLayerID = "highlightedFeature";
 
-  React.useEffect(() => {
-    // console.log('updated currentFeature')
-    // console.log(currentFeature)
-    // if(!currentFeature) return;
-    // if(currentFeature.routeNode) {highlightNode(map, currentFeature.routeNode )};
-    // TODO
-    // if(currentFeature.routeSegment) highlightSegment({ map, currentFeature.routeNode });
-  }, [currentFeature]);
+    map.on("click", e => {
+      // clear old highlight if there is one, or we deselected
+      const mapLayer = map.getLayer(highlightedLayerID);
+      if (typeof mapLayer !== "undefined") {
+        map.removeLayer(highlightedLayerID).removeSource(highlightedLayerID);
+        return;
+      }
+    });
+
+    map.on("click", routeSegmentsID, e => {
+      const feature = e.features[0];
+      console.log("clicked segment");
+      console.log(e.features);
+      highlightRouteFeature(map, feature, highlightedLayerID);
+      setCurrentFeatureID({ id: feature.properties.id, type: "segment" });
+    });
+
+    map.on("click", routeNodesID, e => {
+      const feature = e.features[0];
+      console.log("clicked node");
+      console.log(e.features);
+      highlightRouteFeature(map, feature, highlightedLayerID);
+      setCurrentFeatureID({ id: feature.properties.id, type: "node" });
+    });
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <div id={container} style={{ width: "100%", height: "100%" }} />
+      <div id={config.container} style={{ width: "100%", height: "100%" }} />
     </div>
   );
 };

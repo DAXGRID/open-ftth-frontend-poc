@@ -1,4 +1,4 @@
-import { colorMap } from "lib/mapbox/constants";
+import { colorMap } from "lib/constants";
 
 export const toLocation = (line) => {
   return location(line.startRouteNode)
@@ -26,7 +26,6 @@ export const routeSegments = conduit => {
       type: routeSegment.geometry.type
     },
     properties: {
-      lineWidth: 4,
       lineColor: colorMap[conduit.color]
     }
   }));
@@ -41,7 +40,6 @@ export const lineConduitSegments = line => {
         type: routeSegment.geometry.type
       },
       properties: {
-        lineWidth: 4,
         lineColor: colorMap[conduitSegment.conduit.color]
       }
     }))

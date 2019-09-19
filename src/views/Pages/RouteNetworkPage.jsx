@@ -4,7 +4,7 @@ import MediaQuery from "react-responsive";
 import { FeatureProvider } from "hooks/FeatureContext.jsx";
 import { CurrentFeatureProvider } from "hooks/CurrentFeatureContext.jsx";
 import CurrentFeatureLoader from "hooks/CurrentFeatureLoader.jsx";
-import MapboxDisplay from "components/Maps/MapboxDisplay";
+import RouteNetworkMap from "components/Maps/RouteNetworkMap";
 import InfoPanel from "components/InfoPanel/FeatureContextSwitcher.jsx";
 
 function RouteNetworkPage() {
@@ -14,12 +14,12 @@ function RouteNetworkPage() {
         <CurrentFeatureLoader>
           <MediaQuery minWidth={1224}>
             <Col lg={7} md={12} style={{ height: "85vh" }}>
-              <MapboxDisplay />
+              <RouteNetworkMap />
             </Col>
           </MediaQuery>
           <MediaQuery maxWidth={1224}>
             <Col lg={7} md={12} style={{ height: "50vh" }}>
-              <MapboxDisplay />
+              <RouteNetworkMap />
             </Col>
           </MediaQuery>
         </CurrentFeatureLoader>

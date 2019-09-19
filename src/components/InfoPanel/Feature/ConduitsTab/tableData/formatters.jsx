@@ -1,5 +1,5 @@
 import React from "react";
-import { colorMap } from "lib/mapbox/constants";
+import { colorMap } from "lib/constants";
 import ConduitIcon from "components/ConduitIcon";
 
 export const addressFormatter = (cell, row) => {

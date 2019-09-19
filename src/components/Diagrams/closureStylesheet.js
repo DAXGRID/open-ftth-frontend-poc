@@ -1,4 +1,4 @@
-import { colorMap } from "lib/mapbox/constants";
+import { colorMap } from "lib/constants";
 
 const closureStylesheet = ({ width, height, cols, rows }) => {
   const leftRightSideLength = height * 0.85;

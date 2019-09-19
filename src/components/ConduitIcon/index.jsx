@@ -1,5 +1,5 @@
 import React from "react";
-import { colorMap } from "lib/mapbox/constants";
+import { colorMap } from "lib/constants";
 
 const ConduitIcon = ({ ...props }) => {
   const width = props.size || 50;

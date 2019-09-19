@@ -1,6 +1,6 @@
-export const nodesLayer = features => {
+export const routeNodesLayer = (features, layerID) => {
   return {
-    id: "featureNodes",
+    id: layerID,
     type: "symbol",
     layout: {
       "icon-image": "{icon}",

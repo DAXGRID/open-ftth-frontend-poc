@@ -7,9 +7,13 @@ import {
 
 const conduitsData = currentFeature => {
   const nodeID = currentFeature.id;
+  let conduits;
 
-  // TODO hardcoded routeNode
-  const conduits = currentFeature.routeNode.relatedConduits;
+  if (currentFeature.routeNode) {
+    conduits = currentFeature.routeNode.relatedConduits;
+  } else if (currentFeature.routeSegment) {
+    conduits = currentFeature.routeSegment.relatedConduits;
+  }
 
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
     const line = conduitSegment.line;

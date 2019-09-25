@@ -12,7 +12,25 @@ export const highlightedRouteSegmentLayer = (feature, layerID) => {
     },
     paint: {
       "line-width": 3,
-      "line-color": "#00ffff"
+      "line-color": "#71D3FC"
+    }
+  };
+};
+
+export const highlightedRouteSegmentsLayer = (features, layerID) => {
+  return {
+    id: layerID,
+    type: "line",
+    source: {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: features
+      }
+    },
+    paint: {
+      "line-width": 3,
+      "line-color": ["get", "lineColor"]
     }
   };
 };

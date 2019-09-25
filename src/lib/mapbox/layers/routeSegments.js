@@ -16,19 +16,31 @@ export const routeSegmentsLayer = (features, layerID) => {
   };
 };
 
-export const routeSegmentLabelsLayer = features => {
+export const routeSegmentLabelsLayer = (features, layerID) => {
   return {
-    id: "routeSegmentLabels",
+    id: layerID,
     type: "symbol",
     layout: {
-      "symbol-placement": "line",
-      "symbol-spacing": 1,
-      "text-size": 10,
-      "text-field": "{name}", // TODO populate this with children conduit names?
-      "text-allow-overlap": true
+      "symbol-placement": "point",
+      "text-justify": "left",
+      "text-variable-anchor": ["left", "right", "top", "bottom"],
+      "text-radial-offset": 1.5,
+      "text-max-width": 20,
+      "text-line-height": 1.2,
+      "text-size": { // hide at certain zoom levels to match nodes
+        "stops": [
+            [0, 0],
+            [17.9, 0],
+            [18, 10]
+        ]
+      },
+      "text-field": ["get", "name"],
+      // "text-allow-overlap": true
     },
     paint: {
-      // "text-color": "#ff0000",
+      "text-halo-width": 5,
+      "text-color": "#202",
+      "text-halo-color": "#fff",
     },
     source: {
       type: "geojson",

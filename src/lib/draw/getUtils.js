@@ -56,9 +56,9 @@ export const getFeaturesFromCoords = ({ map, coords, layers = [] }) => {
   if (existing.length > 0) return existing;
 };
 
-export const getFeaturesFromEvent = (map, e, layers) => {
+export const getFeaturesFromEvent = (map, e, layers, boxsize=2) => {
   var features = [];
-  const bboxSize = 3;
+  const bboxSize = boxsize;
   const mapLayer = map.getLayer(layers[0]);
   if (typeof mapLayer !== "undefined") {
     // console.log(map.queryRenderedFeatures(bbox(e, bboxSize)));

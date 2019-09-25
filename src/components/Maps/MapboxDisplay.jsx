@@ -4,7 +4,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import addUneditableFeatures from "lib/mapbox/addUneditableFeatures";
 import addEditableFeatures from "lib/mapbox/addEditableFeatures";
-import highlightRouteFeature from "lib/mapbox/highlightRouteFeature";
+import highlightRouteFeature, {
+  removeHighlight
+} from "lib/mapbox/highlightRouteFeature";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
 import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
 
@@ -15,8 +17,11 @@ const MapboxDisplay = ({
   editableFeatureTypes
 }) => {
   const [map, setMap] = React.useState();
-  const routeNodesID = "routeNodesID";
-  const routeSegmentsID = "routeSegmentsID";
+  const routeNodesID = "routeNodes";
+  const routeSegmentsID = "routeSegments";
+  const routeSegmentLabelsID = "routeSegmentLabels";
+  const highlightedLayerID = "highlightedFeature";
+  const selectedLayerID = "selectedFeature";
   const drawEnabled = editableFeatures && editableFeatureTypes;
   const { highlightedFeature, setCurrentFeatureID } = React.useContext(
     CurrentFeatureContext
@@ -33,15 +38,19 @@ const MapboxDisplay = ({
     setupOnClick(map);
 
   // not sure why it wants to include functions
-  // eslint-disable-next-line 
+    // not sure why it wants to include functions
+    // eslint-disable-next-line
   }, [map]);
 
   React.useEffect(() => {
-    highlightRouteFeature(map, highlightedFeature);
+    removeHighlight(map, selectedLayerID);
+    removeHighlight(map, highlightedLayerID);
+    
+    highlightRouteFeature(map, highlightedFeature, highlightedLayerID, routeSegmentLabelsID);
   }, [map, highlightedFeature]);
 
   // Ideally the following functions would be imported for a cleaner file,
-  // but we're using hooks that need to be in a React component, and they're 
+  // but we're using hooks that need to be in a React component, and they're
   // using logic that isn't allowed directly in the useEffect hooks.
   const loadFeatures = map => {
     if (!map || !uneditableFeatures) return;
@@ -51,7 +60,8 @@ const MapboxDisplay = ({
         map,
         uneditableFeatures,
         routeNodesID,
-        routeSegmentsID
+        routeSegmentsID,
+        routeSegmentLabelsID
       });
 
       if (drawEnabled) {
@@ -67,7 +77,7 @@ const MapboxDisplay = ({
     const layers = [routeSegmentsID, routeNodesID];
 
     map.on("mousemove", e => {
-      const features = getFeaturesFromEvent( map, e, layers );
+      const features = getFeaturesFromEvent(map, e, layers);
       if (features.length > 0) {
         map.getCanvas().style.cursor = "pointer";
       } else {
@@ -78,32 +88,37 @@ const MapboxDisplay = ({
 
   const setupOnClick = map => {
     if (!map) return;
-    const highlightedLayerID = "highlightedFeature";
+    const segmentLayers = [routeSegmentsID, routeSegmentLabelsID, routeNodesID];
+
+    map.on("click", routeNodesID, e => {
+      removeHighlight(map, selectedLayerID);
+      removeHighlight(map, highlightedLayerID);
+      
+      const feature = e.features[0];
+      highlightRouteFeature(map, feature, selectedLayerID);
+      setCurrentFeatureID({ id: feature.properties.id, type: "node" });
+    });
 
     map.on("click", e => {
       // clear old highlight if there is one, or we deselected
-      const mapLayer = map.getLayer(highlightedLayerID);
-      if (typeof mapLayer !== "undefined") {
-        map.removeLayer(highlightedLayerID).removeSource(highlightedLayerID);
-        return;
+      removeHighlight(map, selectedLayerID);
+      removeHighlight(map, highlightedLayerID);
+
+      // select segments
+      // TODO: it would be nice to select a segment by its label directly. 
+      //Iincreasing the bounding box just causes buggy behavior.
+      const features = getFeaturesFromEvent(map, e, segmentLayers);
+      if (features.length > 0) {
+        const feature = features.find(feature => {
+          return feature.layer.id === routeSegmentsID;
+        });
+        if (feature) {
+          highlightRouteFeature(map, feature, selectedLayerID, routeSegmentLabelsID);
+          setCurrentFeatureID({ id: feature.properties.id, type: "segment" });
+        }
       }
     });
 
-    map.on("click", routeSegmentsID, e => {
-      const feature = e.features[0];
-      console.log("clicked segment");
-      console.log(e.features);
-      highlightRouteFeature(map, feature, highlightedLayerID);
-      setCurrentFeatureID({ id: feature.properties.id, type: "segment" });
-    });
-
-    map.on("click", routeNodesID, e => {
-      const feature = e.features[0];
-      console.log("clicked node");
-      console.log(e.features);
-      highlightRouteFeature(map, feature, highlightedLayerID);
-      setCurrentFeatureID({ id: feature.properties.id, type: "node" });
-    });
   };
 
   return (

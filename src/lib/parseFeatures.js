@@ -6,16 +6,30 @@ const icons = {
   CABINET_SMALL: "CabinetSmall",
   CABINET_BIG: "CabinetBig",
   CENTRAL_OFFICE_SMALL: "CentralOfficeSmall"
-} 
+};
 
 export const filterFeatureSegments = data => {
   const features = data.routeSegments;
   const styles = {
-    "lineWidth": 2,
-    "lineColor": "#111"
+    lineWidth: 2,
+    lineColor: "#111"
   };
 
-  return features.map((feature) => {
+  return features.map(feature => {
+    let name;
+    if (feature.relatedConduits && feature.relatedConduits.length > 0) {
+      name = feature.relatedConduits
+        .filter(({conduit}) => {
+          return !!conduit.assetInfo;
+        })
+        .map(({conduit}) => {
+          return conduit.assetInfo.model.name;
+        })
+        .join("\n");
+    } else {
+      name = "";
+    }
+
     const geojsonFeature = {
       id: feature.id,
       type: "Feature",
@@ -25,7 +39,7 @@ export const filterFeatureSegments = data => {
       },
       properties: {
         id: feature.id,
-        name: feature.name,
+        name,
         pam: "true",
         segmentKind: feature.segmentKind,
         ...styles
@@ -38,13 +52,17 @@ export const filterFeatureSegments = data => {
 export const filterFeatureNodes = data => {
   const features = data.routeNodes;
   const styles = {
-    "circleRadius": 3,
-    "circleColor": "#111"
+    circleRadius: 3,
+    circleColor: "#111"
   };
 
-  return features.map((feature) => {
-    const iconName = icons[feature.nodeKind] ? icons[feature.nodeKind] : 'dot-11'
-    const iconHoverName = icons[feature.nodeKind] ? `${iconName.split('Active')[0]}Hover` : 'border-dot-13'
+  return features.map(feature => {
+    const iconName = icons[feature.nodeKind]
+      ? icons[feature.nodeKind]
+      : "dot-11";
+    const iconHoverName = icons[feature.nodeKind]
+      ? `${iconName.split("Active")[0]}Hover`
+      : "border-dot-13";
     const geojsonFeature = {
       id: feature.id,
       type: "Feature",

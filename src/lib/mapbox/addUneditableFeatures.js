@@ -1,17 +1,19 @@
 import { routeNodesLayer } from "./layers/routeNodes";
-import { routeSegmentsLayer } from "./layers/routeSegments";
+import { routeSegmentsLayer, routeSegmentLabelsLayer } from "./layers/routeSegments";
 
 const addUneditableFeatures = ({
   map,
   uneditableFeatures,
   routeNodesID,
-  routeSegmentsID
+  routeSegmentsID,
+  routeSegmentLabelsID
 }) => {
   if (!map || !uneditableFeatures) return;
 
   // draw nodes after segments so they are on top
   if (uneditableFeatures.segments) {
     map.addLayer(routeSegmentsLayer(uneditableFeatures.segments, routeSegmentsID));
+    map.addLayer(routeSegmentLabelsLayer(uneditableFeatures.segments, routeSegmentLabelsID));
   }
 
   if (uneditableFeatures.nodes) {

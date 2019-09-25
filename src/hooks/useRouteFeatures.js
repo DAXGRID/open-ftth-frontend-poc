@@ -1,5 +1,5 @@
-import { gql } from 'apollo-boost'
-import { useQuery } from 'react-apollo-hooks'
+import { gql } from "apollo-boost";
+import { useQuery } from "react-apollo-hooks";
 
 const GET_ROUTE_FEATURES = gql`
   {
@@ -16,6 +16,19 @@ const GET_ROUTE_FEATURES = gql`
 
     routeSegments {
       id
+      relatedConduits(
+        includeMultiConduits: true
+        includeSingleConduits: true
+        includeInnerConduits: false
+      ) {
+        conduit {
+          assetInfo {
+            model {
+              name
+            }
+          }
+        }
+      }
       segmentKind
       geometry {
         type
@@ -23,8 +36,8 @@ const GET_ROUTE_FEATURES = gql`
       }
     }
   }
-`
+`;
 
 export default () => {
-  return useQuery(GET_ROUTE_FEATURES)
-}
+  return useQuery(GET_ROUTE_FEATURES);
+};

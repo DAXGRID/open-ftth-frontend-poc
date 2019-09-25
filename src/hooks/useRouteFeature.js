@@ -289,6 +289,7 @@ export const GET_ROUTE_SEGMENT = gql`
               kind
               color
               colorMarking
+              textMarking
               position
               children {
                 kind

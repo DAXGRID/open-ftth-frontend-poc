@@ -11,12 +11,13 @@ const ConduitsTab = ({ eventKey }) => {
     CurrentFeatureContext
   );
   const conduits = conduitsData(currentFeature);
-  const showRelationHeader = currentFeature.__typename === "RouteNodeType";
+
+  // Only show grouping header for selected nodes
+  const showRelationHeader = currentFeature.routeNode;
   const conduitsByRelation = _(conduits)
     .groupBy(conduit => conduit.relationType)
     .value();
 
-  console.log(conduitsByRelation);
   const expandedRow = row => {
     if (row.innerConduits) {
       return (

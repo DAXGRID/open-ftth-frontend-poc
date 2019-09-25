@@ -16,31 +16,53 @@ const conduitsData = currentFeature => {
   }
 
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
-    const line = conduitSegment.line;
-
-    // TODO - split out detail information and parse it there
-    return {
-      id: conduit.id,
-      // color: conduit.color,
-      // colorMarking: conduit.colorMarking,
-      to: toLocation(line),
-      from: fromLocation(line),
-      innerConduits: innerConduitsData(
-        conduit.id,
-        nodeID,
-        conduitSegment.children,
-        relationType
-      ),
-      // TODO - explain why we can't look for route features in the same place for a multi and a single conduit
-      lineConduitSegments: isMultiConduit(conduitSegment)
-        ? routeSegments(conduit)
-        : lineConduitSegments(line),
-      isMultiConduit: isMultiConduit(conduitSegment),
-      conduitSegment,
-      conduit,
-      relationType: relationType
-    };
+    if (isMultiConduit(conduit)) {
+      return multiConduitData(conduit, conduitSegment, relationType, nodeID)
+    } else {
+      return conduitData(conduit, conduitSegment, relationType, nodeID)
+    }
   });
+}
+
+
+const multiConduitData = (conduit, conduitSegment, relationType, nodeID) => {
+  return {
+    id: conduit.id,
+    to: "",
+    from: multiConduitLabel(conduit),
+    innerConduits: innerConduitsData(
+      conduit.id,
+      nodeID,
+      conduitSegment.children,
+      relationType
+    ),
+    lineConduitSegments: routeSegments(conduit),
+    isMultiConduit: true,
+    conduitSegment,
+    conduit,
+    relationType: relationType
+  };
+};
+
+const conduitData = (conduit, conduitSegment, relationType, nodeID) => {
+  const line = conduitSegment.line;
+
+  return {
+    id: conduit.id,
+    to: toLocation(line, relationType),
+    from: fromLocation(line, relationType),
+    innerConduits: innerConduitsData(
+      conduit.id,
+      nodeID,
+      conduitSegment.children,
+      relationType
+    ),
+    lineConduitSegments: lineConduitSegments(line),
+    isMultiConduit: false,
+    conduitSegment,
+    conduit,
+    relationType: relationType
+  };
 };
 
 const innerConduitsData = (id, nodeID, children, relationType) => {
@@ -57,7 +79,7 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
       to: toLocation(line),
       from: fromLocation(line),
       lineConduitSegments: lineConduitSegments(line),
-      isMultiConduit: isMultiConduit(conduitSegment),
+      isMultiConduit: isMultiConduit(conduit),
       conduitSegment,
       conduit,
       relationType
@@ -65,9 +87,14 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
   });
 };
 
-const isMultiConduit = (conduitSegment) => {
-  // TODO - adjust when we actually get cable children?
-  return conduitSegment.children && conduitSegment.children.count > 0
-}
+const isMultiConduit = conduit => {
+  return conduit.kind === "MULTI_CONDUIT"
+};
+
+const multiConduitLabel = conduit => {
+  const name = conduit.assetInfo ? conduit.assetInfo.model.name : "";
+  const colorMarking = conduit.colorMarking;
+  return { name, colorMarking };
+};
 
 export default conduitsData;

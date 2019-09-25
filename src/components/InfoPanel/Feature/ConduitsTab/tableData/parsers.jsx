@@ -1,10 +1,10 @@
 import { colorMap } from "lib/constants";
 
-export const toLocation = (line) => {
+export const toLocation = (line, relation) => {
   return location(line.startRouteNode)
 }
 
-export const fromLocation = (line) => {
+export const fromLocation = (line, relation) => {
   return location(line.endRouteNode)
 }
 

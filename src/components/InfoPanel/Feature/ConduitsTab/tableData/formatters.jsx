@@ -3,37 +3,33 @@ import { colorMap } from "lib/constants";
 import ConduitIcon from "components/ConduitIcon";
 
 export const addressFormatter = (cell, row) => {
-  if (cell) {
-    return (
-      <>
-        <div>
-          <strong>{cell.name}</strong>
-        </div>
-        <div>{cell.address}</div>
-      </>
-    );
+  if (!cell) {
+    return;
   }
+  const upperLine = cell.name;
+  const lowerLine = cell.textMarking
+    ? `Marking: ${cell.textMarking.toLowerCase()}`
+    : cell.address;
+
+  return (
+    <>
+      <div>
+        <strong>{upperLine}</strong>
+      </div>
+      <div>&nbsp;{lowerLine}</div>
+    </>
+  );
 };
 
 export const iconFormatter = (cell, row) => {
-  let cableSize;
-  // TODO this is probably not the right logic
-  if (row.conduit.children && row.conduit.children.first.kind === "CABLE") {
-    cableSize = row.conduit.children.first.cableSize;
+  if (row.conduit.kind === "MULTI_CONDUIT") {
+    return multiConduitIcon(cell, row);
+  } else {
+    return conduitIcon(cell, row);
   }
-
-  const iconOptions = {
-    color: row.conduit.color,
-    colorMarking: row.conduit.colorMarking,
-    cableSize
-  };
-
-  return <ConduitIcon {...iconOptions} />;
 };
 
-const multiConduitIcon = (cell, row) => {};
-
-const singleConduitIcon = (cell, row) => {
+const multiConduitIcon = (cell, row) => {
   let title, borderColor;
   const color = row.conduit.color;
   const colorMarking = row.conduit.colorMarking;
@@ -53,4 +49,20 @@ const singleConduitIcon = (cell, row) => {
       style={{ backgroundColor: backgroundColor, borderColor: borderColor }}
     />
   );
+};
+
+const conduitIcon = (cell, row) => {
+  let cableSize;
+  // TODO this is probably not the right logic
+  if (row.conduit.children && row.conduit.children.first.kind === "CABLE") {
+    cableSize = row.conduit.children.first.cableSize;
+  }
+
+  const iconOptions = {
+    color: row.conduit.color,
+    colorMarking: row.conduit.colorMarking,
+    cableSize
+  };
+
+  return <ConduitIcon {...iconOptions} />;
 };

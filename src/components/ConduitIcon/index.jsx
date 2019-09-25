@@ -2,8 +2,8 @@ import React from "react";
 import { colorMap } from "lib/constants";
 
 const ConduitIcon = ({ ...props }) => {
-  const width = props.size || 50;
-  const height = props.size || 50;
+  const width = props.size || 30;
+  const height = props.size || 30;
   const color = props.color ? colorMap[props.color.toUpperCase()] : "";
   const colorMarking = props.colorMarking
     ? colorMap[props.colorMarking.toUpperCase()]

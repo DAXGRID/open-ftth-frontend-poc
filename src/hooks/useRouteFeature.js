@@ -319,10 +319,10 @@ export default ({ id, type }) => {
   console.log(`call graphql for ${type} ${id}`);
 
   switch (type) {
-    case "node":
+    case "routeNodes":
       query = GET_ROUTE_NODE;
       break;
-    case "segment":
+    case "routeSegments":
       query = GET_ROUTE_SEGMENT;
       break;
     default:

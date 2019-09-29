@@ -37,16 +37,15 @@ const MapboxDisplay = ({
     setupOnMousemove(map);
     setupOnClick(map);
 
-  // not sure why it wants to include functions
-    // not sure why it wants to include functions
+    // not sure why, but eslint wants us to include functions here
     // eslint-disable-next-line
   }, [map]);
 
   React.useEffect(() => {
     removeHighlight(map, selectedLayerID);
     removeHighlight(map, highlightedLayerID);
-    
-    highlightRouteFeature(map, highlightedFeature, highlightedLayerID, routeSegmentLabelsID);
+
+    highlightRouteFeature(map, highlightedFeature, highlightedLayerID);
   }, [map, highlightedFeature]);
 
   // Ideally the following functions would be imported for a cleaner file,
@@ -74,7 +73,7 @@ const MapboxDisplay = ({
   const setupOnMousemove = map => {
     if (!map) return;
 
-    const layers = [routeSegmentsID, routeNodesID];
+    const layers = [routeSegmentsID, routeSegmentLabelsID, routeNodesID];
 
     map.on("mousemove", e => {
       const features = getFeaturesFromEvent(map, e, layers);
@@ -88,37 +87,34 @@ const MapboxDisplay = ({
 
   const setupOnClick = map => {
     if (!map) return;
-    const segmentLayers = [routeSegmentsID, routeSegmentLabelsID, routeNodesID];
-
-    map.on("click", routeNodesID, e => {
-      removeHighlight(map, selectedLayerID);
-      removeHighlight(map, highlightedLayerID);
-      
-      const feature = e.features[0];
-      highlightRouteFeature(map, feature, selectedLayerID);
-      setCurrentFeatureID({ id: feature.properties.id, type: "node" });
-    });
+    const layers = [routeSegmentsID, routeSegmentLabelsID, routeNodesID];
 
     map.on("click", e => {
       // clear old highlight if there is one, or we deselected
       removeHighlight(map, selectedLayerID);
       removeHighlight(map, highlightedLayerID);
 
-      // select segments
-      // TODO: it would be nice to select a segment by its label directly. 
-      //Iincreasing the bounding box just causes buggy behavior.
-      const features = getFeaturesFromEvent(map, e, segmentLayers);
-      if (features.length > 0) {
-        const feature = features.find(feature => {
-          return feature.layer.id === routeSegmentsID;
-        });
-        if (feature) {
-          highlightRouteFeature(map, feature, selectedLayerID, routeSegmentLabelsID);
-          setCurrentFeatureID({ id: feature.properties.id, type: "segment" });
+      let feature;
+      const nodeFeatures = getFeaturesFromEvent(map, e, layers);
+
+      if (nodeFeatures.length > 0) {
+        feature = nodeFeatures[0];
+        const featureID = feature.properties.id;
+
+        // select segment by its label. Nodes do this automatically (same layer)
+        if (feature.layer.id === routeSegmentLabelsID) {
+          feature = map
+            .queryRenderedFeatures({ layers: [routeSegmentsID] })
+            .find(f => f.properties.id === featureID);
         }
+
+        console.log("clicked feature");
+        console.log(feature);
+
+        highlightRouteFeature(map, feature, selectedLayerID);
+        setCurrentFeatureID({ id: featureID, type: feature.source });
       }
     });
-
   };
 
   return (

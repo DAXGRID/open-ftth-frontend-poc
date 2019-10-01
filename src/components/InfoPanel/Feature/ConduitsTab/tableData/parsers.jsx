@@ -1,14 +1,32 @@
 import { colorMap } from "lib/constants";
 
 export const toLocation = (line, relation) => {
-  return location(line.startRouteNode)
-}
+  switch (relation) {
+    case "INCOMMING":
+      return location(line.endRouteNode);
+    case "OUTGOING":
+      return location(line.startRouteNode);
+    case "PASS_THROUGH":
+      return location(line.startRouteNode);
+    default:
+      return location(line.startRouteNode);
+  }
+};
 
 export const fromLocation = (line, relation) => {
-  return location(line.endRouteNode)
-}
+  switch (relation) {
+    case "INCOMMING":
+      return location(line.startRouteNode);
+    case "OUTGOING":
+      return location(line.endRouteNode);
+    case "PASS_THROUGH":
+      return location(line.endRouteNode);
+    default:
+      return location(line.endRouteNode);
+  }
+};
 
-const location = (node) => {
+const location = node => {
   if (node && node.locationInfo) {
     const address = node.locationInfo.accessAddress;
     return {

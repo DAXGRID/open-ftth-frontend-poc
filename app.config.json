@@ -1,0 +1,10 @@
+{
+  apps : [
+    {
+      name      : "openftth",
+      script    : "npm",
+      interpreter: "none",
+      args: "serve -p 3000 -T"
+    }
+  ]
+}

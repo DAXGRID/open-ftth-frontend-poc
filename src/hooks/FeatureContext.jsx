@@ -2,12 +2,13 @@ import React, { createContext, useState } from "react";
 import useRouteFeatures from "hooks/useRouteFeatures";
 import { filterFeatureSegments, filterFeatureNodes } from "lib/parseFeatures";
 import { useTranslation } from "react-i18next";
-const { t } = useTranslation();
 
 const FeatureContext = createContext();
 export default FeatureContext;
 
 export const FeatureProvider = props => {
+  const { t } = useTranslation();
+
   const [features, setFeatures] = useState();
 
   const { data, error, loading } = useRouteFeatures();

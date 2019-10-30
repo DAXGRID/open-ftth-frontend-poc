@@ -15,16 +15,12 @@ ReactDOM.render(
   // Suspense wraps whole app for translation loading.
   <React.Suspense fallback="loading">
     <ApolloProvider client={client}>
-      {/* <Provider store={store}> */}
-      {/* <StateProvider initialState={initialState} reducer={reducer}> */}
       <HashRouter>
         <Switch>
           <Route path="/admin" render={props => <AdminLayout {...props} />} />
-          <Redirect from="/" to="/admin/route-network" />
+          <Redirect from="/" to="/admin/" />
         </Switch>
       </HashRouter>
-      {/* </StateProvider> */}
-      {/* </Provider> */}
     </ApolloProvider>
   </React.Suspense>,
   document.getElementById("root")

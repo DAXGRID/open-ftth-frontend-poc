@@ -92,18 +92,18 @@ SnapPointMode.onTap = SnapPointMode.onClick = function(state, e) {
     return;
   }
 
-  if (
-    state.permissions.canOnlyAddToExistingFeatureLayers &&
-    state.permissions.canOnlyAddToExistingFeatureLayers.points
-  ) {
-    const lineAddPermissions =
-      state.permissions.canOnlyAddToExistingFeatureLayers.points;
-    const coords = [state.snappedLng, state.snappedLat];
+  // if (
+  //   state.permissions.canOnlyAddToExistingFeatureLayers &&
+  //   state.permissions.canOnlyAddToExistingFeatureLayers.points
+  // ) {
+  //   const lineAddPermissions =
+  //     state.permissions.canOnlyAddToExistingFeatureLayers.points;
+  //   const coords = [state.snappedLng, state.snappedLat];
 
-    // if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
-      return this.changeMode(Constants.modes.SIMPLE_SELECT);
-    // }
-  }
+  //   // if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
+  //     return this.changeMode(Constants.modes.SIMPLE_SELECT);
+  //   // }
+  // }
 
   DrawPoint.onClick.call(this, state, {
     lngLat: {

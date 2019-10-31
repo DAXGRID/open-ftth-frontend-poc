@@ -18,7 +18,7 @@ ReactDOM.render(
       <HashRouter>
         <Switch>
           <Route path="/admin" render={props => <AdminLayout {...props} />} />
-          <Redirect from="/" to="/admin/" />
+          <Redirect from="/" to="/admin/dashboard" />
         </Switch>
       </HashRouter>
     </ApolloProvider>

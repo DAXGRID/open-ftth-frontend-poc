@@ -8,13 +8,12 @@ import highlightRouteFeature, {
   removeHighlight
 } from "lib/mapbox/highlightRouteFeature";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
-import { getFeaturesFromEvent } from "../../lib/draw/getUtils";
+import { getFeaturesFromEvent } from "../../lib/mapbox/draw/getUtils";
 
 const MapboxDisplay = ({
   config,
   uneditableFeatures,
-  editableFeatures,
-  editableFeatureTypes
+  editableFeatures
 }) => {
   const [map, setMap] = React.useState();
   const routeNodesID = "routeNodes";
@@ -22,7 +21,7 @@ const MapboxDisplay = ({
   const routeSegmentLabelsID = "routeSegmentLabels";
   const highlightedLayerID = "highlightedFeature";
   const selectedLayerID = "selectedFeature";
-  const drawEnabled = editableFeatures && editableFeatureTypes;
+  const drawEnabled = !!editableFeatures;
   const { highlightedFeature, setCurrentFeatureID } = React.useContext(
     CurrentFeatureContext
   );
@@ -64,8 +63,10 @@ const MapboxDisplay = ({
       });
 
       if (drawEnabled) {
-        addEditableFeatures(map, editableFeatures);
-        // configureDraw(map, props);
+        console.log("draw enabled")
+        console.log(editableFeatures)
+
+        addEditableFeatures({map, editableFeatures});
       }
     });
   };

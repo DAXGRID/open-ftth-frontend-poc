@@ -3,7 +3,7 @@ import EditRouteNetworkPage from "views/Pages/EditRouteNetworkPage.jsx";
 
 var routes = [
   {
-    path: "/",
+    path: "/dashboard",
     layout: "/admin",
     name: "Route Network",
     icon: "pe-7s-map-2",

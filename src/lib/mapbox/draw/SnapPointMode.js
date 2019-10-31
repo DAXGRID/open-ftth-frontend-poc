@@ -4,8 +4,7 @@
 import Constants from "@mapbox/mapbox-gl-draw/src/constants";
 import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
 import DrawPoint from "@mapbox/mapbox-gl-draw/src/modes/draw_point";
-import { getPointFromEvent } from "./getUtils.js";
-import { userAllowedToAddFeatureHere } from "./permissions";
+import { getPointFromEvent } from "./getUtils";
 import {
   findGuidesFromFeatures,
   getGuideFeature,
@@ -101,9 +100,9 @@ SnapPointMode.onTap = SnapPointMode.onClick = function(state, e) {
       state.permissions.canOnlyAddToExistingFeatureLayers.points;
     const coords = [state.snappedLng, state.snappedLat];
 
-    if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
+    // if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
       return this.changeMode(Constants.modes.SIMPLE_SELECT);
-    }
+    // }
   }
 
   DrawPoint.onClick.call(this, state, {

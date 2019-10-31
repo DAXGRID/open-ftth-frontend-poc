@@ -4,8 +4,7 @@
 import Constants from "@mapbox/mapbox-gl-draw/src/constants";
 import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
 import DrawLine from "@mapbox/mapbox-gl-draw/src/modes/draw_line_string";
-import { getPointsFromCoords } from "./getUtils.js";
-import { userAllowedToAddFeatureHere } from "./permissions";
+import { getPointsFromCoords } from "./getUtils";
 import {
   addPointToGuides,
   findGuidesFromFeatures,
@@ -105,9 +104,9 @@ SnapLineMode.onClick = function(state) {
       state.permissions.canOnlyAddToExistingFeatureLayers.lines;
     const coords = state.line.coordinates[0];
 
-    if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
+    // if (!userAllowedToAddFeatureHere(state, lineAddPermissions, coords)) {
       return this.changeMode(Constants.modes.SIMPLE_SELECT);
-    }
+    // }
   }
 
   const point = state.map.project({ lng, lat });

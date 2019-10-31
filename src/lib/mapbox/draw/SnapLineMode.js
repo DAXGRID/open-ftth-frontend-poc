@@ -71,7 +71,8 @@ SnapLineMode.onSetup = function({ onAdd = () => {}, properties = {} }) {
     // Update the guide locations after zoom, pan, rotate, or resize
     state.guides = findGuidesFromFeatures({
       map: this.map,
-      draw: this.draw,
+      draw,
+      snapFeatures,
       currentFeature: line
     });
   };

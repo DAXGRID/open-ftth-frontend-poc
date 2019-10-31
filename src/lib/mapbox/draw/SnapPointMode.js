@@ -67,8 +67,9 @@ SnapPointMode.onSetup = function({ properties = {} }) {
     // Update the guide locations after zoom, pan, rotate, or resize
     state.guides = findGuidesFromFeatures({
       map: this.map,
-      currentFeature: point,
-      draw: this.draw
+      draw,
+      snapFeatures,
+      currentFeature: point
     });
   };
 

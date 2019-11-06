@@ -14,7 +14,6 @@ const CurrentFeatureLoader = props => {
     setCurrentFeatureError,
     setCurrentFeatureLoading
   } = useContext(CurrentFeatureContext);
-  console.log("loader")
   const loading = true;
   const response = useRouteFeature(currentFeatureID);
   

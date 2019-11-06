@@ -41,6 +41,7 @@ export const filterFeatureSegments = data => {
         id: feature.id,
         name,
         pam: "true",
+        dataType: "route_segment",
         segmentKind: feature.segmentKind,
         ...styles
       }
@@ -77,6 +78,7 @@ export const filterFeatureNodes = data => {
         nodeKind: feature.nodeKind,
         nodeFunctionKind: feature.nodeFunctionKind,
         icon: iconName,
+        dataType: "route_node",
         // this is not great, clean up icon names later
         iconHover: iconHoverName,
         ...styles

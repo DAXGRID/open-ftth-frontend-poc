@@ -61,11 +61,14 @@ export const getFeaturesFromEvent = (map, e, layers, boxsize=2) => {
   const bboxSize = boxsize;
   const mapLayer = map.getLayer(layers[0]);
   if (typeof mapLayer !== "undefined") {
-    // console.log(map.queryRenderedFeatures(bbox(e, bboxSize)));
     features = map.queryRenderedFeatures(bbox(e, bboxSize), { layers });
   }
   return features;
 };
+
+export const getFeatureFromEvent = (map, e, layers) => {
+  return getFeaturesFromEvent(map, e, layers)[0]
+}
 
 const bbox = (e, bboxSize) => {
   return [

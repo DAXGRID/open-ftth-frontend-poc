@@ -4,7 +4,7 @@
 import Constants from "@mapbox/mapbox-gl-draw/src/constants";
 import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
 import DrawPoint from "@mapbox/mapbox-gl-draw/src/modes/draw_point";
-import { getPointFromEvent } from "./getUtils";
+import { getPointFromEvent } from "../getUtils";
 import {
   findGuidesFromFeatures,
   getGuideFeature,

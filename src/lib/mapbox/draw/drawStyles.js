@@ -23,41 +23,6 @@ const drawStyles = [
     }
   },
   {
-    id: "physical-type-duct",
-    type: "line",
-    filter: [
-      "all",
-      ["==", "active", "false"],
-      ["==", "$type", "LineString"],
-      ["!=", "mode", "static"],
-      ["!=", "user_isSnapGuide", "true"],
-      ["==", "user_physicalType", "duct"]
-    ],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": "#111",
-      "line-width": 2
-    }
-  },
-  {
-    id: "physical-type-cabinet",
-    type: "circle",
-    filter: [
-      "all",
-      ["==", "active", "false"],
-      ["==", "$type", "Point"],
-      ["!=", "mode", "static"],
-      ["==", "user_physicalType", "cabinet"]
-    ],
-    paint: {
-      "circle-radius": 3,
-      "circle-color": "#111"
-    }
-  },
-  {
     id: "pam-snap-guide",
     type: "line",
     filter: [

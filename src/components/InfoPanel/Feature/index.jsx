@@ -25,7 +25,7 @@ const FeatureInfoPanel = () => {
     currentFeatureError,
     currentFeatureLoading
   );
-  const [activeKey, setActiveKey] = React.useState();
+  const [activeKey, setActiveKey] = React.useState('closure');
 
   React.useLayoutEffect(() => {
     new PerfectScrollbar("#scroll-container", {
@@ -45,7 +45,7 @@ const FeatureInfoPanel = () => {
       content={
         <Tab.Container
           id="itemInfo"
-          defaultActiveKey="conduits"
+          defaultActiveKey="closure"
           onSelect={handleSelect}
         >
           <Row className="clearfix">
@@ -54,9 +54,9 @@ const FeatureInfoPanel = () => {
                 <NavItem eventKey="conduits">{t("general.conduits")}</NavItem>
 
                 {/* Only allow for SP1010 for now */}
-                {feature.conduitClosure && (feature.id == "0b2168f2-d9be-455c-a4de-e9169f000122") && (
+                {/* {feature.conduitClosure && (feature.id == "0b2168f2-d9be-455c-a4de-e9169f000122") && ( */}
                   <NavItem eventKey="closure">{t("general.closure")}</NavItem>
-                )}
+                {/* )} */}
 
                 <NavItem eventKey="equipment">{t("general.equipment")}</NavItem>
 

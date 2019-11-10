@@ -1,25 +1,41 @@
 import React from "react";
-import CytoscapeComponent from "react-cytoscapejs";
-import closureStylesheet from "./closureStylesheet";
-import closureElementFormatter from "./closureElementFormatter";
+import MapboxDiagram from "./MapboxDiagram";
+import ClosuresTab from "components/InfoPanel/Feature/ClosuresTab";
 
-const ClosureDiagram = ({ data, width, height }) => {
-  if (!data || !data.routeNode || !data.routeNode.conduitClosure) return;
+const ClosureDiagram = ({ features }) => {
+  const longitude = 0.012;
+  const latitude = 0.012;
+  const config = {
+    container: "mapbox-diagram-map",
+    center: [longitude, latitude],
+    zoom: 12.5,
+    style: "mapbox://styles/tamimitchell/cjx2ss4or057d1cnqj9j62jwl/"
+  };
 
-  const closureData = data.routeNode.conduitClosure;
-  const [elements, cols, rows] = closureElementFormatter({ closureData, width, height });
-  return (
-    <CytoscapeComponent
-      elements={elements}
-      // autolock={true}
-      panningEnabled={false}
-      zoomingEnabled={false}
-      // autounselectify={true}
-      boxSelectionEnabled={true}
-      stylesheet={closureStylesheet({width, height, cols, rows})}
-      style={{ width: `${width}px`, height: `${height}px`, backgroundColor: "#eee" }}
-    />
-  );
+  const parsedFeatures = () => {
+    return features.map(feature => {
+      let parsedFeature = feature;
+      let coords;
+
+      if (typeof feature.geometry.coordinates === "string") {
+        coords = JSON.parse(feature.geometry.coordinates);
+      } else {
+        coords = feature.geometry.coordinates[0];
+      }
+
+      parsedFeature.properties = {
+        oldCoords: feature.geometry.coordinates,
+        layerID: "diagramFeatures" + feature.style,
+        style: feature.style
+      };
+     
+      parsedFeature.geometry.coordinates = coords;
+
+      return parsedFeature;
+    });
+  };
+
+  return <MapboxDiagram config={config} features={parsedFeatures()} />;
 };
 
 export default ClosureDiagram;

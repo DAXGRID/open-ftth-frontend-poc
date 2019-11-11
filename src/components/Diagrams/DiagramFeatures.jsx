@@ -1,6 +1,8 @@
 import React from "react";
+import _ from "lodash";
 import { getFeatureFromEvent } from "lib/mapbox/getUtils";
 import { diagramFeatureLayer } from "lib/mapbox/layers/diagramFeatures";
+import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 
 const DiagramFeatures = ({ map, features }) => {
   let layers = [];

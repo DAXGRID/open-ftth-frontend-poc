@@ -1,11 +1,11 @@
 import React from "react";
 import { Tab } from "react-bootstrap";
-import useClosure from "hooks/useNodeWithClosure";
+import useDiagramService from "hooks/useDiagramService";
 import ClosureDiagram from "components/Diagrams/ClosureDiagram";
 
 const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   const featureID = active ? currentFeatureID : null;
-  const { data, error, loading } = useClosure(featureID);
+  const { data, error, loading } = useDiagramService(featureID);
   let features = [];
 
   if (error) {

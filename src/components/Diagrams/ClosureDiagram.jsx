@@ -9,7 +9,8 @@ const ClosureDiagram = ({ features }) => {
     container: "mapbox-diagram-map",
     center: [longitude, latitude],
     zoom: 12.5,
-    style: "mapbox://styles/tamimitchell/cjx2ss4or057d1cnqj9j62jwl/"
+    minZoom: 12.5,
+    style: "mapbox://styles/tamimitchell/ck2txin690msp1co4tt0aiahp"
   };
 
   const parsedFeatures = () => {

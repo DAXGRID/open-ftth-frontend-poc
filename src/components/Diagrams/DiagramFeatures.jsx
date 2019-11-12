@@ -5,23 +5,48 @@ import { diagramFeatureLayer } from "lib/mapbox/layers/diagramFeatures";
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 
 const DiagramFeatures = ({ map, features }) => {
-  let layers = [];
+  const [layers, setLayers] = React.useState();
+  const sourceID = "diagramFeatures";
 
   React.useEffect(() => {
     if (!map || !features) return;
 
+    if (layers) {
+      resetLayers();
+    }
+
     map.on("load", () => {
       loadFeatures();
-      setupOnMousemove();
-      setupOnClick();
     });
   }, [map, features]);
 
-  const loadFeatures = () => {
-    console.log("diagram features");
-    console.log(features);
+  React.useEffect(() => {
+    if (!layers) {
+      return;
+    }
 
-    map.addSource("diagramFeatures", {
+    setupOnMousemove();
+    setupOnClick();
+  }, [layers]);
+
+  const resetLayers = () => {
+    _.each([...layers, "selected"], layer => {
+      if (map.getLayer(layer)) {
+        map.removeLayer(layer);
+      }
+    });
+
+    if (map.getSource(sourceID)) {
+      map.removeSource(sourceID);
+    }
+
+    setLayers();
+  };
+
+  const loadFeatures = () => {
+    let _layers = [];
+
+    map.addSource(sourceID, {
       type: "geojson",
       data: {
         type: "FeatureCollection",
@@ -31,8 +56,8 @@ const DiagramFeatures = ({ map, features }) => {
 
     features
       .filter(feature => {
-        if (!layers.includes(feature.properties.layerID)) {
-          return layers.push(feature.properties.layerID);
+        if (!_layers.includes(feature.properties.layerID)) {
+          return _layers.push(feature.properties.layerID);
         }
       })
       .sort((a, b) => a.properties.order > b.properties.order)
@@ -40,11 +65,13 @@ const DiagramFeatures = ({ map, features }) => {
         map.addLayer(
           diagramFeatureLayer({
             layerID: feature.properties.layerID,
-            source: "diagramFeatures",
+            source: sourceID,
             styleLabel: feature.properties.style
           })
         );
       });
+
+    setLayers(_layers);
   };
 
   const setupOnMousemove = () => {
@@ -63,8 +90,6 @@ const DiagramFeatures = ({ map, features }) => {
       clearHighlights();
       const feature = getFeatureFromEvent(map, e, layers);
       if (!feature) return;
-      console.log("clicked feature");
-      console.log(feature);
 
       map.addLayer({
         id: "selected",

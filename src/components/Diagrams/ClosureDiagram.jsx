@@ -16,22 +16,17 @@ const ClosureDiagram = ({ features }) => {
   const parsedFeatures = () => {
     return features.map(feature => {
       let parsedFeature = feature;
-      let coords;
-
-      if (typeof feature.geometry.coordinates === "string") {
-        coords = JSON.parse(feature.geometry.coordinates);
-      } else {
-        coords = feature.geometry.coordinates[0];
-      }
 
       parsedFeature.properties = {
         oldCoords: feature.geometry.coordinates,
         layerID: "diagramFeatures" + feature.style,
         style: feature.style
       };
-     
-      parsedFeature.geometry.coordinates = coords;
 
+      if (typeof feature.geometry.coordinates === "string") {
+        parsedFeature.geometry.coordinates = JSON.parse(feature.geometry.coordinates);
+      }
+     
       return parsedFeature;
     });
   };

@@ -29,7 +29,7 @@ const layerPropsForStyle = {
     order: 0,
     paint: {
       "line-width": 3,
-      "line-color": "#000"
+      "line-color": "#555"
     }
   },
   DF_WellFill: {
@@ -141,7 +141,7 @@ const layerPropsForStyle = {
   },
   DF_CableOutsideWellLabel: {
     type: "symbol",
-    order: 3,
+    order: 4,
     paint: {
       "text-halo-width": 2,
       "text-color": "#444",
@@ -158,7 +158,7 @@ const layerPropsForStyle = {
   },
   DF_CableInsideWellLabel: {
     type: "symbol",
-    order: 3,
+    order: 4,
     paint: {
       "text-halo-width": 2,
       "text-color": "#444",

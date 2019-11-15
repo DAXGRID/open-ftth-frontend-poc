@@ -1,8 +1,10 @@
 import React from "react";
 import MapboxDiagram from "./MapboxDiagram";
+import DiagramActions from "./DiagramActions";
 
 const ClosureDiagram = ({ features }) => {
   const [parsedFeatures, setParsedFeatures] = React.useState();
+  const [currentDiagramFeatures, setCurrentDiagramFeatures] = React.useState();
 
   const longitude = 0.012;
   const latitude = 0.012;
@@ -10,7 +12,7 @@ const ClosureDiagram = ({ features }) => {
     container: "mapbox-diagram-map",
     center: [longitude, latitude],
     zoom: 13,
-    minZoom: 12.5,
+    minZoom: 13,
     style: "mapbox://styles/tamimitchell/ck2txin690msp1co4tt0aiahp"
   };
 
@@ -36,19 +38,19 @@ const ClosureDiagram = ({ features }) => {
         if (parsedFeature.style === "Well") {
           parsedFeature.properties.layers.push({
             layerID: "DF_WellFill"
-          })
+          });
         }
 
         if (parsedFeature.style === "CableInsideWell") {
           parsedFeature.properties.layers.push({
             layerID: "DF_CableInsideWellLabel"
-          })
+          });
         }
 
         if (parsedFeature.style === "CableOutsideWell") {
           parsedFeature.properties.layers.push({
             layerID: "DF_CableOutsideWellLabel"
-          })
+          });
         }
 
         if (typeof feature.geometry.coordinates === "string") {
@@ -65,7 +67,18 @@ const ClosureDiagram = ({ features }) => {
   return (
     <>
       {parsedFeatures && (
-        <MapboxDiagram config={config} features={parsedFeatures} />
+        <>
+          <MapboxDiagram
+            config={config}
+            features={parsedFeatures}
+            currentDiagramFeatures={currentDiagramFeatures}
+            setCurrentDiagramFeatures={setCurrentDiagramFeatures}
+          />
+          <DiagramActions
+            currentDiagramFeatures={currentDiagramFeatures}
+            setCurrentDiagramFeatures={setCurrentDiagramFeatures}
+          />
+        </>
       )}
     </>
   );

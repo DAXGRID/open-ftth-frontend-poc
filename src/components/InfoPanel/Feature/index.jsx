@@ -68,7 +68,7 @@ const FeatureInfoPanel = () => {
               <Tab.Content
                 animation
                 id="scroll-container"
-                style={{ height: "65vh", position: "relative" }}
+                style={{ height: "85vh", position: "relative" }}
               >
                 <ConduitsTab eventKey="conduits" />
 

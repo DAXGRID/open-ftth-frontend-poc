@@ -11,11 +11,23 @@ const MapboxDiagram = ({ config, features }) => {
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
     if (map) return;
     setMap(new mapboxgl.Map(config));
-  }, [config]);
+  }, []);
+
+
+  React.useEffect(() => {
+    console.log("map resize")
+    if (map) map.resize();
+  });
+
+  React.useEffect(() => {
+    if (!map) return;
+    map.scrollZoom.disable();
+  }, [map]);
+
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <div id={config.container} style={{ width: "100%", height: "100%" }} />
+      <div id={config.container} style={{ width: "100%", height: "100%" }}></div>
       {features && <DiagramFeatures map={map} features={features} />}
     </div>
   );

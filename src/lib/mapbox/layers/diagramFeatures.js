@@ -1,6 +1,8 @@
 import { colorMap } from "lib/constants";
 
 export const diagramFeatureLayer = ({source, styleLabel, layerID}) => {
+  // Need style label to filter and draw for the right features
+
   let layer = {
     id: layerID,
     order: 0,
@@ -8,7 +10,7 @@ export const diagramFeatureLayer = ({source, styleLabel, layerID}) => {
     filter: ["==", "style", styleLabel]
   }
 
-  let styleProps = layerPropsForStyle[styleLabel]
+  let styleProps = layerPropsForStyle[layerID]
   if (!styleProps) {
     styleProps = layerPropsForStyle["default"]
   }
@@ -22,7 +24,7 @@ export const diagramFeatureLayer = ({source, styleLabel, layerID}) => {
 }
 
 const layerPropsForStyle = {
-  "Well": {
+  "DF_Well": {
     type: "line",
     order: 0,
     paint: {
@@ -30,91 +32,98 @@ const layerPropsForStyle = {
       "line-color": "#000"
     },
   },
-  "MultiConduitOrange": {
+  "DF_WellFill": {
+    type: "fill",
+    order: 0,
+    paint: {
+      "fill-color": "#ccc"
+    },
+  },
+  "DF_MultiConduitOrange": {
     type: "fill",
     order: 1,
     paint: {
       "fill-color": colorMap["ORANGE"]
     },
   },
-  "BigConduitRed": {
+  "DF_BigConduitRed": {
     type: "fill",
     order: 1,
     paint: {
       "fill-color": colorMap["RED"]
     },
   }, 
-  "InnerConduitBlue": {
+  "DF_InnerConduitBlue": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["BLUE"]
     },
   }, 
-  "InnerConduitOrange": {
+  "DF_InnerConduitOrange": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["ORANGE"]
     },
   }, 
-  "InnerConduitGreen": {
+  "DF_InnerConduitGreen": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["GREEN"]
     },
   }, 
-  "InnerConduitBrown": {
+  "DF_InnerConduitBrown": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["BROWN"]
     },
   }, 
-  "InnerConduitGrey": {
+  "DF_InnerConduitGrey": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["GREY"]
     },
   }, 
-  "InnerConduitWhite": {
+  "DF_InnerConduitWhite": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["WHITE"]
     },
   }, 
-  "InnerConduitRed": {
+  "DF_InnerConduitRed": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["RED"]
     },
   }, 
-  "InnerConduitBlack": {
+  "DF_InnerConduitBlack": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["BLACK"]
     },
   }, 
-  "InnerConduitYellow": {
+  "DF_InnerConduitYellow": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["YELLOW"]
     },
   }, 
-  "InnerConduitViolet": {
+  "DF_InnerConduitViolet": {
     type: "fill",
     order: 2,
     paint: {
       "fill-color": colorMap["VIOLET"]
     },
   }, 
-  "CableInsideWell": {
+  "DF_CableInsideWell": {
     type: "line",
     order: 3,
     paint: {
@@ -122,7 +131,7 @@ const layerPropsForStyle = {
       "line-color": "#000"
     },
   }, 
-  "CableOutsideWell": {
+  "DF_CableOutsideWell": {
     type: "line",
     order: 3,
     paint: {
@@ -130,7 +139,7 @@ const layerPropsForStyle = {
       "line-color": "#000"
     },
   },
-  "LinkBlockTerminalConnectionPoint": {
+  "DF_LinkBlockTerminalConnectionPoint": {
     type: "line",
     order: 3,
     paint: {

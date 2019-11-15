@@ -39,9 +39,9 @@ const DiagramFeatures = ({ map, features }) => {
 
   const resetLayers = () => {
     if (layers && layers.length > 0) {
-      _.each([...layers, "selected"], layer => {
-        if (map.getLayer(layer)) {
-          map.removeLayer(layer);
+      _.each([...layers, { id: "selected" }], layer => {
+        if (map.getLayer(layer.id)) {
+          map.removeLayer(layer.id);
         }
       });
     }
@@ -55,6 +55,35 @@ const DiagramFeatures = ({ map, features }) => {
 
   const loadFeatures = () => {
     let _layers = [];
+
+    addSource();
+    _layers = parseLayersFromFeatures();
+    addLayers(_layers);
+    setLayers(_layers);
+    setLoading(false);
+  };
+
+  const parseLayersFromFeatures = () => {
+    let _layers = [];
+
+    _.each(features, feature => {
+      feature.properties.layers.map(layer => {
+        const newLayer = diagramFeatureLayer({
+          source: sourceID,
+          layerID: layer.layerID,
+          styleLabel: feature.properties.style
+        });
+
+        if (!_layers.map(layer => layer.id).includes(newLayer.id)) {
+          _layers.push(newLayer);
+        }
+      });
+    });
+
+    return _layers.sort((a, b) => a.order > b.order);
+  };
+
+  const addSource = () => {
     map.addSource(sourceID, {
       type: "geojson",
       data: {
@@ -62,31 +91,19 @@ const DiagramFeatures = ({ map, features }) => {
         features: features
       }
     });
+  };
 
-    features
-      .filter(feature => {
-        if (!_layers.includes(feature.properties.layerID)) {
-          return _layers.push(feature.properties.layerID);
-        }
-      })
-      .sort((a, b) => a.properties.order > b.properties.order)
-      .map(feature => {
-        map.addLayer(
-          diagramFeatureLayer({
-            layerID: feature.properties.layerID,
-            source: sourceID,
-            styleLabel: feature.properties.style
-          })
-        );
-      });
-
-    setLayers(_layers);
-    setLoading(false);
+  const addLayers = _layers => {
+    _.each(_layers, layer => {
+      map.addLayer(layer);
+    });
   };
 
   const setupOnMousemove = () => {
+    const layerIDs = layers.map(layer => layer.id);
+
     map.on("mousemove", e => {
-      const feature = getFeatureFromEvent(map, e, layers);
+      const feature = getFeatureFromEvent(map, e, layerIDs);
       if (feature) {
         map.getCanvas().style.cursor = "pointer";
       } else {
@@ -96,9 +113,11 @@ const DiagramFeatures = ({ map, features }) => {
   };
 
   const setupOnClick = () => {
+    const layerIDs = layers.map(layer => layer.id);
+
     map.on("click", e => {
       clearHighlights();
-      const feature = getFeatureFromEvent(map, e, layers);
+      const feature = getFeatureFromEvent(map, e, layerIDs);
       if (!feature) return;
 
       map.addLayer({

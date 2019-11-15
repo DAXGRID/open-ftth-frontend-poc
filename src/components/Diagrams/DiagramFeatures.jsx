@@ -6,13 +6,17 @@ import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 
 const DiagramFeatures = ({ map, features }) => {
   const [layers, setLayers] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+
   const sourceID = "diagramFeatures";
 
   React.useEffect(() => {
     if (!map || !features) return;
-
     map.on("load", () => {
-      loadFeatures();
+      if (!loading && layers.length === 0) {
+        setLoading(true);
+        loadFeatures();
+      }
     });
   }, [map, features]);
 
@@ -24,6 +28,14 @@ const DiagramFeatures = ({ map, features }) => {
     setupOnMousemove();
     setupOnClick();
   }, [map, layers]);
+
+  React.useEffect(() => {
+    return () => {
+      if (map && map.loaded() && layers.length > 0) {
+        resetLayers();
+      }
+    };
+  }, [map]);
 
   const resetLayers = () => {
     if (layers && layers.length > 0) {
@@ -43,10 +55,6 @@ const DiagramFeatures = ({ map, features }) => {
 
   const loadFeatures = () => {
     let _layers = [];
-
-    if (map.getSource(sourceID)) {
-      resetLayers();
-    }
 
     map.addSource(sourceID, {
       type: "geojson",
@@ -74,6 +82,7 @@ const DiagramFeatures = ({ map, features }) => {
       });
 
     setLayers(_layers);
+    setLoading(false);
   };
 
   const setupOnMousemove = () => {

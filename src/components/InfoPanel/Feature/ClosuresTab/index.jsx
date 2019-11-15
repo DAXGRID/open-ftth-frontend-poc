@@ -4,31 +4,32 @@ import useDiagramService from "hooks/useDiagramService";
 import ClosureDiagram from "components/Diagrams/ClosureDiagram";
 
 const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
-  const featureID = active ? currentFeatureID : null;
-  const { data, error, loading } = useDiagramService(featureID);
-  let features = [];
+  const { data, error, loading } = useDiagramService(currentFeatureID, loading);
+  const [features, setFeatures] = React.useState([]);
 
-  if (error) {
-    console.error("Error Loading Item: ");
-    console.error(error);
-  }
+  React.useEffect(() => {
+    if (error) {
+      console.error("Error Loading Item: ");
+      console.error(error);
+    }
+  }, [error]);
 
-  if (data && data.diagramService) {
-    features = data.diagramService.buildRouteNodeDiagram.diagramObjects
-  }
+  React.useEffect(() => {
+    if (active && data && data.diagramService) {
+      setFeatures(data.diagramService.buildRouteNodeDiagram.diagramObjects);
+    }
+  }, [data]);
 
   return (
     <Tab.Pane eventKey={eventKey}>
       {loading && <p>Loading...</p>}
       {!loading && data && (
         <>
-          <div style={{height: "50vh"}}>
+          <div style={{ height: "50vh" }}>
             <ClosureDiagram features={features} />
           </div>
         </>
-
       )}
-
     </Tab.Pane>
   );
 };

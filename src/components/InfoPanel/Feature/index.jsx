@@ -45,7 +45,7 @@ const FeatureInfoPanel = () => {
       content={
         <Tab.Container
           id="itemInfo"
-          defaultActiveKey="closure"
+          defaultActiveKey="conduits"
           onSelect={handleSelect}
         >
           <Row className="clearfix">
@@ -57,10 +57,10 @@ const FeatureInfoPanel = () => {
                 {/* {feature.conduitClosure && (feature.id == "0b2168f2-d9be-455c-a4de-e9169f000122") && ( */}
                   <NavItem eventKey="closure">{t("general.closure")}</NavItem>
                 {/* )} */}
-
+{/* 
                 <NavItem eventKey="equipment">{t("general.equipment")}</NavItem>
 
-                <NavItem eventKey="circuits">{t("general.circuits")}</NavItem>
+                <NavItem eventKey="circuits">{t("general.circuits")}</NavItem> */}
               </Nav>
             </Col>
 
@@ -78,9 +78,9 @@ const FeatureInfoPanel = () => {
                   eventKey="closure"
                 />
 
-                <EquipmentTab currentFeature={feature} eventKey="equipment" />
+                {/* <EquipmentTab currentFeature={feature} eventKey="equipment" />
 
-                <CircuitsTab currentFeature={feature} eventKey="circuits" />
+                <CircuitsTab currentFeature={feature} eventKey="circuits" /> */}
               </Tab.Content>
             </Col>
           </Row>

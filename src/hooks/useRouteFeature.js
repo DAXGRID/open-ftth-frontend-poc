@@ -316,7 +316,6 @@ export const GET_ROUTE_SEGMENT = gql`
 
 export default ({ id, type }) => {
   let query;
-  console.log(`call graphql for ${type} ${id}`);
 
   switch (type) {
     case "route_node":

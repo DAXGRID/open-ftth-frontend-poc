@@ -22,9 +22,6 @@ const CurrentFeatureLoader = props => {
   setCurrentFeatureLoading(response.loading);
   setCurrentFeature(response.data);
 
-  console.log('loaded feature data')
-  console.log(response.data)
-
   return <>{props.children}</>;
 };
 

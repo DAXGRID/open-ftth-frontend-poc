@@ -7,16 +7,24 @@ import conduitsData from "./tableData/conduitsData";
 import CurrentFeatureContext from "hooks/CurrentFeatureContext.jsx";
 
 const ConduitsTab = ({ eventKey }) => {
+  const [conduitsByRelation, setConduitsByRelation] = React.useState([]);
+  const [showRelationHeader, setShowRelationHeader] = React.useState(false);
   const { currentFeature, setHighlightedFeature } = useContext(
     CurrentFeatureContext
   );
-  const conduits = conduitsData(currentFeature);
+
+  React.useEffect(() => {
+    if (!currentFeature) return;
+
+    const conduits = conduitsData(currentFeature);
+    setConduitsByRelation(_(conduits)
+      .groupBy(conduit => conduit.relationType)
+      .value());
 
   // Only show grouping header for selected nodes
-  const showRelationHeader = currentFeature.routeNode;
-  const conduitsByRelation = _(conduits)
-    .groupBy(conduit => conduit.relationType)
-    .value();
+    setShowRelationHeader(currentFeature.routeNode);
+  }, [currentFeature]);
+
 
   const expandedRow = row => {
     if (row.innerConduits) {
@@ -32,26 +40,28 @@ const ConduitsTab = ({ eventKey }) => {
     }
   };
 
+  const tableSection = relationType => {
+    return (
+      <div key={relationType}>
+        {showRelationHeader && (
+          <h5 className="title">{_.capitalize(relationType)}</h5>
+        )}
+        <ConduitsTable
+          data={conduitsByRelation[relationType]}
+          onSelectRow={setHighlightedFeature}
+          expandedRow={expandedRow}
+        />
+        <br />
+        <br />
+      </div>
+    );
+  };
+
   return (
     <Tab.Pane eventKey={eventKey}>
       {_.keysIn(conduitsByRelation)
         .sort()
-        .map(relationType => {
-          return (
-            <div key={relationType}>
-              {showRelationHeader && (
-                <h5 className="title">{_.capitalize(relationType)}</h5>
-              )}
-              <ConduitsTable
-                data={conduitsByRelation[relationType]}
-                onSelectRow={setHighlightedFeature}
-                expandedRow={expandedRow}
-              />
-              <br />
-              <br />
-            </div>
-          );
-        })}
+        .map(relationType => tableSection(relationType))}
     </Tab.Pane>
   );
 };

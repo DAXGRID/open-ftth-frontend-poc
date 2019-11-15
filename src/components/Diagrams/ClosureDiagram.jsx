@@ -1,8 +1,9 @@
 import React from "react";
 import MapboxDiagram from "./MapboxDiagram";
-import ClosuresTab from "components/InfoPanel/Feature/ClosuresTab";
 
 const ClosureDiagram = ({ features }) => {
+  const [parsedfeatures, setParsedFeatures] = React.useState([]);
+
   const longitude = 0.012;
   const latitude = 0.012;
   const config = {
@@ -13,25 +14,33 @@ const ClosureDiagram = ({ features }) => {
     style: "mapbox://styles/tamimitchell/ck2txin690msp1co4tt0aiahp"
   };
 
-  const parsedFeatures = () => {
-    return features.map(feature => {
-      let parsedFeature = feature;
+  React.useEffect(() => {
+    if (!features) {
+      return;
+    }
 
-      parsedFeature.properties = {
-        oldCoords: feature.geometry.coordinates,
-        layerID: "diagramFeatures" + feature.style,
-        style: feature.style
-      };
+    setParsedFeatures(
+      features.map(feature => {
+        let parsedFeature = feature;
 
-      if (typeof feature.geometry.coordinates === "string") {
-        parsedFeature.geometry.coordinates = JSON.parse(feature.geometry.coordinates);
-      }
-     
-      return parsedFeature;
-    });
-  };
+        parsedFeature.properties = {
+          oldCoords: feature.geometry.coordinates,
+          layerID: "diagramFeatures" + feature.style,
+          style: feature.style
+        };
 
-  return <MapboxDiagram config={config} features={parsedFeatures()} />;
+        if (typeof feature.geometry.coordinates === "string") {
+          parsedFeature.geometry.coordinates = JSON.parse(
+            feature.geometry.coordinates
+          );
+        }
+
+        return parsedFeature;
+      })
+    );
+  }, [features]);
+
+  return <MapboxDiagram config={config} features={parsedfeatures} />;
 };
 
 export default ClosureDiagram;

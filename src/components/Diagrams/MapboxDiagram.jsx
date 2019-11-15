@@ -9,13 +9,14 @@ const MapboxDiagram = ({ config, features }) => {
 
   React.useLayoutEffect(() => {
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
+    if (map && map.loaded()) return;
     setMap(new mapboxgl.Map(config));
   }, [config]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div id={config.container} style={{ width: "100%", height: "100%" }} />
-      {features && (<DiagramFeatures map={map} features={features} />)}
+      {features && <DiagramFeatures map={map} features={features} />}
     </div>
   );
 };

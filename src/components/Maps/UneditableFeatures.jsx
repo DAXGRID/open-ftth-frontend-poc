@@ -87,16 +87,11 @@ const UneditableFeatures = ({ map, features }) => {
 
       // select segment by its label. Nodes do this automatically (same layer)
       if (feature.layer.id === layerIDs.routeSegmentLabels) {
-        console.log("get from label")
         feature = map
           .queryRenderedFeatures({ layerIDs: [layerIDs.routeSegments] })
           .find(f => f.properties.id === featureID);
       }
-      console.log("clicked feature")
-      console.log(feature)
       highlightRouteFeature(map, feature, layerIDs.selectedLayer);
-      // debugger
-
       setCurrentFeatureID({ id: featureID, type: featureType });
     });
   };

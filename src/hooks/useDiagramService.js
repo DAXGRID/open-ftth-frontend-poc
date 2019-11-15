@@ -4,10 +4,9 @@ import { useQuery } from "react-apollo-hooks";
 export const GET_DIAGRAM_SERVICE = gql`
   query GetDiagramService($id: ID!) {
     diagramService {
-      buildRouteNodeDiagram(routeNodeId: $id)
-       {
+      buildRouteNodeDiagram(routeNodeId: $id) {
         diagramObjects {
-          label 
+          label
           style
           geometry {
             type
@@ -19,12 +18,12 @@ export const GET_DIAGRAM_SERVICE = gql`
   }
 `;
 
-export default ( id ) => {
+export default (id, loading) => {
   let query;
-  console.log(`call diagramService for  ${id}`);
 
   // React complains if we conditionally call this hook
-  const skipQuery = !id;
+  const skipQuery = !id || loading;
+
   return useQuery(GET_DIAGRAM_SERVICE, {
     variables: { id },
     skip: skipQuery

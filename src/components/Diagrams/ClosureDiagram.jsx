@@ -2,7 +2,7 @@ import React from "react";
 import MapboxDiagram from "./MapboxDiagram";
 
 const ClosureDiagram = ({ features }) => {
-  const [parsedfeatures, setParsedFeatures] = React.useState([]);
+  const [parsedfeatures, setParsedFeatures] = React.useState();
 
   const longitude = 0.012;
   const latitude = 0.012;
@@ -15,10 +15,9 @@ const ClosureDiagram = ({ features }) => {
   };
 
   React.useEffect(() => {
-    if (!features) {
+    if (!features || parsedfeatures) {
       return;
     }
-
     setParsedFeatures(
       features.map(feature => {
         let parsedFeature = feature;
@@ -40,7 +39,11 @@ const ClosureDiagram = ({ features }) => {
     );
   }, [features]);
 
-  return <MapboxDiagram config={config} features={parsedfeatures} />;
+  return (
+    <>
+      {parsedfeatures && <MapboxDiagram config={config} features={parsedfeatures} />}
+    </>
+  )
 };
 
 export default ClosureDiagram;

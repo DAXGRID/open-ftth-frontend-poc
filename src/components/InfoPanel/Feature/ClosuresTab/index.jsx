@@ -5,7 +5,7 @@ import ClosureDiagram from "components/Diagrams/ClosureDiagram";
 
 const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   const { data, error, loading } = useDiagramService(currentFeatureID, loading);
-  const [features, setFeatures] = React.useState([]);
+  const [features, setFeatures] = React.useState();
 
   React.useEffect(() => {
     if (error) {
@@ -15,7 +15,7 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   }, [error]);
 
   React.useEffect(() => {
-    if (active && data && data.diagramService) {
+    if (active && data && data.diagramService && !features) {
       setFeatures(data.diagramService.buildRouteNodeDiagram.diagramObjects);
     }
   }, [data]);
@@ -26,7 +26,7 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
       {!loading && data && (
         <>
           <div style={{ height: "50vh" }}>
-            <ClosureDiagram features={features} />
+            {features && <ClosureDiagram features={features} />}
           </div>
         </>
       )}

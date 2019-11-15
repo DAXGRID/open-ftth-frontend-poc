@@ -55,7 +55,6 @@ const DiagramFeatures = ({ map, features }) => {
 
   const loadFeatures = () => {
     let _layers = [];
-
     map.addSource(sourceID, {
       type: "geojson",
       data: {

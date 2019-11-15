@@ -9,7 +9,7 @@ const MapboxDiagram = ({ config, features }) => {
 
   React.useLayoutEffect(() => {
     mapboxgl.accessToken = process.env.REACT_APP_MapboxAccessToken;
-    if (map && map.loaded()) return;
+    if (map) return;
     setMap(new mapboxgl.Map(config));
   }, [config]);
 

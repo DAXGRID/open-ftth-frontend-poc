@@ -39,11 +39,14 @@ const DiagramFeatures = ({ map, features }) => {
 
   const resetLayers = () => {
     if (layers && layers.length > 0) {
-      _.each([...layers, { id: "selected" }], layer => {
-        if (map.getLayer(layer.id)) {
-          map.removeLayer(layer.id);
+      _.each(
+        [...layers, { id: "selected" }, { id: "selectedLabel" }],
+        layer => {
+          if (map.getLayer(layer.id)) {
+            map.removeLayer(layer.id);
+          }
         }
-      });
+      );
     }
 
     if (map.getSource(sourceID)) {
@@ -56,6 +59,8 @@ const DiagramFeatures = ({ map, features }) => {
   const loadFeatures = () => {
     let _layers = [];
 
+    console.log("features");
+    console.log(features);
     addSource();
     _layers = parseLayersFromFeatures();
     addLayers(_layers);
@@ -136,12 +141,38 @@ const DiagramFeatures = ({ map, features }) => {
           "line-color": "#71D3FC"
         }
       });
+
+      if (feature.properties.label) {
+        map.addLayer({
+          id: "selectedLabel",
+          type: "symbol",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: feature.geometry,
+              properties: feature.properties
+            }
+          },
+          paint: {
+            "text-halo-width": 2,
+            "text-color": "#54A1C1",
+            "text-halo-color": "#fff"
+          },
+          layout: {
+            "symbol-placement": "line-center",
+            "text-size": 10,
+            "text-font": ["PT Sans Narrow Bold", "Arial Unicode MS Regular"],
+            "text-field": ["get", "label"]
+          }
+        });
+      }
     });
   };
 
   const clearHighlights = () => {
     removeHighlight(map, "selected");
-    removeHighlight(map, "selected-fill");
+    removeHighlight(map, "selectedLabel");
   };
 
   return <></>;

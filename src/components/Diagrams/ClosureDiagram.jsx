@@ -9,7 +9,7 @@ const ClosureDiagram = ({ features }) => {
   const config = {
     container: "mapbox-diagram-map",
     center: [longitude, latitude],
-    zoom: 12.5,
+    zoom: 13,
     minZoom: 12.5,
     style: "mapbox://styles/tamimitchell/ck2txin690msp1co4tt0aiahp"
   };
@@ -25,6 +25,7 @@ const ClosureDiagram = ({ features }) => {
         parsedFeature.properties = {
           oldCoords: feature.geometry.coordinates,
           style: feature.style,
+          label: feature.label,
           layers: [
             {
               layerID: "DF_" + feature.style
@@ -35,6 +36,18 @@ const ClosureDiagram = ({ features }) => {
         if (parsedFeature.style === "Well") {
           parsedFeature.properties.layers.push({
             layerID: "DF_WellFill"
+          })
+        }
+
+        if (parsedFeature.style === "CableInsideWell") {
+          parsedFeature.properties.layers.push({
+            layerID: "DF_CableInsideWellLabel"
+          })
+        }
+
+        if (parsedFeature.style === "CableOutsideWell") {
+          parsedFeature.properties.layers.push({
+            layerID: "DF_CableOutsideWellLabel"
           })
         }
 

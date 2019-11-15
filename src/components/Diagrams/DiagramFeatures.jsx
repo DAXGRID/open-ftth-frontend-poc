@@ -5,15 +5,11 @@ import { diagramFeatureLayer } from "lib/mapbox/layers/diagramFeatures";
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 
 const DiagramFeatures = ({ map, features }) => {
-  const [layers, setLayers] = React.useState();
+  const [layers, setLayers] = React.useState([]);
   const sourceID = "diagramFeatures";
 
   React.useEffect(() => {
     if (!map || !features) return;
-
-    if (layers) {
-      resetLayers();
-    }
 
     map.on("load", () => {
       loadFeatures();
@@ -21,20 +17,22 @@ const DiagramFeatures = ({ map, features }) => {
   }, [map, features]);
 
   React.useEffect(() => {
-    if (!layers) {
+    if (!map || !layers) {
       return;
     }
 
     setupOnMousemove();
     setupOnClick();
-  }, [layers]);
+  }, [map, layers]);
 
   const resetLayers = () => {
-    _.each([...layers, "selected"], layer => {
-      if (map.getLayer(layer)) {
-        map.removeLayer(layer);
-      }
-    });
+    if (layers && layers.length > 0) {
+      _.each([...layers, "selected"], layer => {
+        if (map.getLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      });
+    }
 
     if (map.getSource(sourceID)) {
       map.removeSource(sourceID);
@@ -45,6 +43,10 @@ const DiagramFeatures = ({ map, features }) => {
 
   const loadFeatures = () => {
     let _layers = [];
+
+    if (map.getSource(sourceID)) {
+      resetLayers();
+    }
 
     map.addSource(sourceID, {
       type: "geojson",

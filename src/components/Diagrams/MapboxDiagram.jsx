@@ -15,7 +15,7 @@ const MapboxDiagram = ({ config, features }) => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div id={config.container} style={{ width: "100%", height: "100%" }} />
-      <DiagramFeatures map={map} features={features} />
+      {features && (<DiagramFeatures map={map} features={features} />)}
     </div>
   );
 };

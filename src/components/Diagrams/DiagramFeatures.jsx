@@ -123,24 +123,28 @@ const DiagramFeatures = ({ map, features }) => {
     map.on("click", e => {
       clearHighlights();
       const feature = getFeatureFromEvent(map, e, layerIDs);
+      console.log("clicked feature")
+      console.log(feature)
       if (!feature) return;
 
-      map.addLayer({
-        id: "selected",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: feature.geometry,
-            properties: feature.properties
+      if (!feature.properties.style.includes("Label")) {
+        map.addLayer({
+          id: "selected",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: feature.geometry,
+              properties: feature.properties
+            }
+          },
+          paint: {
+            "line-width": 3,
+            "line-color": "#71D3FC"
           }
-        },
-        paint: {
-          "line-width": 3,
-          "line-color": "#71D3FC"
-        }
-      });
+        });
+      }
 
       if (feature.properties.label) {
         map.addLayer({

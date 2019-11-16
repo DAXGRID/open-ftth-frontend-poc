@@ -21,7 +21,7 @@ const MapboxDiagram = ({ config, features }) => {
 
   React.useEffect(() => {
     if (!map) return;
-    map.scrollZoom.disable();
+    // map.scrollZoom.disable();
   }, [map]);
 
 

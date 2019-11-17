@@ -13,17 +13,21 @@ const MapboxDiagram = ({ config, features }) => {
     setMap(new mapboxgl.Map(config));
   }, []);
 
-
-  React.useEffect(() => {
-    console.log("map resize")
+  React.useLayoutEffect(() => {
     if (map) map.resize();
   });
 
   React.useEffect(() => {
     if (!map) return;
-    // map.scrollZoom.disable();
-  }, [map]);
+    map.scrollZoom.disable();
 
+    const nav = new mapboxgl.NavigationControl({
+      showCompass: false,
+      showZoom: true
+    });
+
+    map.addControl(nav, "top-left");
+  }, [map]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

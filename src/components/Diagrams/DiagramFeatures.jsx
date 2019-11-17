@@ -3,6 +3,7 @@ import _ from "lodash";
 import { getFeatureFromEvent } from "lib/mapbox/getUtils";
 import { diagramFeatureLayer } from "lib/mapbox/layers/diagramFeatures";
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
+import { fitBounds } from "lib/mapbox/getUtils";
 
 const DiagramFeatures = ({ map, features }) => {
   const [layers, setLayers] = React.useState([]);
@@ -37,6 +38,14 @@ const DiagramFeatures = ({ map, features }) => {
     };
   }, [map]);
 
+  React.useLayoutEffect(() => {
+    // being called too many times, fix later
+    if (map && !loading && layers.length > 0) {
+      fitBounds(map, features, 30);
+    }
+  });
+
+
   const resetLayers = () => {
     if (layers && layers.length > 0) {
       _.each(
@@ -59,8 +68,6 @@ const DiagramFeatures = ({ map, features }) => {
   const loadFeatures = () => {
     let _layers = [];
 
-    console.log("features");
-    console.log(features);
     addSource();
     _layers = parseLayersFromFeatures();
     addLayers(_layers);
@@ -123,8 +130,6 @@ const DiagramFeatures = ({ map, features }) => {
     map.on("click", e => {
       clearHighlights();
       const feature = getFeatureFromEvent(map, e, layerIDs);
-      console.log("clicked feature")
-      console.log(feature)
       if (!feature) return;
 
       if (!feature.properties.style.includes("Label")) {

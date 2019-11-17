@@ -1,5 +1,6 @@
 import { highlightedRouteNodeLayer } from "./layers/highlightedRouteNode";
 import { highlightedRouteSegmentLayer, highlightedRouteSegmentsLayer } from "./layers/highlightedRouteSegment";
+import { fitBounds } from "lib/mapbox/getUtils";
 
 const highlightRouteFeature = (map, feature, layerID) => {
   if (!map ) return;
@@ -13,8 +14,10 @@ const highlightRouteFeature = (map, feature, layerID) => {
     addHighlightedNodeLayer(map, feature, layerID);
   } else if (feature.layer && feature.layer.type === "line") {
     addHighlightedSegmentLayer(map, feature, layerID);
+    fitBounds(map, [feature]);
   } else if (feature.lineConduitSegments) {
     addHighlightedSegmentsLayer(map, feature.lineConduitSegments, layerID);
+    fitBounds(map, feature.lineConduitSegments);
   }
 };
 

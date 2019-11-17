@@ -1,4 +1,6 @@
+import mapboxgl from "mapbox-gl";
 import CommonSelectors from "@mapbox/mapbox-gl-draw/src/lib/common_selectors";
+import _ from "lodash";
 
 /**
 * Returns existing point feature under a click event if there are any,
@@ -56,7 +58,7 @@ export const getFeaturesFromCoords = ({ map, coords, layers = [] }) => {
   if (existing.length > 0) return existing;
 };
 
-export const getFeaturesFromEvent = (map, e, layers, boxsize=2) => {
+export const getFeaturesFromEvent = (map, e, layers, boxsize = 2) => {
   var features = [];
   const bboxSize = boxsize;
   const mapLayer = map.getLayer(layers[0]);
@@ -67,12 +69,29 @@ export const getFeaturesFromEvent = (map, e, layers, boxsize=2) => {
 };
 
 export const getFeatureFromEvent = (map, e, layers) => {
-  return getFeaturesFromEvent(map, e, layers)[0]
-}
+  return getFeaturesFromEvent(map, e, layers)[0];
+};
 
 const bbox = (e, bboxSize) => {
   return [
     [e.point.x - bboxSize, e.point.y - bboxSize],
     [e.point.x + bboxSize, e.point.y + bboxSize]
   ];
+};
+
+export const fitBounds = (map, features, padding = 50) => {
+  let coordinates = features.map(feature => {
+    if(feature._geometry) return feature._geometry.coordinates;
+    if(feature.geometry) return feature.geometry.coordinates;
+  });
+
+  coordinates = _.flatten(coordinates)
+
+  const bounds = coordinates.reduce(function(bounds, coord) {
+    return bounds.extend(coord);
+  }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+  map.fitBounds(bounds, {
+    padding: padding
+  });
 };

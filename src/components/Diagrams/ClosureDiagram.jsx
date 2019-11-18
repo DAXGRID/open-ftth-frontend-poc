@@ -28,6 +28,8 @@ const ClosureDiagram = ({ features }) => {
           oldCoords: feature.geometry.coordinates,
           featureType: feature.style,
           label: feature.label,
+          refId: feature.refId,
+          refClass: feature.refClass,
           layers: [
             {
               layerID: "DF_" + feature.style

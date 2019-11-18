@@ -1,7 +1,8 @@
 export const isOuterConduit = feature => {
   return (
-    feature.properties.featureType.toLowerCase().includes("multiconduit") ||
-    feature.properties.featureType.toLowerCase().includes("outerconduit")
+    feature &&
+    (feature.properties.featureType.toLowerCase().includes("multiconduit") ||
+      feature.properties.featureType.toLowerCase().includes("outerconduit"))
   );
 };
 
@@ -13,5 +14,7 @@ export const isInnerConduit = feature => {
 };
 
 export const isCable = feature => {
-  return feature.properties.featureType.toLowerCase().includes("cable");
+  return (
+    feature && feature.properties.featureType.toLowerCase().includes("cable")
+  );
 };

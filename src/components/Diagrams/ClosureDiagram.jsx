@@ -4,7 +4,7 @@ import DiagramActions from "./DiagramActions";
 
 const ClosureDiagram = ({ features }) => {
   const [parsedFeatures, setParsedFeatures] = React.useState();
-  const [currentDiagramFeatures, setCurrentDiagramFeatures] = React.useState();
+  const [currentDiagramFeatures, setCurrentDiagramFeatures] = React.useState([]);
 
   const longitude = 0.012;
   const latitude = 0.012;
@@ -26,7 +26,7 @@ const ClosureDiagram = ({ features }) => {
 
         parsedFeature.properties = {
           oldCoords: feature.geometry.coordinates,
-          style: feature.style,
+          featureType: feature.style,
           label: feature.label,
           layers: [
             {
@@ -71,7 +71,6 @@ const ClosureDiagram = ({ features }) => {
           <MapboxDiagram
             config={config}
             features={parsedFeatures}
-            currentDiagramFeatures={currentDiagramFeatures}
             setCurrentDiagramFeatures={setCurrentDiagramFeatures}
           />
           <DiagramActions

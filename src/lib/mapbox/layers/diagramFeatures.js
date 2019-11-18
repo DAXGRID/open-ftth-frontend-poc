@@ -1,13 +1,13 @@
 import { colorMap } from "lib/constants";
 
-export const diagramFeatureLayer = ({ source, styleLabel, layerID }) => {
+export const diagramFeatureLayer = ({ source, featureType, layerID }) => {
   // Need style label to filter and draw for the right features
 
   let layer = {
     id: layerID,
     order: 0,
     source,
-    filter: ["==", "style", styleLabel]
+    filter: ["==", "featureType", featureType]
   };
 
   let styleProps = layerPropsForStyle[layerID];
@@ -22,6 +22,51 @@ export const diagramFeatureLayer = ({ source, styleLabel, layerID }) => {
 
   return layer;
 };
+
+export const selectedDiagramFeatureLayer = (feature, id) => {
+  return {
+    id,
+    type: "line",
+    source: {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        geometry: feature.geometry,
+        properties: feature.properties
+      }
+    },
+    paint: {
+      "line-width": 3,
+      "line-color": "#71D3FC"
+    }
+  }
+}
+
+export const selectedDiagramLabelLayer = (feature, id) => {
+  return {
+    id,
+    type: "symbol",
+    source: {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        geometry: feature.geometry,
+        properties: feature.properties
+      }
+    },
+    paint: {
+      "text-halo-width": 2,
+      "text-color": "#54A1C1",
+      "text-halo-color": "#fff"
+    },
+    layout: {
+      "symbol-placement": "line-center",
+      "text-size": 10,
+      "text-font": ["PT Sans Narrow Bold", "Arial Unicode MS Regular"],
+      "text-field": ["get", "label"]
+    }
+  }
+}
 
 const layerPropsForStyle = {
   DF_Well: {

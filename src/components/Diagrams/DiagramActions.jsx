@@ -1,5 +1,6 @@
 import React from "react";
 import { Alert, Collapse, ListGroup, ListGroupItem } from "react-bootstrap";
+import { isCable, isInnerConduit, isOuterConduit } from "./FeatureLogic";
 
 const DiagramActions = ({
   currentDiagramFeatures,
@@ -9,16 +10,27 @@ const DiagramActions = ({
     console.log("onClick");
   };
 
+  const canAddToWell = () => {
+    return (currentDiagramFeatures.count === 1 && isOuterConduit(currentDiagramFeatures[0]))
+  };
+
+  React.useEffect(() => {
+    console.log("currentDiagramFeatures changed") 
+    console.log(currentDiagramFeatures)
+  }, [currentDiagramFeatures])
+
   return (
     <>
       <ListGroup variant="flush">
-        <ListGroupItem>
-          <i className="nc-icon nc-air-baloon"></i>
-          <a onClick={onClick}>Add to Well</a>
-          <Alert bsStyle="danger">
-            <span>This is a plain notification</span>
-          </Alert>
-        </ListGroupItem>
+        {canAddToWell && (
+          <ListGroupItem>
+            <i className="nc-icon nc-air-baloon"></i>
+            <a onClick={onClick}>Add to Well</a>
+            <Alert bsStyle="danger">
+              <span>This is a plain notification</span>
+            </Alert>
+          </ListGroupItem>
+        )}
         <ListGroupItem>
           <i className="nc-icon nc-air-baloon"></i>
           <a onClick={onClick}>Cut Outer Conduit</a>

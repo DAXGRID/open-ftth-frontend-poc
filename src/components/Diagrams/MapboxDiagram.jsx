@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import DiagramFeatures from "./DiagramFeatures";
 
-const MapboxDiagram = ({ config, features }) => {
+const MapboxDiagram = ({ config, features, setCurrentDiagramFeatures }) => {
   const [map, setMap] = React.useState();
 
   React.useLayoutEffect(() => {
@@ -31,8 +31,17 @@ const MapboxDiagram = ({ config, features }) => {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <div id={config.container} style={{ width: "100%", height: "100%" }}></div>
-      {features && <DiagramFeatures map={map} features={features} />}
+      <div
+        id={config.container}
+        style={{ width: "100%", height: "100%" }}
+      ></div>
+      {features && (
+        <DiagramFeatures
+          map={map}
+          features={features}
+          setCurrentDiagramFeatures={setCurrentDiagramFeatures}
+        />
+      )}
     </div>
   );
 };

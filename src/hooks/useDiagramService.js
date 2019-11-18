@@ -8,6 +8,8 @@ export const GET_DIAGRAM_SERVICE = gql`
         diagramObjects {
           label
           style
+          refId
+          refClass
           geometry {
             type
             coordinates

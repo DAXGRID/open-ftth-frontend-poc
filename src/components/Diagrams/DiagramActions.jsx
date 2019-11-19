@@ -7,7 +7,10 @@ import {
   isOuterConduit,
   isClosure
 } from "./FeatureLogic";
-import { ATTACH_CONDUIT_TO_CLOSURE } from "hooks/useDiagramService";
+import {
+  ATTACH_CONDUIT_TO_CLOSURE,
+  CUT_OUTER_CONDUIT
+} from "hooks/useDiagramService";
 import { useMutation } from "react-apollo-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 
@@ -17,6 +20,10 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
   );
 
   const attachConduitToClosure = useMutation(ATTACH_CONDUIT_TO_CLOSURE, {
+    update: (proxy, mutationResult) => {}
+  });
+
+  const cutOuterConduit = useMutation(CUT_OUTER_CONDUIT, {
     update: (proxy, mutationResult) => {}
   });
 
@@ -78,10 +85,6 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     const conduitId = outerConduit.properties.refId;
     const conduitClosureId = closure.properties.refId;
 
-    console.log("attaching");
-    console.log(conduitId);
-    console.log(conduitClosureId);
-
     attachConduitToClosure({
       variables: {
         conduitId,
@@ -89,6 +92,37 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
       }
     });
 
+    reload();
+  };
+
+  const onCutOuterConduit = e => {
+    e.preventDefault();
+    const outerConduit = currentDiagramFeatures.find(feature => {
+      return isOuterConduit(feature);
+    });
+
+    if (!outerConduit) {
+      return;
+    }
+
+    const multiConduitId = outerConduit.properties.refId;
+    const pointOfInterestId = currentFeature.id;
+
+    cutOuterConduit({
+      variables: {
+        multiConduitId,
+        pointOfInterestId
+      }
+    });
+
+    reload();
+  };
+
+  const onClick = () => {
+    console.log("clicked");
+  };
+
+  const reload = () => {
     const _currentFeature = currentFeature;
     const dataType = _currentFeature.nodeKind ? "route_node" : "route_segment";
 
@@ -99,11 +133,6 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
       type: dataType
     });
   };
-
-  const onClick = () => {
-    console.log("clicked");
-  };
-
   React.useEffect(() => {
     console.log("currentDiagramFeatures changed");
     console.log(currentDiagramFeatures);
@@ -141,7 +170,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         )}
 
         {canCutOuterConduit() && (
-          <ListGroupItem onClick={onClick}>
+          <ListGroupItem onClick={onCutOuterConduit}>
             <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
             <span className="text-primary">Cut Outer Conduit</span>
           </ListGroupItem>

@@ -50,3 +50,19 @@ mutation AddConduitClosure($conduitClosureId: ID!, $conduitId: ID!) {
   }
 }
 `;
+
+
+export const CUT_OUTER_CONDUIT = gql`
+mutation cutOuterConduitCommand($pointOfInterestId: ID!, $multiConduitId: ID!) {
+  conduitService {
+    multiConduit {
+      cutOuterConduitCommand(
+        pointOfInterestId: $pointOfInterestId
+        multiConduitId: $multiConduitId
+      ) {
+        id
+      }
+    }
+  }
+}
+`;

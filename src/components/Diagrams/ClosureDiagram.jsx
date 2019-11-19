@@ -70,6 +70,7 @@ const ClosureDiagram = ({ features, currentFeature }) => {
           <MapboxDiagram
             config={config}
             features={parsedFeatures}
+            currentDiagramFeatures={currentDiagramFeatures}
             setCurrentDiagramFeatures={setCurrentDiagramFeatures}
           />
           <DiagramActions

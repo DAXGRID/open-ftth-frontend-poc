@@ -8,9 +8,14 @@ import {
 } from "lib/mapbox/layers/diagramFeatures";
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 import { fitBounds } from "lib/mapbox/getUtils";
-import { isCable, isInnerConduit, isClosure, isOuterConduit } from "./FeatureLogic";
+import {
+  isCable,
+  isInnerConduit,
+  isClosure,
+  isOuterConduit
+} from "./FeatureLogic";
 
-const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
+const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiagramFeatures }) => {
   const [layers, setLayers] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
@@ -18,8 +23,8 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
 
   React.useEffect(() => {
     if (!map || !features) return;
-    console.log("load diagramfeatures, layers:")
-    console.log(layers)
+    console.log("load diagramfeatures, layers:");
+    console.log(layers);
 
     map.on("load", () => {
       if (!loading && layers.length === 0) {
@@ -44,7 +49,7 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
   React.useEffect(() => {
     return () => {
       if (map && map.loaded() && layers.length > 0) {
-        console.log("unload")
+        console.log("unload");
         setLayers([]);
         resetLayers();
       }
@@ -53,6 +58,9 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
 
   React.useLayoutEffect(() => {
     // being called too many times, fix later
+    if (currentDiagramFeatures.length > 0) {
+      return;
+    }
     if (map && !loading && layers.length > 0) {
       fitBounds(map, features, 30);
     }
@@ -110,7 +118,7 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
       });
     });
 
-    return _.orderBy(_layers, ['order'],['asc']);
+    return _.orderBy(_layers, ["order"], ["asc"]);
   };
 
   const addSource = () => {
@@ -124,8 +132,8 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
   };
 
   const addLayers = _layers => {
-    console.log("all layers")
-    console.log(_layers)
+    console.log("all layers");
+    console.log(_layers);
     _.each(_layers, layer => {
       map.addLayer(layer);
     });
@@ -204,7 +212,6 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
     ) {
       return true;
     }
-
 
     if (
       (isOuterConduit(feature) && isClosure(prevFeatue)) ||

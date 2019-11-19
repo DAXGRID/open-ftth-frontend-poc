@@ -10,7 +10,8 @@ import {
 import {
   ATTACH_CONDUIT_TO_CLOSURE,
   CUT_OUTER_CONDUIT,
-  CUT_INNER_CONDUIT
+  CUT_INNER_CONDUIT,
+  CONNECT_INNER_CONDUIT
 } from "hooks/useDiagramService";
 import { useMutation } from "react-apollo-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
@@ -29,6 +30,10 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
   });
 
   const cutInnerConduit = useMutation(CUT_INNER_CONDUIT, {
+    update: (proxy, mutationResult) => {}
+  });
+
+  const connectInnerConduit = useMutation(CONNECT_INNER_CONDUIT, {
     update: (proxy, mutationResult) => {}
   });
 
@@ -146,6 +151,30 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
+  const onConnectInnerConduit = e => {
+    e.preventDefault();
+    const fromConduit = currentDiagramFeatures[0]
+    const toConduit = currentDiagramFeatures[1]
+
+    if (!fromConduit || !toConduit) {
+      return;
+    }
+
+    const fromConduitSegmentId = fromConduit.properties.refId;
+    const toConduitSegmentId = toConduit.properties.refId;
+    const pointOfInterestId = currentFeature.id;
+
+    connectInnerConduit({
+      variables: {
+        pointOfInterestId,
+        fromConduitSegmentId,
+        toConduitSegmentId
+      }
+    });
+
+    reload();
+  };
+
   const onClick = () => {
     console.log("clicked");
   };
@@ -212,7 +241,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         )}
 
         {canConnectInnerConduit() && (
-          <ListGroupItem onClick={onClick}>
+          <ListGroupItem onClick={onConnectInnerConduit}>
             <Glyphicon style={{ marginRight: "10px" }} glyph="link" />
             <span className="text-primary">Connect Inner Conduit</span>
           </ListGroupItem>

@@ -82,3 +82,20 @@ mutation cutInnerConduitCommand($pointOfInterestId: ID!, $innerConduitId: ID!) {
   }
 }
 `;
+
+
+export const CONNECT_INNER_CONDUIT = gql`
+mutation connectConduitSegmentToConduitSegment($pointOfInterestId: ID!, $fromConduitSegmentId: ID!, $toConduitSegmentId: ID!) {
+  conduitService {
+    multiConduit {
+      connectConduitSegmentToConduitSegment(
+        pointOfInterestId: $pointOfInterestId
+        fromConduitSegmentId: $fromConduitSegmentId
+        toConduitSegmentId: $toConduitSegmentId
+      ) {
+        id
+      }
+    }
+  }
+}
+`;

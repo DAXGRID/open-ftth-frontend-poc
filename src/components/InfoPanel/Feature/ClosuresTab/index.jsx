@@ -1,11 +1,13 @@
 import React from "react";
 import { Tab } from "react-bootstrap";
 import useDiagramService from "hooks/useDiagramService";
+
 import ClosureDiagram from "components/Diagrams/ClosureDiagram";
 
-const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
-  const { data, error, loading } = useDiagramService(currentFeatureID, loading);
+const ClosuresTab = ({ currentFeature, active, eventKey }) => {
+  const [currentFeatureID, setCurrentFeatureID] = React.useState();
   const [features, setFeatures] = React.useState();
+  const { data, error, loading } = useDiagramService(currentFeatureID, loading);
 
   React.useEffect(() => {
     if (error) {
@@ -15,8 +17,18 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
   }, [error]);
 
   React.useEffect(() => {
-    if (active && data && data.diagramService && !features) {
+    console.log("data changed");
+
+    if (currentFeature) {
+      setCurrentFeatureID(currentFeature.id);
+    }
+
+    console.log("diagram data changed");
+    console.log(data);
+    if (active && data && data.diagramService) {
       setFeatures(data.diagramService.buildRouteNodeDiagram.diagramObjects);
+    } else {
+      setFeatures([]);
     }
   }, [data]);
 
@@ -26,7 +38,10 @@ const ClosuresTab = ({ currentFeatureID, active, eventKey }) => {
       {!loading && data && (
         <>
           <div style={{ height: "80vh" }}>
-            {features && <ClosureDiagram features={features} />}
+            <ClosureDiagram
+              currentFeature={currentFeature}
+              features={features}
+            />
           </div>
         </>
       )}

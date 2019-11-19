@@ -92,6 +92,14 @@ const layerPropsForStyle = {
       "fill-outline-color": "#555"
     }
   },
+  DF_MultiConduitRed: {
+    type: "fill",
+    order: 1,
+    paint: {
+      "fill-color": colorMap["RED"],
+      "fill-outline-color": "#555"
+    }
+  },
   DF_BigConduitRed: {
     type: "fill",
     order: 1,

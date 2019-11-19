@@ -2,7 +2,7 @@ import React from "react";
 import MapboxDiagram from "./MapboxDiagram";
 import DiagramActions from "./DiagramActions";
 
-const ClosureDiagram = ({ features }) => {
+const ClosureDiagram = ({ features, currentFeature }) => {
   const [parsedFeatures, setParsedFeatures] = React.useState();
   const [currentDiagramFeatures, setCurrentDiagramFeatures] = React.useState([]);
 
@@ -17,9 +17,6 @@ const ClosureDiagram = ({ features }) => {
   };
 
   React.useEffect(() => {
-    if (!features || parsedFeatures) {
-      return;
-    }
     setParsedFeatures(
       features.map(feature => {
         let parsedFeature = feature;
@@ -77,6 +74,7 @@ const ClosureDiagram = ({ features }) => {
           />
           <DiagramActions
             currentDiagramFeatures={currentDiagramFeatures}
+            currentFeature={currentFeature}
             setCurrentDiagramFeatures={setCurrentDiagramFeatures}
           />
         </>

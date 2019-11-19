@@ -18,3 +18,11 @@ export const isCable = feature => {
     feature && feature.properties.featureType.toLowerCase().includes("cable")
   );
 };
+
+export const isClosure = feature => {
+  return (
+    feature &&
+    (feature.properties.featureType.toLowerCase().includes("closure") ||
+    feature.properties.featureType.toLowerCase().includes("well"))
+  );
+};

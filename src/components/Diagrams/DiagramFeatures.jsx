@@ -8,7 +8,7 @@ import {
 } from "lib/mapbox/layers/diagramFeatures";
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 import { fitBounds } from "lib/mapbox/getUtils";
-import { isCable, isInnerConduit } from "./FeatureLogic";
+import { isCable, isInnerConduit, isClosure, isOuterConduit } from "./FeatureLogic";
 
 const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
   const [layers, setLayers] = React.useState([]);
@@ -18,10 +18,13 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
 
   React.useEffect(() => {
     if (!map || !features) return;
+    console.log("load diagramfeatures, layers:")
+    console.log(layers)
+
     map.on("load", () => {
       if (!loading && layers.length === 0) {
         setLoading(true);
-        console.log("features");
+        console.log("diagramfeatures");
         console.log(features);
 
         loadFeatures();
@@ -41,6 +44,8 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
   React.useEffect(() => {
     return () => {
       if (map && map.loaded() && layers.length > 0) {
+        console.log("unload")
+        setLayers([]);
         resetLayers();
       }
     };
@@ -105,7 +110,7 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
       });
     });
 
-    return _layers.sort((a, b) => a.order > b.order);
+    return _.orderBy(_layers, ['order'],['asc']);
   };
 
   const addSource = () => {
@@ -119,6 +124,8 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
   };
 
   const addLayers = _layers => {
+    console.log("all layers")
+    console.log(_layers)
     _.each(_layers, layer => {
       map.addLayer(layer);
     });
@@ -194,6 +201,14 @@ const DiagramFeatures = ({ map, features, setCurrentDiagramFeatures }) => {
     if (
       (isInnerConduit(feature) && isCable(prevFeatue)) ||
       (isInnerConduit(prevFeatue) && isCable(feature))
+    ) {
+      return true;
+    }
+
+
+    if (
+      (isOuterConduit(feature) && isClosure(prevFeatue)) ||
+      (isOuterConduit(prevFeatue) && isClosure(feature))
     ) {
       return true;
     }

@@ -1,20 +1,32 @@
 import React from "react";
 import _ from "lodash";
-import { Col, Glyphicon, ListGroup, ListGroupItem } from "react-bootstrap";
-import { isCable, isInnerConduit, isOuterConduit } from "./FeatureLogic";
+import { Glyphicon, ListGroup, ListGroupItem } from "react-bootstrap";
+import {
+  isCable,
+  isInnerConduit,
+  isOuterConduit,
+  isClosure
+} from "./FeatureLogic";
+import { ATTACH_CONDUIT_TO_CLOSURE } from "hooks/useDiagramService";
+import { useMutation } from "react-apollo-hooks";
+import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 
-const DiagramActions = ({
-  currentDiagramFeatures,
-  setCurrentDiagramFeatures
-}) => {
-  const onClick = e => {
-    console.log("onClick");
-  };
+const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
+  const { setCurrentFeature, setCurrentFeatureID } = React.useContext(
+    CurrentFeatureContext
+  );
 
-  const canAddToWell = () => {
+  const attachConduitToClosure = useMutation(ATTACH_CONDUIT_TO_CLOSURE, {
+    update: (proxy, mutationResult) => {}
+  });
+
+  const canAddToClosure = () => {
     return (
-      currentDiagramFeatures.length === 1 &&
-      isOuterConduit(currentDiagramFeatures[0])
+      (currentDiagramFeatures.length === 2 &&
+        isOuterConduit(currentDiagramFeatures[0]) &&
+        isClosure(currentDiagramFeatures[1])) ||
+      (isOuterConduit(currentDiagramFeatures[1]) &&
+        isClosure(currentDiagramFeatures[0]))
     );
   };
 
@@ -50,6 +62,48 @@ const DiagramActions = ({
     );
   };
 
+  const onAddToClosure = e => {
+    e.preventDefault();
+    const outerConduit = currentDiagramFeatures.find(feature => {
+      return isOuterConduit(feature);
+    });
+
+    const closure = currentDiagramFeatures.find(feature => {
+      return isClosure(feature);
+    });
+
+    if (!outerConduit || !closure) {
+      return;
+    }
+    const conduitId = outerConduit.properties.refId;
+    const conduitClosureId = closure.properties.refId;
+
+    console.log("attaching");
+    console.log(conduitId);
+    console.log(conduitClosureId);
+
+    attachConduitToClosure({
+      variables: {
+        conduitId,
+        conduitClosureId
+      }
+    });
+
+    const _currentFeature = currentFeature;
+    const dataType = _currentFeature.nodeKind ? "route_node" : "route_segment";
+
+    // reload pane with new data
+    setCurrentFeature(null);
+    setCurrentFeatureID({
+      id: _currentFeature.id,
+      type: dataType
+    });
+  };
+
+  const onClick = () => {
+    console.log("clicked");
+  };
+
   React.useEffect(() => {
     console.log("currentDiagramFeatures changed");
     console.log(currentDiagramFeatures);
@@ -77,10 +131,12 @@ const DiagramActions = ({
           </p>
         </ListGroupItem>
 
-        {canAddToWell() && (
-          <ListGroupItem onClick={onClick}>
+        {canAddToClosure() && (
+          <ListGroupItem onClick={onAddToClosure}>
             <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-            <span className="text-primary" className="text-primary">Add to Well</span>
+            <span className="text-primary" className="text-primary">
+              Add to Well/Closure
+            </span>
           </ListGroupItem>
         )}
 
@@ -108,7 +164,9 @@ const DiagramActions = ({
         {canRouteCableThroughInnerConduit() && (
           <ListGroupItem onClick={onClick}>
             <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-            <span className="text-primary">Route Cable Through Inner Conduit</span>
+            <span className="text-primary">
+              Route Cable Through Inner Conduit
+            </span>
           </ListGroupItem>
         )}
       </ListGroup>

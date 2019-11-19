@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 
-export const GET_DIAGRAM_SERVICE = gql`
+const GET_DIAGRAM_SERVICE = gql`
   query GetDiagramService($id: ID!) {
     diagramService {
       buildRouteNodeDiagram(routeNodeId: $id) {
@@ -25,9 +25,28 @@ export default (id, loading) => {
 
   // React complains if we conditionally call this hook
   const skipQuery = !id || loading;
-
+  console.log("useDiagramService")
   return useQuery(GET_DIAGRAM_SERVICE, {
     variables: { id },
-    skip: skipQuery
+    skip: skipQuery,
+    fetchPolicy: "no-cache"
   });
 };
+
+
+export const ATTACH_CONDUIT_TO_CLOSURE = gql`
+mutation AddConduitClosure($conduitClosureId: ID!, $conduitId: ID!) {
+  conduitService {
+    conduitClosure {
+      attachPassByConduitToClosure(
+        conduitClosureId: $conduitClosureId
+        conduitId: $conduitId
+        incommingSide: LEFT
+        outgoingSide: RIGHT
+      ) {
+        id
+      }
+    }
+  }
+}
+`;

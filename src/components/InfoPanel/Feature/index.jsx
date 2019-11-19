@@ -17,7 +17,7 @@ const FeatureInfoPanel = () => {
   const {
     currentFeature,
     currentFeatureError,
-    currentFeatureLoading
+    currentFeatureLoading,
   } = useContext(CurrentFeatureContext);
   const feature = currentFeature.routeNode || currentFeature.routeSegment;
   const header = cardHeader(
@@ -45,7 +45,7 @@ const FeatureInfoPanel = () => {
       content={
         <Tab.Container
           id="itemInfo"
-          defaultActiveKey="conduits"
+          defaultActiveKey="closure"
           onSelect={handleSelect}
         >
           <Row className="clearfix">
@@ -73,7 +73,7 @@ const FeatureInfoPanel = () => {
                 <ConduitsTab eventKey="conduits" />
 
                 <ClosuresTab
-                  currentFeatureID={feature.id}
+                  currentFeature={feature}
                   active={activeKey === "closure"}
                   eventKey="closure"
                 />

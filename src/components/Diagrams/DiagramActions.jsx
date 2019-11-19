@@ -9,7 +9,8 @@ import {
 } from "./FeatureLogic";
 import {
   ATTACH_CONDUIT_TO_CLOSURE,
-  CUT_OUTER_CONDUIT
+  CUT_OUTER_CONDUIT,
+  CUT_INNER_CONDUIT
 } from "hooks/useDiagramService";
 import { useMutation } from "react-apollo-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
@@ -24,6 +25,10 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
   });
 
   const cutOuterConduit = useMutation(CUT_OUTER_CONDUIT, {
+    update: (proxy, mutationResult) => {}
+  });
+
+  const cutInnerConduit = useMutation(CUT_INNER_CONDUIT, {
     update: (proxy, mutationResult) => {}
   });
 
@@ -118,6 +123,29 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
+  const onCutInnerConduit = e => {
+    e.preventDefault();
+    const innerConduit = currentDiagramFeatures.find(feature => {
+      return isInnerConduit(feature);
+    });
+
+    if (!innerConduit) {
+      return;
+    }
+
+    const innerConduitId = innerConduit.properties.refId;
+    const pointOfInterestId = currentFeature.id;
+
+    cutInnerConduit({
+      variables: {
+        innerConduitId,
+        pointOfInterestId
+      }
+    });
+
+    reload();
+  };
+
   const onClick = () => {
     console.log("clicked");
   };
@@ -177,7 +205,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         )}
 
         {canCutInnerConduit() && (
-          <ListGroupItem onClick={onClick}>
+          <ListGroupItem onClick={onCutInnerConduit}>
             <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
             <span className="text-primary">Cut Inner Conduit</span>
           </ListGroupItem>

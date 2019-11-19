@@ -329,9 +329,6 @@ export default ({ id, type }) => {
       break;
   }
 
-  console.log("loading feature")
-  console.log(id)
-  console.log(type)
   // React complains if we conditionally call this hook
   const skipQuery = !id;
   return useQuery(query, {

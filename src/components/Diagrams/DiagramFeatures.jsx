@@ -15,7 +15,12 @@ import {
   isOuterConduit
 } from "./FeatureLogic";
 
-const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiagramFeatures }) => {
+const DiagramFeatures = ({
+  map,
+  features,
+  currentDiagramFeatures,
+  setCurrentDiagramFeatures
+}) => {
   const [layers, setLayers] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
@@ -23,15 +28,10 @@ const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiag
 
   React.useEffect(() => {
     if (!map || !features) return;
-    console.log("load diagramfeatures, layers:");
-    console.log(layers);
 
     map.on("load", () => {
       if (!loading && layers.length === 0) {
         setLoading(true);
-        console.log("diagramfeatures");
-        console.log(features);
-
         loadFeatures();
       }
     });
@@ -49,7 +49,6 @@ const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiag
   React.useEffect(() => {
     return () => {
       if (map && map.loaded() && layers.length > 0) {
-        console.log("unload");
         setLayers([]);
         resetLayers();
       }
@@ -132,8 +131,6 @@ const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiag
   };
 
   const addLayers = _layers => {
-    console.log("all layers");
-    console.log(_layers);
     _.each(_layers, layer => {
       map.addLayer(layer);
     });
@@ -162,8 +159,6 @@ const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiag
         clearHighlights();
         return;
       }
-      console.log("feature");
-      console.log(feature);
 
       if (!canSelectAdditional(selectedFeatures, feature)) {
         // reset selectedFeatures
@@ -203,6 +198,13 @@ const DiagramFeatures = ({ map, features, currentDiagramFeatures, setCurrentDiag
     const prevFeatue = selectedFeatures[0];
 
     if (isInnerConduit(feature) && isInnerConduit(prevFeatue)) {
+      return true;
+    }
+
+    if (
+      (isInnerConduit(feature) && isOuterConduit(prevFeatue)) ||
+      (isOuterConduit(feature) && isInnerConduit(prevFeatue))
+    ) {
       return true;
     }
 

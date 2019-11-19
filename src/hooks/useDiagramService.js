@@ -25,7 +25,6 @@ export default (id, loading) => {
 
   // React complains if we conditionally call this hook
   const skipQuery = !id || loading;
-  console.log("useDiagramService")
   return useQuery(GET_DIAGRAM_SERVICE, {
     variables: { id },
     skip: skipQuery,

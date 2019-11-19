@@ -63,9 +63,13 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
 
   const canConnectInnerConduit = () => {
     return (
-      currentDiagramFeatures.length === 2 &&
-      isInnerConduit(currentDiagramFeatures[0]) &&
-      isInnerConduit(currentDiagramFeatures[1])
+      (currentDiagramFeatures.length === 2 &&
+        isInnerConduit(currentDiagramFeatures[0]) &&
+          isInnerConduit(currentDiagramFeatures[1])) ||
+      (isOuterConduit(currentDiagramFeatures[0]) &&
+        isInnerConduit(currentDiagramFeatures[1])) ||
+      (isInnerConduit(currentDiagramFeatures[0]) &&
+        isOuterConduit(currentDiagramFeatures[1]))
     );
   };
 
@@ -153,8 +157,8 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
 
   const onConnectInnerConduit = e => {
     e.preventDefault();
-    const fromConduit = currentDiagramFeatures[0]
-    const toConduit = currentDiagramFeatures[1]
+    const fromConduit = currentDiagramFeatures[0];
+    const toConduit = currentDiagramFeatures[1];
 
     if (!fromConduit || !toConduit) {
       return;
@@ -190,10 +194,6 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
       type: dataType
     });
   };
-  React.useEffect(() => {
-    console.log("currentDiagramFeatures changed");
-    console.log(currentDiagramFeatures);
-  }, [currentDiagramFeatures]);
 
   return (
     <>

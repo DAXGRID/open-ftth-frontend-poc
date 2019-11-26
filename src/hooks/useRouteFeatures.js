@@ -1,5 +1,5 @@
 import { gql } from "apollo-boost";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery } from "@apollo/react-hooks";
 
 const GET_ROUTE_FEATURES = gql`
   {

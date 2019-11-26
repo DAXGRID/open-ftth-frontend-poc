@@ -11,7 +11,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useTranslation } from "react-i18next";
 import { gql } from "apollo-boost";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import CurrentFeatureContext from "../../../../hooks/CurrentFeatureContext";
 
 const PLACE_CLOSURE = gql`

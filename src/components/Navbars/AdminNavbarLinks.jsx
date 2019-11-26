@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import da from "../../assets/img/flags/da-round.png";
 import uk from "../../assets/img/flags/uk-round.png";
 import { gql } from "apollo-boost";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation } from "@apollo/react-hooks";
 
 const RESET_DEMO_DATA = gql`
   mutation {

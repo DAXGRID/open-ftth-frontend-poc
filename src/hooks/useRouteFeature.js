@@ -1,5 +1,5 @@
 import { gql } from "apollo-boost";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery } from "@apollo/react-hooks";
 
 export const GET_ROUTE_NODE = gql`
   query GetRouteNode($id: ID!) {

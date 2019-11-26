@@ -13,7 +13,7 @@ import {
   CUT_INNER_CONDUIT,
   CONNECT_INNER_CONDUIT
 } from "hooks/useDiagramService";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 
 const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {

@@ -1,5 +1,5 @@
 import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "react-apollo-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
 const GET_DIAGRAM_SERVICE = gql`
   query GetDiagramService($id: ID!) {

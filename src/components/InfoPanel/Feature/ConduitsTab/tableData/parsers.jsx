@@ -50,7 +50,7 @@ export const routeSegments = conduit => {
 };
 
 export const lineConduitSegments = line => {
-  const featureArrays = line.allConduitSegments.map(conduitSegment =>
+  const featureArrays = line.allSegments.map(conduitSegment =>
     conduitSegment.allRouteSegments.map(routeSegment => ({
       id: routeSegment.id,
       geometry: {

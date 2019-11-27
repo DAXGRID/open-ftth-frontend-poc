@@ -4,7 +4,7 @@ import { Button, ButtonToolbar, Panel } from "react-bootstrap";
 const ConduitDetail = ({ data, breakoutToSplicePoint }) => {
   const line = data.conduitSegment.line;
   const conduit = data.conduit;
-  const lineConduitSegments = line.allConduitSegments;
+  const lineConduitSegments = line.allSegments;
 
   const colorLabel = conduit => {
     let label = conduit.color;

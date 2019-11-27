@@ -77,7 +77,7 @@ export const GET_ROUTE_NODE = gql`
                 }
               }
             }
-            allConduitSegments {
+            allSegments {
               conduit {
                 id
                 name
@@ -115,7 +115,7 @@ export const GET_ROUTE_NODE = gql`
                   }
                 }
               }
-              allConduitSegments {
+              allSegments {
                 conduit {
                   id
                   name
@@ -220,7 +220,7 @@ export const GET_ROUTE_SEGMENT = gql`
                 }
               }
             }
-            allConduitSegments {
+            allSegments {
               conduit {
                 id
                 name
@@ -258,7 +258,7 @@ export const GET_ROUTE_SEGMENT = gql`
                   }
                 }
               }
-              allConduitSegments {
+              allSegments {
                 conduit {
                   id
                   name

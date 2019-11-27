@@ -20,6 +20,11 @@ const ClosuresTab = ({ currentFeature, active, eventKey }) => {
     if (currentFeature) {
       setCurrentFeatureID(currentFeature.id);
     }
+  }, [currentFeature]);
+  
+  React.useEffect(() => {
+    console.log("data changed");
+    console.log(data);
 
     if (active && data && data.diagramService) {
       setFeatures(data.diagramService.buildRouteNodeDiagram.diagramObjects);

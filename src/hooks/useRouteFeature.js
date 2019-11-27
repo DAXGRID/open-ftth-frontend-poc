@@ -37,6 +37,8 @@ export const GET_ROUTE_NODE = gql`
         includeSingleConduits: true
       ) {
         relationType
+        canBeCutAtNode
+        canBeAttachedToConduitClosure
         conduit {
           id
           kind

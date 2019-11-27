@@ -1,6 +1,13 @@
 import React from "react";
 import _ from "lodash";
-import { Glyphicon, ListGroup, ListGroupItem } from "react-bootstrap";
+import {
+  Clearfix,
+  Glyphicon,
+  Dropdown,
+  ListGroup,
+  ListGroupItem,
+  MenuItem
+} from "react-bootstrap";
 import {
   isCable,
   isInnerConduit,
@@ -15,19 +22,48 @@ import {
 } from "hooks/useDiagramService";
 import { useMutation } from "@apollo/react-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
+import ClickContext from "hooks/ClickContext";
 
 const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
   const { setCurrentFeature, setCurrentFeatureID } = React.useContext(
     CurrentFeatureContext
   );
-
-  const attachConduitToClosure = useMutation(ATTACH_CONDUIT_TO_CLOSURE, {
-    update: (proxy, mutationResult) => {}
+  const [contextMenu, setContextMenu] = React.useState({
+    active: false,
+    top: null,
+    left: null
   });
+  const { clickEvent } = React.useContext(ClickContext);
 
-  const cutOuterConduit = useMutation(CUT_OUTER_CONDUIT, {
-    update: (proxy, mutationResult) => {}
-  });
+  React.useEffect(() => {
+    if (clickEvent) {
+      setContextMenu({
+        active: true,
+        top: clickEvent.layerY + 150,
+        left: clickEvent.layerX + 20
+      });
+    } else {
+      setContextMenu({
+        active: false,
+        top: (clickEvent ? clickEvent.top : null),
+        left: (clickEvent ? clickEvent.left : null)
+      });
+    }
+  }, [clickEvent]);
+
+  const [attachConduitToClosure, { attachConduitToClosureData }] = useMutation(
+    ATTACH_CONDUIT_TO_CLOSURE,
+    {
+      update: (proxy, mutationResult) => {}
+    }
+  );
+
+  const [cutOuterConduit, { cutOuterConduitData }] = useMutation(
+    CUT_OUTER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {}
+    }
+  );
 
   const cutInnerConduit = useMutation(CUT_INNER_CONDUIT, {
     update: (proxy, mutationResult) => {}
@@ -48,6 +84,8 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
   };
 
   const canCutOuterConduit = () => {
+    // console.log("canCutOuterConduit")
+    // console.log(currentDiagramFeatures)
     return (
       currentDiagramFeatures.length === 1 &&
       isOuterConduit(currentDiagramFeatures[0])
@@ -65,7 +103,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     return (
       (currentDiagramFeatures.length === 2 &&
         isInnerConduit(currentDiagramFeatures[0]) &&
-          isInnerConduit(currentDiagramFeatures[1])) ||
+        isInnerConduit(currentDiagramFeatures[1])) ||
       (isOuterConduit(currentDiagramFeatures[0]) &&
         isInnerConduit(currentDiagramFeatures[1])) ||
       (isInnerConduit(currentDiagramFeatures[0]) &&
@@ -83,8 +121,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     );
   };
 
-  const onAddToClosure = e => {
-    e.preventDefault();
+  const onAddToClosure = () => {
     const outerConduit = currentDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
     });
@@ -109,8 +146,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
-  const onCutOuterConduit = e => {
-    e.preventDefault();
+  const onCutOuterConduit = () => {
     const outerConduit = currentDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
     });
@@ -132,8 +168,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
-  const onCutInnerConduit = e => {
-    e.preventDefault();
+  const onCutInnerConduit = () => {
     const innerConduit = currentDiagramFeatures.find(feature => {
       return isInnerConduit(feature);
     });
@@ -155,8 +190,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
-  const onConnectInnerConduit = e => {
-    e.preventDefault();
+  const onConnectInnerConduit = () => {
     const fromConduit = currentDiagramFeatures[0];
     const toConduit = currentDiagramFeatures[1];
 
@@ -177,10 +211,6 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     });
 
     reload();
-  };
-
-  const onClick = () => {
-    console.log("clicked");
   };
 
   const reload = () => {
@@ -216,46 +246,52 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
             {currentDiagramFeatures.length === 0 && <span>None</span>}
           </p>
         </ListGroupItem>
-
-        {canAddToClosure() && (
-          <ListGroupItem onClick={onAddToClosure}>
-            <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-            <span className="text-primary" className="text-primary">
-              Add to Well/Closure
-            </span>
-          </ListGroupItem>
-        )}
-
-        {canCutOuterConduit() && (
-          <ListGroupItem onClick={onCutOuterConduit}>
-            <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
-            <span className="text-primary">Cut Outer Conduit</span>
-          </ListGroupItem>
-        )}
-
-        {canCutInnerConduit() && (
-          <ListGroupItem onClick={onCutInnerConduit}>
-            <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
-            <span className="text-primary">Cut Inner Conduit</span>
-          </ListGroupItem>
-        )}
-
-        {canConnectInnerConduit() && (
-          <ListGroupItem onClick={onConnectInnerConduit}>
-            <Glyphicon style={{ marginRight: "10px" }} glyph="link" />
-            <span className="text-primary">Connect Inner Conduit</span>
-          </ListGroupItem>
-        )}
-
-        {canRouteCableThroughInnerConduit() && (
-          <ListGroupItem onClick={onClick}>
-            <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-            <span className="text-primary">
-              Route Cable Through Inner Conduit
-            </span>
-          </ListGroupItem>
-        )}
       </ListGroup>
+      <Dropdown
+        open={contextMenu.active}
+        style={{ position: "absolute", top: contextMenu.top, left: contextMenu.left }}
+      >
+        <Dropdown.Menu>
+          {canAddToClosure() && (
+            <MenuItem onSelect={onAddToClosure}>
+              <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
+              <span className="text-primary" className="text-primary">
+                Add to Well/Closure
+              </span>
+            </MenuItem>
+          )}
+
+          {canCutOuterConduit() && (
+            <MenuItem onSelect={onCutOuterConduit}>
+              <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
+              <span className="text-primary">Cut Outer Conduit</span>
+            </MenuItem>
+          )}
+
+          {canCutInnerConduit() && (
+            <MenuItem onSelect={onCutInnerConduit}>
+              <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
+              <span className="text-primary">Cut Inner Conduit</span>
+            </MenuItem>
+          )}
+
+          {canConnectInnerConduit() && (
+            <MenuItem onSelect={onConnectInnerConduit}>
+              <Glyphicon style={{ marginRight: "10px" }} glyph="link" />
+              <span className="text-primary">Connect Inner Conduit</span>
+            </MenuItem>
+          )}
+
+          {canRouteCableThroughInnerConduit() && (
+            <MenuItem onSelect={onConnectInnerConduit}>
+              <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
+              <span className="text-primary">
+                Route Cable Through Inner Conduit
+              </span>
+            </MenuItem>
+          )}
+        </Dropdown.Menu>
+      </Dropdown>
     </>
   );
 };

@@ -3,6 +3,7 @@ import { Tab } from "react-bootstrap";
 import useDiagramService from "hooks/useDiagramService";
 
 import ClosureDiagram from "components/Diagrams/ClosureDiagram";
+import { ClickProvider } from "hooks/ClickContext";
 
 const ClosuresTab = ({ currentFeature, active, eventKey }) => {
   const [currentFeatureID, setCurrentFeatureID] = React.useState();
@@ -21,7 +22,7 @@ const ClosuresTab = ({ currentFeature, active, eventKey }) => {
       setCurrentFeatureID(currentFeature.id);
     }
   }, [currentFeature]);
-  
+
   React.useEffect(() => {
     console.log("data changed");
     console.log(data);
@@ -39,10 +40,12 @@ const ClosuresTab = ({ currentFeature, active, eventKey }) => {
       {!loading && data && (
         <>
           <div style={{ height: "80vh" }}>
-            <ClosureDiagram
-              currentFeature={currentFeature}
-              features={features}
-            />
+            <ClickProvider>
+              <ClosureDiagram
+                currentFeature={currentFeature}
+                features={features}
+              />
+            </ClickProvider>
           </div>
         </>
       )}

@@ -5,6 +5,7 @@ import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import DiagramFeatures from "./DiagramFeatures";
 
 const MapboxDiagram = ({ config, features, currentDiagramFeatures, setCurrentDiagramFeatures }) => {
+
   const [map, setMap] = React.useState();
 
   React.useLayoutEffect(() => {

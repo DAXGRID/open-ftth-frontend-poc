@@ -43,6 +43,8 @@ export const filterFeatureSegments = data => {
         pam: "true",
         dataType: "route_segment",
         segmentKind: feature.segmentKind,
+        // canBeCutAtNode: feature.canBeCutAtNode,
+        // canBeAttachedToConduitClosure: feature.canBeAttachedToConduitClosure,
         ...styles
       }
     };

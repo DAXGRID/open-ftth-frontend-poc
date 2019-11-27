@@ -1,6 +1,7 @@
 import React from "react";
 import MapboxDiagram from "./MapboxDiagram";
 import DiagramActions from "./DiagramActions";
+import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 
 const ClosureDiagram = ({ features, currentFeature }) => {
   const [parsedFeatures, setParsedFeatures] = React.useState();
@@ -19,6 +20,9 @@ const ClosureDiagram = ({ features, currentFeature }) => {
   };
 
   React.useEffect(() => {
+    console.log("currentFeature")
+
+    console.log(currentFeature)
     console.log("features");
     console.log(features);
     setParsedFeatures(
@@ -71,17 +75,17 @@ const ClosureDiagram = ({ features, currentFeature }) => {
     <>
       {parsedFeatures && (
         <>
-          <DiagramActions
-            currentDiagramFeatures={currentDiagramFeatures}
-            currentFeature={currentFeature}
-            setCurrentDiagramFeatures={setCurrentDiagramFeatures}
-          />
-          <MapboxDiagram
-            config={config}
-            features={parsedFeatures}
-            currentDiagramFeatures={currentDiagramFeatures}
-            setCurrentDiagramFeatures={setCurrentDiagramFeatures}
-          />
+            <DiagramActions
+              currentDiagramFeatures={currentDiagramFeatures}
+              currentFeature={currentFeature}
+              setCurrentDiagramFeatures={setCurrentDiagramFeatures}
+            />
+            <MapboxDiagram
+              config={config}
+              features={parsedFeatures}
+              currentDiagramFeatures={currentDiagramFeatures}
+              setCurrentDiagramFeatures={setCurrentDiagramFeatures}
+            />
         </>
       )}
     </>

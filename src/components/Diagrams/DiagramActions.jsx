@@ -1,7 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import {
-  Clearfix,
+  Col,
   Glyphicon,
   Dropdown,
   ListGroup,
@@ -213,6 +213,11 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
+  const onToggle= () => {
+    // must have an onToggle for the dropdown
+    return;
+  }
+
   const reload = () => {
     const _currentFeature = currentFeature;
     const dataType = _currentFeature.nodeKind ? "route_node" : "route_segment";
@@ -248,10 +253,14 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         </ListGroupItem>
       </ListGroup>
       <Dropdown
+        id="contextMenu"
         open={contextMenu.active}
+        onToggle={onToggle}
         style={{ position: "absolute", top: contextMenu.top, left: contextMenu.left }}
       >
-        <Dropdown.Menu>
+      <Col bsRole="toggle"></Col>
+
+        <Dropdown.Menu >
           {canAddToClosure() && (
             <MenuItem onSelect={onAddToClosure}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />

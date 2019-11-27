@@ -30,7 +30,7 @@ const HeaderLinks = () => {
     }
   }
 
-  const callResetMutation = useMutation(RESET_DEMO_DATA, {
+  const [callResetMutation, _] = useMutation(RESET_DEMO_DATA, {
     update: (proxy, mutationResult) => {
       window.location.reload();
     }

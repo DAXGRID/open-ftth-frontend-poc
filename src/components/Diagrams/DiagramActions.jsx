@@ -45,8 +45,8 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     } else {
       setContextMenu({
         active: false,
-        top: (clickEvent ? clickEvent.top : null),
-        left: (clickEvent ? clickEvent.left : null)
+        top: clickEvent ? clickEvent.top : null,
+        left: clickEvent ? clickEvent.left : null
       });
     }
   }, [clickEvent]);
@@ -213,10 +213,10 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     reload();
   };
 
-  const onToggle= () => {
+  const onToggle = () => {
     // must have an onToggle for the dropdown
     return;
-  }
+  };
 
   const reload = () => {
     const _currentFeature = currentFeature;
@@ -256,11 +256,15 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         id="contextMenu"
         open={contextMenu.active}
         onToggle={onToggle}
-        style={{ position: "absolute", top: contextMenu.top, left: contextMenu.left }}
+        style={{
+          position: "absolute",
+          top: contextMenu.top,
+          left: contextMenu.left
+        }}
       >
-      <Col bsRole="toggle"></Col>
+        <Col bsRole="toggle"></Col>
 
-        <Dropdown.Menu >
+        <Dropdown.Menu>
           {canAddToClosure() && (
             <MenuItem onSelect={onAddToClosure}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />

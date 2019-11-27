@@ -25,9 +25,7 @@ const DiagramFeatures = ({
   const [layers, setLayers] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const sourceID = "diagramFeatures";
-  const { setClickEvent } = React.useContext(
-    ClickContext
-  );
+  const { setClickEvent } = React.useContext(ClickContext);
 
   React.useEffect(() => {
     if (!map || !features) return;
@@ -159,12 +157,12 @@ const DiagramFeatures = ({
     map.on("click", e => {
       const feature = getFeatureFromEvent(map, e, layerIDs);
       if (!feature) {
-        setClickEvent()
-
+        setClickEvent();
+        setCurrentDiagramFeatures([]);
         clearHighlights();
         return;
       }
-      setClickEvent(e.originalEvent)
+      setClickEvent(e.originalEvent);
 
       if (!canSelectAdditional(selectedFeatures, feature)) {
         // reset selectedFeatures

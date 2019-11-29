@@ -5,6 +5,7 @@ Currently running at http://157.245.236.177.
 ## Deploy to Production
 
 ```
+ssh root@157.245.236.177
 cd /var/www/open-ftth-frontend
 git pull 
 pm2 restart 0

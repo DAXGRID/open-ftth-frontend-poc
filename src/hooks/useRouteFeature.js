@@ -80,19 +80,21 @@ export const GET_ROUTE_NODE = gql`
               }
             }
             allSegments {
-              conduit {
-                id
-                name
-                kind
-                color
-                colorMarking
-              }
-              allRouteSegments {
-                id
-                length
-                geometry {
-                  coordinates
-                  type
+              ... on ConduitSegment {
+                conduit {
+                  id
+                  name
+                  kind
+                  color
+                  colorMarking
+                }
+                allRouteSegments {
+                  id
+                  length
+                  geometry {
+                    coordinates
+                    type
+                  }
                 }
               }
             }
@@ -118,50 +120,22 @@ export const GET_ROUTE_NODE = gql`
                 }
               }
               allSegments {
-                conduit {
-                  id
-                  name
-                  kind
-                  color
-                  colorMarking
-                  parent {
+                ... on ConduitSegment {
+                  conduit {
                     id
                     name
                     kind
                     color
                     colorMarking
                   }
-                }
-                allRouteSegments {
-                  id
-                  length
-                  geometry {
-                    coordinates
-                    type
+                  allRouteSegments {
+                    id
+                    length
+                    geometry {
+                      coordinates
+                      type
+                    }
                   }
-                }
-              }
-            }
-            conduit {
-              id
-              name
-              kind
-              color
-              colorMarking
-              position
-              children {
-                kind
-              }
-              parent {
-                id
-                name
-                kind
-                color
-                colorMarking
-              }
-              assetInfo {
-                model {
-                  name
                 }
               }
             }

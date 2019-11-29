@@ -15,15 +15,17 @@ const conduitsData = currentFeature => {
     conduits = currentFeature.routeSegment.relatedConduits;
   }
 
+
   return conduits.map(({ conduit, conduitSegment, relationType }) => {
+    if (!conduit) {debugger}
+
     if (isMultiConduit(conduit)) {
-      return multiConduitData(conduit, conduitSegment, relationType, nodeID)
+      return multiConduitData(conduit, conduitSegment, relationType, nodeID);
     } else {
-      return conduitData(conduit, conduitSegment, relationType, nodeID)
+      return conduitData(conduit, conduitSegment, relationType, nodeID);
     }
   });
-}
-
+};
 
 const multiConduitData = (conduit, conduitSegment, relationType, nodeID) => {
   return {
@@ -70,6 +72,7 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
   return children.map(conduitSegment => {
     const line = conduitSegment.line;
     const conduit = conduitSegment.conduit;
+    if(!conduit) return;
 
     return {
       id: conduit.id,
@@ -88,7 +91,7 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
 };
 
 const isMultiConduit = conduit => {
-  return conduit.kind === "MULTI_CONDUIT"
+  return conduit.kind === "MULTI_CONDUIT";
 };
 
 const multiConduitLabel = conduit => {

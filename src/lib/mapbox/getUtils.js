@@ -89,6 +89,7 @@ export const fitBounds = (map, features, padding = 50) => {
 
   
   coordinates = _.flatten(coordinates)
+  if (!coordinates.length) return
   const bounds = coordinates.reduce(function(bounds, coord) {
     return bounds.extend(coord);
   }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));

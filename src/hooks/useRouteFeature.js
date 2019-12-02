@@ -80,24 +80,23 @@ export const GET_ROUTE_NODE = gql`
               }
             }
             allSegments {
-              ... on ConduitSegment {
-                conduit {
-                  id
-                  name
-                  kind
-                  color
-                  colorMarking
-                }
-                allRouteSegments {
-                  id
-                  length
-                  geometry {
-                    coordinates
-                    type
-                  }
+              conduit {
+                id
+                name
+                kind
+                color
+                colorMarking
+              }
+              allRouteSegments {
+                id
+                length
+                geometry {
+                  coordinates
+                  type
                 }
               }
             }
+
           }
           children {
             line {
@@ -120,23 +119,22 @@ export const GET_ROUTE_NODE = gql`
                 }
               }
               allSegments {
-                ... on ConduitSegment {
-                  conduit {
-                    id
-                    name
-                    kind
-                    color
-                    colorMarking
-                  }
-                  allRouteSegments {
-                    id
-                    length
-                    geometry {
-                      coordinates
-                      type
-                    }
+                conduit {
+                  id
+                  name
+                  kind
+                  color
+                  colorMarking
+                }
+                allRouteSegments {
+                  id
+                  length
+                  geometry {
+                    coordinates
+                    type
                   }
                 }
+
               }
             }
           }

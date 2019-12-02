@@ -23,7 +23,6 @@
     "lodash": "^4.17.15",
     "mapbox-gl": "^1.0.0",
     "moment": "2.24.0",
-    "node-sass": "4.12.0",
     "nouislider": "13.1.5",
     "perfect-scrollbar": "1.4.0",
     "react": "16.8.6",
@@ -72,6 +71,7 @@
     "@types/markerclustererplus": "2.1.33",
     "@types/react": "16.8.15",
     "i18next-scanner": "^2.10.2",
+    "node-sass": "^4.13.0",
     "typescript": "3.4.5"
   },
   "browserslist": [

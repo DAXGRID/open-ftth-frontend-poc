@@ -9,6 +9,8 @@ import {
 import { removeHighlight } from "lib/mapbox/highlightRouteFeature";
 import { fitBounds } from "lib/mapbox/getUtils";
 import ClickContext from "hooks/ClickContext";
+import DiagramContext from "hooks/DiagramContext";
+
 import {
   isCable,
   isInnerConduit,
@@ -16,38 +18,47 @@ import {
   isOuterConduit
 } from "./FeatureLogic";
 
-const DiagramFeatures = ({
-  map,
-  features,
-  currentDiagramFeatures,
-  setCurrentDiagramFeatures
-}) => {
+const DiagramFeatures = ({ map }) => {
+  const selectedFeatures = React.useRef([]);
   const [layers, setLayers] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
   const sourceID = "diagramFeatures";
   const { setClickEvent } = React.useContext(ClickContext);
+  const {
+    loadingDiagram,
+    setLoadingDiagram,
+    diagramFeatures,
+    selectedDiagramFeatures,
+    setSelectedDiagramFeatures
+  } = React.useContext(DiagramContext);
 
   React.useEffect(() => {
-    if (!map || !features) return;
+    if (!map || !diagramFeatures) return;
 
     map.on("load", () => {
-      if (!loading && layers.length === 0) {
-        setLoading(true);
+      if (
+        !loadingDiagram &&
+        diagramFeatures.length > 0 &&
+        layers.length === 0
+      ) {
+        setLoadingDiagram(true);
         loadFeatures();
       }
     });
-  }, [map, features]);
+  }, [map, diagramFeatures]);
 
-  React.useEffect(() => {
-    if (!map || !layers) {
+  React.useLayoutEffect(() => {
+    if (!map || !layers || layers.length === 0) {
       return;
     }
-
-    setupOnMousemove();
-    setupOnClick();
+      setupOnMousemove();
+      setupOnClick();
   }, [map, layers]);
 
   React.useEffect(() => {
+    if (map) {
+      map.resize();
+    }
+
     return () => {
       if (map && map.loaded() && layers.length > 0) {
         setLayers([]);
@@ -56,15 +67,45 @@ const DiagramFeatures = ({
     };
   }, [map]);
 
+  React.useEffect(() => {
+    if (
+      map &&
+      map.loaded() &&
+      diagramFeatures.length &&
+      map.getSource(sourceID)
+    ) {
+      // todo reset when loading new, reset selected
+      map.getSource(sourceID).setData({
+        type: "FeatureCollection",
+        features: []
+      });
+
+      map.getSource(sourceID).setData({
+        type: "FeatureCollection",
+        features: diagramFeatures
+      });
+      setLoadingDiagram(false);
+    }
+  }, [map, diagramFeatures]);
+
   React.useLayoutEffect(() => {
     // being called too many times, fix later
-    if (currentDiagramFeatures.length > 0) {
+    if (selectedDiagramFeatures.length > 0) {
       return;
     }
-    if (map && !loading && layers.length > 0) {
-      fitBounds(map, features, 30);
+    if (map && !loadingDiagram && layers.length > 0) {
+      fitBounds(map, diagramFeatures, 30);
     }
   });
+
+  React.useLayoutEffect(() => {
+    if (loadingDiagram) {
+      setClickEvent();
+      selectedFeatures.current = [];
+      setSelectedDiagramFeatures([]);
+      clearHighlights();
+    }
+  }, [loadingDiagram]);
 
   const resetLayers = () => {
     if (layers && layers.length > 0) {
@@ -98,13 +139,14 @@ const DiagramFeatures = ({
     _layers = parseLayersFromFeatures();
     addLayers(_layers);
     setLayers(_layers);
-    setLoading(false);
+    map.resize();
+    setLoadingDiagram(false);
   };
 
   const parseLayersFromFeatures = () => {
     let _layers = [];
 
-    _.each(features, feature => {
+    _.each(diagramFeatures, feature => {
       feature.properties.layers.map(layer => {
         const newLayer = diagramFeatureLayer({
           source: sourceID,
@@ -122,11 +164,12 @@ const DiagramFeatures = ({
   };
 
   const addSource = () => {
+    if (map.getSource(sourceID)) return;
     map.addSource(sourceID, {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: features
+        features: diagramFeatures
       }
     });
   };
@@ -152,41 +195,39 @@ const DiagramFeatures = ({
 
   const setupOnClick = () => {
     const layerIDs = layers.map(layer => layer.id);
-    var selectedFeatures = [];
 
     map.on("click", e => {
       const feature = getFeatureFromEvent(map, e, layerIDs);
       if (!feature) {
         setClickEvent();
-        setCurrentDiagramFeatures([]);
+        selectedFeatures.current = [];
+        setSelectedDiagramFeatures([]);
         clearHighlights();
         return;
       }
       setClickEvent(e.originalEvent);
-
-      if (!canSelectAdditional(selectedFeatures, feature)) {
+      if (!canSelectAdditional(selectedFeatures.current, feature)) {
         // reset selectedFeatures
         clearHighlights();
-        selectedFeatures = [feature];
+        selectedFeatures.current = [feature];
       } else {
-        selectedFeatures = [...selectedFeatures, feature];
+        selectedFeatures.current = [...selectedFeatures.current, feature];
       }
 
-      setCurrentDiagramFeatures(selectedFeatures);
+      setSelectedDiagramFeatures(selectedFeatures.current);
+      const index = selectedFeatures.current.length - 1
 
-      selectedFeatures.map((feature, index) => {
-        if (!feature.properties.featureType.includes("Label")) {
-          map.addLayer(
-            selectedDiagramFeatureLayer(feature, "selected" + index)
-          );
-        }
+      if (!feature.properties.featureType.includes("Label")) {
+        map.addLayer(
+          selectedDiagramFeatureLayer(feature, "selected" + index)
+        );
+      }
 
-        if (feature.properties.label) {
-          map.addLayer(
-            selectedDiagramLabelLayer(feature, "selectedLabel" + index)
-          );
-        }
-      });
+      if (feature.properties.label) {
+        map.addLayer(
+          selectedDiagramLabelLayer(feature, "selectedLabel" + index)
+        );
+      }
     });
   };
 
@@ -200,6 +241,10 @@ const DiagramFeatures = ({
     }
 
     const prevFeatue = selectedFeatures[0];
+
+    if (prevFeatue.properties.refId === feature.properties.refId) {
+      return false;
+    }
 
     if (isInnerConduit(feature) && isInnerConduit(prevFeatue)) {
       return true;

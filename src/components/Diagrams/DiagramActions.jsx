@@ -23,11 +23,16 @@ import {
 import { useMutation } from "@apollo/react-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 import ClickContext from "hooks/ClickContext";
+import DiagramContext from "hooks/DiagramContext";
 
-const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
-  const { setCurrentFeature, setCurrentFeatureID } = React.useContext(
-    CurrentFeatureContext
-  );
+const DiagramActions = () => {
+  const {
+    diagramFeatures,
+    pointOfInterestID,
+    selectedDiagramFeatures,
+    setLoadingDiagram
+  } = React.useContext(DiagramContext);
+
   const [contextMenu, setContextMenu] = React.useState({
     active: false,
     top: null,
@@ -39,7 +44,7 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     if (clickEvent) {
       setContextMenu({
         active: true,
-        top: clickEvent.layerY + 150,
+        top: clickEvent.layerY + 130,
         left: clickEvent.layerX + 20
       });
     } else {
@@ -51,88 +56,107 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
     }
   }, [clickEvent]);
 
+  React.useEffect(() => {
+    if (!cutOuterConduitData) return;
+    debugger;
+  }, [cutOuterConduitData]);
+
   const [attachConduitToClosure, { attachConduitToClosureData }] = useMutation(
     ATTACH_CONDUIT_TO_CLOSURE,
     {
-      update: (proxy, mutationResult) => {}
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
     }
   );
 
   const [cutOuterConduit, { cutOuterConduitData }] = useMutation(
     CUT_OUTER_CONDUIT,
     {
-      update: (proxy, mutationResult) => {}
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
     }
   );
 
-  const cutInnerConduit = useMutation(CUT_INNER_CONDUIT, {
-    update: (proxy, mutationResult) => {}
-  });
+  const [cutInnerConduit, { cutInnerConduitData }] = useMutation(
+    CUT_INNER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
 
-  const connectInnerConduit = useMutation(CONNECT_INNER_CONDUIT, {
-    update: (proxy, mutationResult) => {}
-  });
+  const [connectInnerConduit, { connectInnerConduitData }] = useMutation(
+    CONNECT_INNER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
 
   const canAddToClosure = () => {
     return (
-      (currentDiagramFeatures.length === 2 &&
-        isOuterConduit(currentDiagramFeatures[0]) &&
-        isClosure(currentDiagramFeatures[1])) ||
-      (isOuterConduit(currentDiagramFeatures[1]) &&
-        isClosure(currentDiagramFeatures[0]))
+      (selectedDiagramFeatures.length === 2 &&
+        isOuterConduit(selectedDiagramFeatures[0]) &&
+        isClosure(selectedDiagramFeatures[1])) ||
+      (isOuterConduit(selectedDiagramFeatures[1]) &&
+        isClosure(selectedDiagramFeatures[0]))
     );
   };
 
   const canCutOuterConduit = () => {
-    // console.log("canCutOuterConduit")
-    // console.log(currentDiagramFeatures)
     return (
-      currentDiagramFeatures.length === 1 &&
-      isOuterConduit(currentDiagramFeatures[0])
+      selectedDiagramFeatures.length === 1 &&
+      isOuterConduit(selectedDiagramFeatures[0])
     );
   };
 
   const canCutInnerConduit = () => {
     return (
-      currentDiagramFeatures.length === 1 &&
-      isInnerConduit(currentDiagramFeatures[0])
+      selectedDiagramFeatures.length === 1 &&
+      isInnerConduit(selectedDiagramFeatures[0])
     );
   };
 
   const canConnectInnerConduit = () => {
     return (
-      (currentDiagramFeatures.length === 2 &&
-        isInnerConduit(currentDiagramFeatures[0]) &&
-        isInnerConduit(currentDiagramFeatures[1])) ||
-      (isOuterConduit(currentDiagramFeatures[0]) &&
-        isInnerConduit(currentDiagramFeatures[1])) ||
-      (isInnerConduit(currentDiagramFeatures[0]) &&
-        isOuterConduit(currentDiagramFeatures[1]))
+      (selectedDiagramFeatures.length === 2 &&
+        isInnerConduit(selectedDiagramFeatures[0]) &&
+        isInnerConduit(selectedDiagramFeatures[1])) ||
+      (isOuterConduit(selectedDiagramFeatures[0]) &&
+        isInnerConduit(selectedDiagramFeatures[1])) ||
+      (isInnerConduit(selectedDiagramFeatures[0]) &&
+        isOuterConduit(selectedDiagramFeatures[1]))
     );
   };
 
   const canRouteCableThroughInnerConduit = () => {
     return (
-      (currentDiagramFeatures.length === 2 &&
-        isCable(currentDiagramFeatures[0]) &&
-        isInnerConduit(currentDiagramFeatures[1])) ||
-      (isCable(currentDiagramFeatures[1]) &&
-        isInnerConduit(currentDiagramFeatures[0]))
+      (selectedDiagramFeatures.length === 2 &&
+        isCable(selectedDiagramFeatures[0]) &&
+        isInnerConduit(selectedDiagramFeatures[1])) ||
+      (isCable(selectedDiagramFeatures[1]) &&
+        isInnerConduit(selectedDiagramFeatures[0]))
     );
   };
 
   const onAddToClosure = () => {
-    const outerConduit = currentDiagramFeatures.find(feature => {
+    const outerConduit = selectedDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
     });
 
-    const closure = currentDiagramFeatures.find(feature => {
+    const closure = selectedDiagramFeatures.find(feature => {
       return isClosure(feature);
     });
 
     if (!outerConduit || !closure) {
       return;
     }
+    setLoadingDiagram(true);
+
     const conduitId = outerConduit.properties.refId;
     const conduitClosureId = closure.properties.refId;
 
@@ -142,21 +166,20 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         conduitClosureId
       }
     });
-
-    reload();
   };
 
   const onCutOuterConduit = () => {
-    const outerConduit = currentDiagramFeatures.find(feature => {
+    const outerConduit = selectedDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
     });
 
     if (!outerConduit) {
       return;
     }
+    setLoadingDiagram(true);
 
     const multiConduitId = outerConduit.properties.refId;
-    const pointOfInterestId = currentFeature.id;
+    const pointOfInterestId = pointOfInterestID;
 
     cutOuterConduit({
       variables: {
@@ -164,21 +187,20 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         pointOfInterestId
       }
     });
-
-    reload();
   };
 
   const onCutInnerConduit = () => {
-    const innerConduit = currentDiagramFeatures.find(feature => {
+    const innerConduit = selectedDiagramFeatures.find(feature => {
       return isInnerConduit(feature);
     });
 
     if (!innerConduit) {
       return;
     }
+    setLoadingDiagram(true);
 
     const innerConduitId = innerConduit.properties.refId;
-    const pointOfInterestId = currentFeature.id;
+    const pointOfInterestId = pointOfInterestID;
 
     cutInnerConduit({
       variables: {
@@ -186,21 +208,20 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         pointOfInterestId
       }
     });
-
-    reload();
   };
 
   const onConnectInnerConduit = () => {
-    const fromConduit = currentDiagramFeatures[0];
-    const toConduit = currentDiagramFeatures[1];
+    const fromConduit = selectedDiagramFeatures[0];
+    const toConduit = selectedDiagramFeatures[1];
 
     if (!fromConduit || !toConduit) {
       return;
     }
+    setLoadingDiagram(true);
 
     const fromConduitSegmentId = fromConduit.properties.refId;
     const toConduitSegmentId = toConduit.properties.refId;
-    const pointOfInterestId = currentFeature.id;
+    const pointOfInterestId = pointOfInterestID;
 
     connectInnerConduit({
       variables: {
@@ -209,25 +230,11 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         toConduitSegmentId
       }
     });
-
-    reload();
   };
 
   const onToggle = () => {
     // must have an onToggle for the dropdown
     return;
-  };
-
-  const reload = () => {
-    const _currentFeature = currentFeature;
-    const dataType = _currentFeature.nodeKind ? "route_node" : "route_segment";
-
-    // reload pane with new data
-    setCurrentFeature(null);
-    setCurrentFeatureID({
-      id: _currentFeature.id,
-      type: dataType
-    });
   };
 
   return (
@@ -236,19 +243,22 @@ const DiagramActions = ({ currentDiagramFeatures, currentFeature }) => {
         <ListGroupItem>
           <h5>Selected Items</h5>
           <p>
-            {currentDiagramFeatures.length > 0 &&
-              currentDiagramFeatures.map(feature => (
+            {selectedDiagramFeatures &&
+              selectedDiagramFeatures.length > 0 &&
+              selectedDiagramFeatures.map(feature => (
                 <span key={feature.properties.featureType}>
                   {_.startCase(feature.properties.featureType)}
-                  {feature.properties.label.length > 0 &&
+                  {feature.properties.label &&
+                    feature.properties.label.length &&
                     feature.properties.label !== "null" && (
                       <span> - {feature.properties.label}</span>
                     )}
-                  {currentDiagramFeatures.length > 1 &&
-                    feature === currentDiagramFeatures[0] && <span> & </span>}
+                  {selectedDiagramFeatures.length > 1 &&
+                    feature === selectedDiagramFeatures[0] && <span> & </span>}
                 </span>
               ))}
-            {currentDiagramFeatures.length === 0 && <span>None</span>}
+            {!selectedDiagramFeatures ||
+              (!selectedDiagramFeatures.length && <span>None</span>)}
           </p>
         </ListGroupItem>
       </ListGroup>

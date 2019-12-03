@@ -4,6 +4,7 @@ import MapboxDiagram from "./MapboxDiagram";
 import DiagramActions from "./DiagramActions";
 import DiagramContext from "hooks/DiagramContext";
 import useDiagramService from "hooks/useDiagramService";
+import { Alert } from "react-bootstrap";
 
 const ClosureDiagram = ({ currentFeature, active }) => {
   const {
@@ -20,8 +21,9 @@ const ClosureDiagram = ({ currentFeature, active }) => {
 
   React.useEffect(() => {
     if (error) {
+      setLoadingDiagram(false);
       console.error("Error Loading Item: ");
-      console.error(error);
+      console.error(error.message);
     }
   }, [error]);
 
@@ -55,6 +57,16 @@ const ClosureDiagram = ({ currentFeature, active }) => {
 
   return (
     <>
+      {error && (
+        <Alert bsStyle="warning">
+          <span>
+            <b> Error - </b>
+            {error.graphQLErrors.map(({ message }, i) => (
+              <span key={i}>{message}</span>
+            ))}
+          </span>
+        </Alert>
+      )}
       <LoadingOverlay active={loadingDiagram} spinner text="Loading...">
         {!loading && data && (
           <>

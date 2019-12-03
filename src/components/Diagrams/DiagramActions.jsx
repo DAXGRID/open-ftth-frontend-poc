@@ -9,16 +9,21 @@ import {
   MenuItem
 } from "react-bootstrap";
 import {
-  isCable,
   isInnerConduit,
   isOuterConduit,
-  isClosure
+  isClosure,
+  canAddToClosure,
+  canCutOuterConduit,
+  canCutInnerConduit,
+  canConnectInnerConduits,
+  canRouteCableThroughConduits
 } from "./FeatureLogic";
 import {
   ATTACH_CONDUIT_TO_CLOSURE,
   CUT_OUTER_CONDUIT,
   CUT_INNER_CONDUIT,
-  CONNECT_INNER_CONDUIT
+  CONNECT_INNER_CONDUIT,
+  PLACE_FIBER_CABLE_WITHIN_CONDUIT
 } from "hooks/useDiagramService";
 import { useMutation } from "@apollo/react-hooks";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
@@ -97,52 +102,15 @@ const DiagramActions = () => {
     }
   );
 
-  const canAddToClosure = () => {
-    return (
-      (selectedDiagramFeatures.length === 2 &&
-        isOuterConduit(selectedDiagramFeatures[0]) &&
-        isClosure(selectedDiagramFeatures[1])) ||
-      (isOuterConduit(selectedDiagramFeatures[1]) &&
-        isClosure(selectedDiagramFeatures[0]))
-    );
-  };
-
-  const canCutOuterConduit = () => {
-    return (
-      selectedDiagramFeatures.length === 1 &&
-      isOuterConduit(selectedDiagramFeatures[0])
-    );
-  };
-
-  const canCutInnerConduit = () => {
-    return (
-      selectedDiagramFeatures.length === 1 &&
-      isInnerConduit(selectedDiagramFeatures[0])
-    );
-  };
-
-  const canConnectInnerConduit = () => {
-    return (
-      (selectedDiagramFeatures.length === 2 &&
-        isInnerConduit(selectedDiagramFeatures[0]) &&
-        isInnerConduit(selectedDiagramFeatures[1])) ||
-      (isOuterConduit(selectedDiagramFeatures[0]) &&
-        isInnerConduit(selectedDiagramFeatures[1])) ||
-      (isInnerConduit(selectedDiagramFeatures[0]) &&
-        isOuterConduit(selectedDiagramFeatures[1]))
-    );
-  };
-
-  const canRouteCableThroughInnerConduit = () => {
-    return (
-      (selectedDiagramFeatures.length === 2 &&
-        isCable(selectedDiagramFeatures[0]) &&
-        isInnerConduit(selectedDiagramFeatures[1])) ||
-      (isCable(selectedDiagramFeatures[1]) &&
-        isInnerConduit(selectedDiagramFeatures[0]))
-    );
-  };
-
+  const [placeFiberCableWithinConduit, { placeFiberCableWithinConduitData }] = useMutation(
+    PLACE_FIBER_CABLE_WITHIN_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
+  
   const onAddToClosure = () => {
     const outerConduit = selectedDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
@@ -232,6 +200,29 @@ const DiagramActions = () => {
     });
   };
 
+  const onRouteCableThroughConduits = () => {
+    const cable = selectedDiagramFeatures[0]
+    const fromConduit = selectedDiagramFeatures[1];
+    const toConduit = selectedDiagramFeatures[2];
+
+    if (!cable || !fromConduit || !toConduit) {
+      return;
+    }
+    setLoadingDiagram(true);
+
+    const cableSegmentId = cable.properties.refId;
+    const conduitSegmentId1 = fromConduit.properties.refId;
+    const conduitSegmentId2 = toConduit.properties.refId;
+
+    placeFiberCableWithinConduit({
+      variables: {
+        cableSegmentId,
+        conduitSegmentId1,
+        conduitSegmentId2
+      }
+    });
+  };
+
   const onToggle = () => {
     // must have an onToggle for the dropdown
     return;
@@ -244,8 +235,7 @@ const DiagramActions = () => {
           <h5>Selected Items</h5>
           <p>
             {selectedDiagramFeatures &&
-              selectedDiagramFeatures.length > 0 &&
-              selectedDiagramFeatures.map(feature => (
+              selectedDiagramFeatures.map((feature, index) => (
                 <span key={feature.properties.featureType}>
                   {_.startCase(feature.properties.featureType)}
                   {feature.properties.label &&
@@ -253,8 +243,7 @@ const DiagramActions = () => {
                     feature.properties.label !== "null" && (
                       <span> - {feature.properties.label}</span>
                     )}
-                  {selectedDiagramFeatures.length > 1 &&
-                    feature === selectedDiagramFeatures[0] && <span> & </span>}
+                  {index < (selectedDiagramFeatures.length - 1) && <span> & </span>}
                 </span>
               ))}
             {!selectedDiagramFeatures ||
@@ -275,7 +264,7 @@ const DiagramActions = () => {
         <Col bsRole="toggle"></Col>
 
         <Dropdown.Menu>
-          {canAddToClosure() && (
+          {canAddToClosure(selectedDiagramFeatures) && (
             <MenuItem onSelect={onAddToClosure}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
               <span className="text-primary" className="text-primary">
@@ -284,29 +273,29 @@ const DiagramActions = () => {
             </MenuItem>
           )}
 
-          {canCutOuterConduit() && (
+          {canCutOuterConduit(selectedDiagramFeatures) && (
             <MenuItem onSelect={onCutOuterConduit}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
               <span className="text-primary">Cut Outer Conduit</span>
             </MenuItem>
           )}
 
-          {canCutInnerConduit() && (
+          {canCutInnerConduit(selectedDiagramFeatures) && (
             <MenuItem onSelect={onCutInnerConduit}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="scissors" />
               <span className="text-primary">Cut Inner Conduit</span>
             </MenuItem>
           )}
 
-          {canConnectInnerConduit() && (
+          {canConnectInnerConduits(selectedDiagramFeatures) && (
             <MenuItem onSelect={onConnectInnerConduit}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="link" />
               <span className="text-primary">Connect Inner Conduit</span>
             </MenuItem>
           )}
 
-          {canRouteCableThroughInnerConduit() && (
-            <MenuItem onSelect={onConnectInnerConduit}>
+          {canRouteCableThroughConduits(selectedDiagramFeatures) && (
+            <MenuItem onSelect={onRouteCableThroughConduits}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
               <span className="text-primary">
                 Route Cable Through Inner Conduit

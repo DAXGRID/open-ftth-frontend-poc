@@ -11,12 +11,7 @@ import { fitBounds } from "lib/mapbox/getUtils";
 import ClickContext from "hooks/ClickContext";
 import DiagramContext from "hooks/DiagramContext";
 
-import {
-  isCable,
-  isInnerConduit,
-  isClosure,
-  isOuterConduit
-} from "./FeatureLogic";
+import { canSelectAdditional } from "./FeatureLogic";
 
 const DiagramFeatures = ({ map }) => {
   const selectedFeatures = React.useRef([]);
@@ -50,8 +45,8 @@ const DiagramFeatures = ({ map }) => {
     if (!map || !layers || layers.length === 0) {
       return;
     }
-      setupOnMousemove();
-      setupOnClick();
+    setupOnMousemove();
+    setupOnClick();
   }, [map, layers]);
 
   React.useEffect(() => {
@@ -215,12 +210,10 @@ const DiagramFeatures = ({ map }) => {
       }
 
       setSelectedDiagramFeatures(selectedFeatures.current);
-      const index = selectedFeatures.current.length - 1
+      const index = selectedFeatures.current.length - 1;
 
       if (!feature.properties.featureType.includes("Label")) {
-        map.addLayer(
-          selectedDiagramFeatureLayer(feature, "selected" + index)
-        );
+        map.addLayer(selectedDiagramFeatureLayer(feature, "selected" + index));
       }
 
       if (feature.properties.label) {
@@ -231,55 +224,14 @@ const DiagramFeatures = ({ map }) => {
     });
   };
 
-  const canSelectAdditional = (selectedFeatures, feature) => {
-    if (selectedFeatures.length >= 2) {
-      return false;
-    }
-
-    if (selectedFeatures.length === 0) {
-      return true;
-    }
-
-    const prevFeatue = selectedFeatures[0];
-
-    if (prevFeatue.properties.refId === feature.properties.refId) {
-      return false;
-    }
-
-    if (isInnerConduit(feature) && isInnerConduit(prevFeatue)) {
-      return true;
-    }
-
-    if (
-      (isInnerConduit(feature) && isOuterConduit(prevFeatue)) ||
-      (isOuterConduit(feature) && isInnerConduit(prevFeatue))
-    ) {
-      return true;
-    }
-
-    if (
-      (isInnerConduit(feature) && isCable(prevFeatue)) ||
-      (isInnerConduit(prevFeatue) && isCable(feature))
-    ) {
-      return true;
-    }
-
-    if (
-      (isOuterConduit(feature) && isClosure(prevFeatue)) ||
-      (isOuterConduit(prevFeatue) && isClosure(feature))
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
   const clearHighlights = () => {
     removeHighlight(map, "selected0");
     removeHighlight(map, "selected1");
+    removeHighlight(map, "selected2");
 
     removeHighlight(map, "selectedLabel0");
     removeHighlight(map, "selectedLabel1");
+    removeHighlight(map, "selectedLabel2");
   };
 
   return <></>;

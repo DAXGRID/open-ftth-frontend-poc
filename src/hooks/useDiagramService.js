@@ -67,6 +67,18 @@ mutation cutOuterConduitCommand($pointOfInterestId: ID!, $multiConduitId: ID!) {
 `;
 
 
+export const PLACE_FIBER_CABLE_WITHIN_CONDUIT = gql`
+mutation placeFiberCableWithinConduit($cableSegmentId: ID!, $conduitSegmentId1: ID!, $conduitSegmentId2: ID!) {
+  conduitService {
+    placeFiberCableWithinConduit(
+      cableSegmentId: $cableSegmentId
+      conduitSegmentId1: $conduitSegmentId1
+      conduitSegmentId2: $conduitSegmentId2
+    ) 
+  }
+}
+`;
+
 export const CUT_INNER_CONDUIT = gql`
 mutation cutInnerConduitCommand($pointOfInterestId: ID!, $innerConduitId: ID!) {
   conduitService {

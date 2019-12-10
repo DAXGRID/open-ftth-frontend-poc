@@ -9,19 +9,7 @@ const EditableFeatures = ({ map, features }) => {
   const [draw, setDraw] = React.useState();
   const { setCurrentFeatureID } = React.useContext(CurrentFeatureContext);
 
-  React.useEffect(() => {
-    if (!map || !features) return;
-    setDraw(setupDraw());
-  }, [map, features]);
-
-  React.useEffect(() => {
-    if (!map || !draw || !features) return;
-
-    features.segments && features.segments.map(feature => draw.add(feature));
-    features.nodes && features.nodes.map(feature => draw.add(feature));
-  }, [map, draw, features]);
-
-  const setupDraw = () => {
+  const setupDraw = React.useCallback(() => {
     const draw = newDraw();
     map.addControl(draw);
 
@@ -57,7 +45,20 @@ const EditableFeatures = ({ map, features }) => {
     //   props.deleteFeatures(e.features);
     // });
     return draw;
-  };
+  }, [map, setCurrentFeatureID]);
+
+  React.useEffect(() => {
+    if (!map || !features) return;
+    setDraw(setupDraw());
+  }, [map, features, setupDraw]);
+
+  React.useEffect(() => {
+    if (!map || !draw || !features) return;
+
+    features.segments && features.segments.map(feature => draw.add(feature));
+    features.nodes && features.nodes.map(feature => draw.add(feature));
+  }, [map, draw, features]);
+
 
   const newDraw = () => {
     // SnapLineMode.permissions = SnapPointMode.permissions = permissions;

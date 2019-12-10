@@ -3,14 +3,20 @@ import { Tab } from "react-bootstrap";
 import ClosureDiagram from "components/Diagrams/ClosureDiagram";
 import { ClickProvider } from "hooks/ClickContext";
 import { DiagramProvider } from "hooks/DiagramContext";
+import CurrentFeatureContext from "hooks/CurrentFeatureContext";
 
-const ClosuresTab = ({ currentFeature, active, eventKey }) => {
+const ClosuresTab = ({ active, eventKey }) => {
+  const {
+    currentFeatureID,
+  } = React.useContext(CurrentFeatureContext);
+
   return (
     <Tab.Pane eventKey={eventKey}>
-      <div style={{ height: "80vh" }}>
+      <div style={{ height: "50vh" }}>
         <ClickProvider>
           <DiagramProvider>
-            <ClosureDiagram currentFeature={currentFeature} active={active} />
+            { currentFeatureID && (
+            <ClosureDiagram currentFeatureID={currentFeatureID} active={active} /> )}
           </DiagramProvider>
         </ClickProvider>
       </div>

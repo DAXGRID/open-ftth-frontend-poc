@@ -81,15 +81,15 @@ const bbox = (e, bboxSize) => {
 
 export const fitBounds = (map, features, padding = 50) => {
   let coordinates = features.map(feature => {
-    const geometry = feature._geometry ? feature._geometry : feature.geometry
+    const geometry = feature._geometry ? feature._geometry : feature.geometry;
 
-    if (geometry.type === "LineString") return geometry.coordinates
-    if (geometry.type === "Polygon") return _.flatten(geometry.coordinates)
+    if (geometry.type === "LineString") return geometry.coordinates;
+    if (geometry.type === "Polygon") return _.flatten(geometry.coordinates);
+    return undefined;
   });
 
-  
-  coordinates = _.flatten(coordinates)
-  if (!coordinates.length) return
+  coordinates = _.flatten(coordinates);
+  if (!coordinates.length) return;
   const bounds = coordinates.reduce(function(bounds, coord) {
     return bounds.extend(coord);
   }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));

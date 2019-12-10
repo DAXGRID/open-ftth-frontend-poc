@@ -20,11 +20,12 @@ const GET_DIAGRAM_SERVICE = gql`
   }
 `;
 
-export default (id, loading) => {
-  let query;
-
+export default ({id, type}) => {
   // React complains if we conditionally call this hook
-  const skipQuery = !id || loading;
+  const skipQuery = !id || type !== "route_node";
+  if(!skipQuery) {
+    console.log(`useDiagramService for id ${id}, type ${type}`)
+  }
   return useQuery(GET_DIAGRAM_SERVICE, {
     variables: { id },
     skip: skipQuery,

@@ -6,7 +6,7 @@ import DiagramContext from "hooks/DiagramContext";
 import useDiagramService from "hooks/useDiagramService";
 import { Alert } from "react-bootstrap";
 
-const ClosureDiagram = ({ currentFeature, active }) => {
+const ClosureDiagram = ({ currentFeatureID, active }) => {
   const {
     setPointOfInterestID,
     setFeatureData,
@@ -14,10 +14,10 @@ const ClosureDiagram = ({ currentFeature, active }) => {
     setLoadingDiagram
   } = React.useContext(DiagramContext);
 
-  const { data, error, loading } = useDiagramService(
-    currentFeature.id,
-    loading
-  );
+  const { data, error, loading } = useDiagramService({
+    id: currentFeatureID.id,
+    type: currentFeatureID.type
+  });
 
   React.useEffect(() => {
     if (error) {
@@ -25,17 +25,21 @@ const ClosureDiagram = ({ currentFeature, active }) => {
       console.error("Error Loading Item: ");
       console.error(error.message);
     }
-  }, [error]);
+  }, [error, setLoadingDiagram]);
 
   React.useEffect(() => {
-    if (currentFeature) {
-      setPointOfInterestID(currentFeature.id);
+    if (currentFeatureID.id && currentFeatureID.type === "route_node") {
+      console.log(
+        `diagram sees currentFeatureID changed to ${currentFeatureID.id}`
+      );
+
+      setPointOfInterestID(currentFeatureID.id);
     }
-  }, [currentFeature]);
+  }, [currentFeatureID, setPointOfInterestID]);
 
   React.useEffect(() => {
     setLoadingDiagram(!!loading);
-  }, [loading]);
+  }, [loading, setLoadingDiagram]);
 
   React.useEffect(() => {
     if (active && data && data.diagramService) {
@@ -43,7 +47,7 @@ const ClosureDiagram = ({ currentFeature, active }) => {
     } else {
       setFeatureData({});
     }
-  }, [data]);
+  }, [data, active, setFeatureData]);
 
   const longitude = 0.012;
   const latitude = 0.012;

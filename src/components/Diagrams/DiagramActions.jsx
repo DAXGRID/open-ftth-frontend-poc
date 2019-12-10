@@ -26,13 +26,11 @@ import {
   PLACE_FIBER_CABLE_WITHIN_CONDUIT
 } from "hooks/useDiagramService";
 import { useMutation } from "@apollo/react-hooks";
-import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 import ClickContext from "hooks/ClickContext";
 import DiagramContext from "hooks/DiagramContext";
 
 const DiagramActions = () => {
   const {
-    diagramFeatures,
     pointOfInterestID,
     selectedDiagramFeatures,
     setLoadingDiagram
@@ -61,12 +59,7 @@ const DiagramActions = () => {
     }
   }, [clickEvent]);
 
-  React.useEffect(() => {
-    if (!cutOuterConduitData) return;
-    debugger;
-  }, [cutOuterConduitData]);
-
-  const [attachConduitToClosure, { attachConduitToClosureData }] = useMutation(
+  const [attachConduitToClosure] = useMutation(
     ATTACH_CONDUIT_TO_CLOSURE,
     {
       update: (proxy, mutationResult) => {},
@@ -75,7 +68,7 @@ const DiagramActions = () => {
     }
   );
 
-  const [cutOuterConduit, { cutOuterConduitData }] = useMutation(
+  const [cutOuterConduit] = useMutation(
     CUT_OUTER_CONDUIT,
     {
       update: (proxy, mutationResult) => {},
@@ -84,7 +77,7 @@ const DiagramActions = () => {
     }
   );
 
-  const [cutInnerConduit, { cutInnerConduitData }] = useMutation(
+  const [cutInnerConduit] = useMutation(
     CUT_INNER_CONDUIT,
     {
       update: (proxy, mutationResult) => {},
@@ -93,7 +86,7 @@ const DiagramActions = () => {
     }
   );
 
-  const [connectInnerConduit, { connectInnerConduitData }] = useMutation(
+  const [connectInnerConduit] = useMutation(
     CONNECT_INNER_CONDUIT,
     {
       update: (proxy, mutationResult) => {},
@@ -102,7 +95,7 @@ const DiagramActions = () => {
     }
   );
 
-  const [placeFiberCableWithinConduit, { placeFiberCableWithinConduitData }] = useMutation(
+  const [placeFiberCableWithinConduit] = useMutation(
     PLACE_FIBER_CABLE_WITHIN_CONDUIT,
     {
       update: (proxy, mutationResult) => {},
@@ -267,7 +260,7 @@ const DiagramActions = () => {
           {canAddToClosure(selectedDiagramFeatures) && (
             <MenuItem onSelect={onAddToClosure}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-              <span className="text-primary" className="text-primary">
+              <span className="text-primary">
                 Add to Well/Closure
               </span>
             </MenuItem>

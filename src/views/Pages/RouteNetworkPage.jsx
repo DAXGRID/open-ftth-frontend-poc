@@ -23,7 +23,7 @@ function RouteNetworkPage() {
             </Col>
           </MediaQuery>
         </CurrentFeatureLoader>
-        <Col lg={5} md={12} className="pt-3">
+        <Col lg={5} md={12} style={{ height: "85vh" }} className="pt-3">
           <InfoPanel />
         </Col>
       </CurrentFeatureProvider>

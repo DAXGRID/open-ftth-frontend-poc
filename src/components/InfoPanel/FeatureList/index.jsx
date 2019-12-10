@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import SummaryTab from "./SummaryTab";
 import WorkListTab from "./WorkListTab";
-import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
 import { useTranslation } from "react-i18next";
 
 const FeatureListInfoPanel = () => {
   const { t } = useTranslation();
-  const { setCurrentFeatureID } = useContext(CurrentFeatureContext);
   return (
     <Card
       title={t("general.route_network_map")}
@@ -25,11 +23,9 @@ const FeatureListInfoPanel = () => {
             <Col sm={12}>
               <Tab.Content animation>
                 <SummaryTab
-                  setCurrentFeature={setCurrentFeatureID}
                   eventKey="summary"
                 />
                 <WorkListTab
-                  setCurrentFeature={setCurrentFeatureID}
                   eventKey="workList"
                 />
               </Tab.Content>

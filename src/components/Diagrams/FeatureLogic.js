@@ -22,6 +22,7 @@ export const canSelectAdditional = (selectedFeatures, feature) => {
       ) {
         return true;
       }
+      break;
     }
     case 3:
       return canRouteCableThroughConduits(features);

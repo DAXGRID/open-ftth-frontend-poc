@@ -54,6 +54,10 @@ const useDiagramFeatures = () => {
         return parsedFeature;
       })
     );
+
+    return () => {
+      setDiagramFeatures([])
+    }
   }, [featureData]);
 
   return [diagramFeatures, setFeatureData];

@@ -2,7 +2,6 @@ import React from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import {
   iconFormatter,
-  colorFormatter,
   addressFormatter
 } from "./tableData/formatters";
 import { useTranslation } from "react-i18next";

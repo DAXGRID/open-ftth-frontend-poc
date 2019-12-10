@@ -72,7 +72,7 @@ const innerConduitsData = (id, nodeID, children, relationType) => {
   return children.map(conduitSegment => {
     const line = conduitSegment.line;
     const conduit = conduitSegment.conduit;
-    if(!conduit) return;
+    if(!conduit) return undefined;
 
     return {
       id: conduit.id,

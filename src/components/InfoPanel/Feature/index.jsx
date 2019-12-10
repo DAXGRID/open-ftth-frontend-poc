@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import Card from "../../Card/Card.jsx";
 import { Col, Nav, NavItem, Tab, Row } from "react-bootstrap";
 import cardHeader from "./cardHeader";
 import ConduitsTab from "./ConduitsTab/index";
 import ClosuresTab from "./ClosuresTab/index";
-import EquipmentTab from "./EquipmentTab";
-import CircuitsTab from "./CircuitsTab";
-import CurrentFeatureContext from "../../../hooks/CurrentFeatureContext";
+// import EquipmentTab from "./EquipmentTab";
+// import CircuitsTab from "./CircuitsTab";
+import CurrentFeatureContext from "hooks/CurrentFeatureContext";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
@@ -17,15 +17,17 @@ const FeatureInfoPanel = () => {
   const {
     currentFeature,
     currentFeatureError,
-    currentFeatureLoading,
-  } = useContext(CurrentFeatureContext);
+    currentFeatureLoading
+  } = React.useContext(CurrentFeatureContext);
   const feature = currentFeature.routeNode || currentFeature.routeSegment;
+  const isRouteNode = !!currentFeature.routeNode
+
   const header = cardHeader(
     feature,
     currentFeatureError,
     currentFeatureLoading
   );
-  const [activeKey, setActiveKey] = React.useState('closure');
+  const [activeKey, setActiveKey] = React.useState("closure");
 
   React.useLayoutEffect(() => {
     new PerfectScrollbar("#scroll-container", {
@@ -45,7 +47,7 @@ const FeatureInfoPanel = () => {
       content={
         <Tab.Container
           id="itemInfo"
-          defaultActiveKey="closure"
+          defaultActiveKey={isRouteNode ? "closure" : "conduits" }
           onSelect={handleSelect}
         >
           <Row className="clearfix">
@@ -53,11 +55,10 @@ const FeatureInfoPanel = () => {
               <Nav bsStyle="tabs">
                 <NavItem eventKey="conduits">{t("general.conduits")}</NavItem>
 
-                {/* Only allow for SP1010 for now */}
-                {/* {feature.conduitClosure && (feature.id == "0b2168f2-d9be-455c-a4de-e9169f000122") && ( */}
+                {isRouteNode && (
                   <NavItem eventKey="closure">{t("general.closure")}</NavItem>
-                {/* )} */}
-{/* 
+                )}
+                {/* 
                 <NavItem eventKey="equipment">{t("general.equipment")}</NavItem>
 
                 <NavItem eventKey="circuits">{t("general.circuits")}</NavItem> */}
@@ -68,12 +69,11 @@ const FeatureInfoPanel = () => {
               <Tab.Content
                 animation
                 id="scroll-container"
-                style={{ height: "100vh", position: "relative" }}
+                style={{ position: "relative" }}
               >
                 <ConduitsTab eventKey="conduits" />
 
                 <ClosuresTab
-                  currentFeature={feature}
                   active={activeKey === "closure"}
                   eventKey="closure"
                 />

@@ -14,7 +14,6 @@ const CurrentFeatureLoader = props => {
     setCurrentFeatureError,
     setCurrentFeatureLoading
   } = useContext(CurrentFeatureContext);
-  const loading = true;
   const response = useRouteFeature(currentFeatureID);
   
   // allowing this state to be set to null is good, will clean info panel

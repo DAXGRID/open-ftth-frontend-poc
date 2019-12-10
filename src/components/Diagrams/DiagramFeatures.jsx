@@ -16,6 +16,8 @@ import { canSelectAdditional } from "./FeatureLogic";
 const DiagramFeatures = ({ map }) => {
   const selectedFeatures = React.useRef([]);
   const [layers, setLayers] = React.useState([]);
+  const [initialLoad, setInitialLoad] = React.useState(true);
+
   const sourceID = "diagramFeatures";
   const { setClickEvent } = React.useContext(ClickContext);
   const {
@@ -26,41 +28,142 @@ const DiagramFeatures = ({ map }) => {
     setSelectedDiagramFeatures
   } = React.useContext(DiagramContext);
 
+  // diagramFeatures initial load - initialize map source & features
   React.useEffect(() => {
-    if (!map || !diagramFeatures) return;
+    if (!map || !diagramFeatures || !initialLoad) return;
+
+    const loadFeatures = () => {
+      addSource();
+      addLayers();
+      map.resize();
+      fitBounds(map, diagramFeatures, 30);
+      setLoadingDiagram(false);
+    };
+
+    const addSource = () => {
+      if (map.getSource(sourceID)) return;
+      map.addSource(sourceID, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: diagramFeatures
+        }
+      });
+    };
+
+    const addLayers = () => {
+      const _layers = parseLayersFromFeatures();
+
+      _.each(_layers, layer => {
+        map.addLayer(layer);
+      });
+      setLayers(_layers);
+    };
+
+    const parseLayersFromFeatures = () => {
+      let _layers = [];
+
+      _.each(diagramFeatures, feature => {
+        _.each(feature.properties.layers, layer => {
+          const newLayer = diagramFeatureLayer({
+            source: sourceID,
+            layerID: layer.layerID,
+            featureType: feature.properties.featureType
+          });
+
+          if (!_layers.map(layer => layer.id).includes(newLayer.id)) {
+            _layers.push(newLayer);
+          }
+        });
+      });
+
+      return _.orderBy(_layers, ["order"], ["asc"]);
+    };
 
     map.on("load", () => {
-      if (
-        !loadingDiagram &&
-        diagramFeatures.length > 0 &&
-        layers.length === 0
-      ) {
+      if (diagramFeatures.length > 0 && layers.length === 0) {
+        setInitialLoad(false);
+        console.log("initial map load");
         setLoadingDiagram(true);
         loadFeatures();
       }
     });
-  }, [map, diagramFeatures]);
+  }, [map, diagramFeatures, initialLoad, layers, setLoadingDiagram]);
 
   React.useLayoutEffect(() => {
     if (!map || !layers || layers.length === 0) {
       return;
     }
+
+    const setupOnMousemove = () => {
+      const layerIDs = layers.map(layer => layer.id);
+  
+      map.on("mousemove", e => {
+        const feature = getFeatureFromEvent(map, e, layerIDs);
+        if (feature) {
+          map.getCanvas().style.cursor = "pointer";
+        } else {
+          map.getCanvas().style.cursor = "";
+        }
+      });
+    };
+  
+    const setupOnClick = () => {
+      const layerIDs = layers.map(layer => layer.id);
+  
+      map.on("click", e => {
+        const feature = getFeatureFromEvent(map, e, layerIDs);
+        if (!feature) {
+          setClickEvent();
+          selectedFeatures.current = [];
+          setSelectedDiagramFeatures([]);
+          clearHighlights();
+          return;
+        }
+        setClickEvent(e.originalEvent);
+        if (!canSelectAdditional(selectedFeatures.current, feature)) {
+          // reset selectedFeatures
+          clearHighlights();
+          selectedFeatures.current = [feature];
+        } else {
+          selectedFeatures.current = [...selectedFeatures.current, feature];
+        }
+  
+        setSelectedDiagramFeatures(selectedFeatures.current);
+        const index = selectedFeatures.current.length - 1;
+  
+        if (!feature.properties.featureType.includes("Label")) {
+          map.addLayer(selectedDiagramFeatureLayer(feature, "selected" + index));
+        }
+  
+        if (feature.properties.label) {
+          map.addLayer(
+            selectedDiagramLabelLayer(feature, "selectedLabel" + index)
+          );
+        }
+      });
+    };
+  
     setupOnMousemove();
     setupOnClick();
   }, [map, layers]);
 
   React.useEffect(() => {
-    if (map) {
+    if (map && map.loaded()) {
       map.resize();
     }
+  }, [map]);
 
+  React.useEffect(() => {
     return () => {
+      console.log("unloading");
+      setLoadingDiagram();
+      setSelectedDiagramFeatures([]);
       if (map && map.loaded() && layers.length > 0) {
-        setLayers([]);
         resetLayers();
       }
     };
-  }, [map]);
+  }, []);
 
   React.useEffect(() => {
     if (
@@ -69,7 +172,6 @@ const DiagramFeatures = ({ map }) => {
       diagramFeatures.length &&
       map.getSource(sourceID)
     ) {
-      // todo reset when loading new, reset selected
       map.getSource(sourceID).setData({
         type: "FeatureCollection",
         features: []
@@ -89,7 +191,7 @@ const DiagramFeatures = ({ map }) => {
       return;
     }
     if (map && !loadingDiagram && layers.length > 0) {
-      fitBounds(map, diagramFeatures, 30);
+      // fitBounds(map, diagramFeatures, 30);
     }
   });
 
@@ -104,13 +206,17 @@ const DiagramFeatures = ({ map }) => {
 
   const resetLayers = () => {
     if (layers && layers.length > 0) {
+      console.log("resetting layers");
+
       _.each(
         [
           ...layers,
           { id: "selected0" },
           { id: "selected1" },
+          { id: "selected2" },
           { id: "selectedLabel0" },
-          { id: "selectedLabel1" }
+          { id: "selectedLabel1" },
+          { id: "selectedLabel2" }
         ],
         layer => {
           if (map.getLayer(layer.id)) {
@@ -124,105 +230,9 @@ const DiagramFeatures = ({ map }) => {
       map.removeSource(sourceID);
     }
 
-    setLayers();
+    setLayers([]);
   };
 
-  const loadFeatures = () => {
-    let _layers = [];
-
-    addSource();
-    _layers = parseLayersFromFeatures();
-    addLayers(_layers);
-    setLayers(_layers);
-    map.resize();
-    setLoadingDiagram(false);
-  };
-
-  const parseLayersFromFeatures = () => {
-    let _layers = [];
-
-    _.each(diagramFeatures, feature => {
-      feature.properties.layers.map(layer => {
-        const newLayer = diagramFeatureLayer({
-          source: sourceID,
-          layerID: layer.layerID,
-          featureType: feature.properties.featureType
-        });
-
-        if (!_layers.map(layer => layer.id).includes(newLayer.id)) {
-          _layers.push(newLayer);
-        }
-      });
-    });
-
-    return _.orderBy(_layers, ["order"], ["asc"]);
-  };
-
-  const addSource = () => {
-    if (map.getSource(sourceID)) return;
-    map.addSource(sourceID, {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: diagramFeatures
-      }
-    });
-  };
-
-  const addLayers = _layers => {
-    _.each(_layers, layer => {
-      map.addLayer(layer);
-    });
-  };
-
-  const setupOnMousemove = () => {
-    const layerIDs = layers.map(layer => layer.id);
-
-    map.on("mousemove", e => {
-      const feature = getFeatureFromEvent(map, e, layerIDs);
-      if (feature) {
-        map.getCanvas().style.cursor = "pointer";
-      } else {
-        map.getCanvas().style.cursor = "";
-      }
-    });
-  };
-
-  const setupOnClick = () => {
-    const layerIDs = layers.map(layer => layer.id);
-
-    map.on("click", e => {
-      const feature = getFeatureFromEvent(map, e, layerIDs);
-      if (!feature) {
-        setClickEvent();
-        selectedFeatures.current = [];
-        setSelectedDiagramFeatures([]);
-        clearHighlights();
-        return;
-      }
-      setClickEvent(e.originalEvent);
-      if (!canSelectAdditional(selectedFeatures.current, feature)) {
-        // reset selectedFeatures
-        clearHighlights();
-        selectedFeatures.current = [feature];
-      } else {
-        selectedFeatures.current = [...selectedFeatures.current, feature];
-      }
-
-      setSelectedDiagramFeatures(selectedFeatures.current);
-      const index = selectedFeatures.current.length - 1;
-
-      if (!feature.properties.featureType.includes("Label")) {
-        map.addLayer(selectedDiagramFeatureLayer(feature, "selected" + index));
-      }
-
-      if (feature.properties.label) {
-        map.addLayer(
-          selectedDiagramLabelLayer(feature, "selectedLabel" + index)
-        );
-      }
-    });
-  };
 
   const clearHighlights = () => {
     removeHighlight(map, "selected0");

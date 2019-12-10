@@ -2,22 +2,16 @@ import React, { useContext } from "react";
 import CurrentFeatureContext from "../../hooks/CurrentFeatureContext";
 import FeatureInfoPanel from "./Feature";
 import FeatureListInfoPanel from "./FeatureList";
-import BreakoutToSplicePointForm from "./ActionForm/BreakoutToSplicePoint";
 
 const FeatureContextSwitcher = () => {
-  const { currentFeature, breakoutToSplicePoint } = useContext(CurrentFeatureContext);
-
-  if (currentFeature && breakoutToSplicePoint) {
-    return (
-      <BreakoutToSplicePointForm
-        data={breakoutToSplicePoint}
-        currentFeature={currentFeature}
-      />
-    );
-  } else if (
+  const { currentFeature } = useContext(CurrentFeatureContext);
+  
+  if (
     currentFeature &&
     (currentFeature.routeNode || currentFeature.routeSegment)
   ) {
+    console.log("currrent Feature")
+    console.log(currentFeature)
     return <FeatureInfoPanel />;
   } else {
     return <FeatureListInfoPanel />;

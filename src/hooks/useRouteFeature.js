@@ -302,6 +302,10 @@ export default ({ id, type }) => {
       query = GET_ROUTE_NODE;
       break;
   }
+  // if(id) {
+
+  // }
+  console.log(`useRouteFeature for id ${id}, type ${type}`)
 
   // React complains if we conditionally call this hook
   const skipQuery = !id;

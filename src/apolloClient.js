@@ -1,7 +1,7 @@
 import ApolloClient from "apollo-boost";
 
 const client = new ApolloClient({
-  uri: "https://equipment.openftth.net/graphql",
+  uri: "https://test02-backend.openftth.net/graphql",
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all'

@@ -1,63 +1,79 @@
 import React from "react";
+import _ from "lodash";
 
 const useDiagramFeatures = () => {
-  const [featureData, setFeatureData] = React.useState({});
-  const [diagramFeatures, setDiagramFeatures] = React.useState([]);
+  const [featureData, setFeatureData] = React.useState();
+  const [diagramFeatures, setDiagramFeatures] = React.useState();
+
+  React.useEffect(() => {
+    console.log("DIAGRAM CONTEXT diagramFeatures changed");
+    console.log(diagramFeatures);
+  }, [diagramFeatures]);
 
   React.useEffect(() => {
     if (!featureData || !featureData.diagramService) return;
 
     const _features =
       featureData.diagramService.buildRouteNodeDiagram.diagramObjects;
+    const _parsedFeatures = _features.map(feature => {
+      let parsedFeature = feature;
 
-    setDiagramFeatures(
-      _features.map(feature => {
-        let parsedFeature = feature;
+      parsedFeature.properties = {
+        oldCoords: feature.geometry.coordinates,
+        featureType: feature.style,
+        label: feature.label,
+        refId: feature.refId,
+        refClass: feature.refClass,
+        layers: [
+          {
+            layerID: "DF_" + feature.style
+          }
+        ]
+      };
 
-        parsedFeature.properties = {
-          oldCoords: feature.geometry.coordinates,
-          featureType: feature.style,
-          label: feature.label,
-          refId: feature.refId,
-          refClass: feature.refClass,
-          layers: [
-            {
-              layerID: "DF_" + feature.style
-            }
-          ]
-        };
+      if (parsedFeature.style === "Well") {
+        parsedFeature.properties.layers.push({
+          layerID: "DF_WellFill"
+        });
+      }
 
-        if (parsedFeature.style === "Well") {
-          parsedFeature.properties.layers.push({
-            layerID: "DF_WellFill"
-          });
-        }
+      if (parsedFeature.style === "CableInsideWell") {
+        parsedFeature.properties.layers.push({
+          layerID: "DF_CableInsideWellLabel"
+        });
+      }
 
-        if (parsedFeature.style === "CableInsideWell") {
-          parsedFeature.properties.layers.push({
-            layerID: "DF_CableInsideWellLabel"
-          });
-        }
+      if (parsedFeature.style === "CableOutsideWell") {
+        parsedFeature.properties.layers.push({
+          layerID: "DF_CableOutsideWellLabel"
+        });
+      }
 
-        if (parsedFeature.style === "CableOutsideWell") {
-          parsedFeature.properties.layers.push({
-            layerID: "DF_CableOutsideWellLabel"
-          });
-        }
+      if (typeof feature.geometry.coordinates === "string") {
+        parsedFeature.geometry.coordinates = JSON.parse(
+          feature.geometry.coordinates
+        );
+      }
 
-        if (typeof feature.geometry.coordinates === "string") {
-          parsedFeature.geometry.coordinates = JSON.parse(
-            feature.geometry.coordinates
-          );
-        }
+      return parsedFeature;
+    });
 
-        return parsedFeature;
-      })
-    );
+    const setFeatures = () => {
+      console.log("debounce setFeatures");
+      setDiagramFeatures(_parsedFeatures);
+    };
 
-    return () => {
-      setDiagramFeatures([])
-    }
+    const debouncedSetFeatures = _.debounce(setFeatures, 500, {
+      leading: true,
+      trailing: false
+    });
+
+    debouncedSetFeatures()
+
+    // return () => {
+    //   console.log("unload from featureData")
+    //   setDiagramFeatures()
+    // }
   }, [featureData]);
 
   return [diagramFeatures, setFeatureData];
@@ -71,7 +87,9 @@ export const DiagramProvider = props => {
   const [pointOfInterestID, setPointOfInterestID] = React.useState();
   const [diagramFeatures, setFeatureData] = useDiagramFeatures();
   const [loadingDiagram, setLoadingDiagram] = React.useState();
-  const [selectedDiagramFeatures, setSelectedDiagramFeatures] = React.useState([]);
+  const [selectedDiagramFeatures, setSelectedDiagramFeatures] = React.useState(
+    []
+  );
 
   return (
     <DiagramContext.Provider

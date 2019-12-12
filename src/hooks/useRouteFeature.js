@@ -96,7 +96,6 @@ export const GET_ROUTE_NODE = gql`
                 }
               }
             }
-
           }
           children {
             line {
@@ -134,7 +133,6 @@ export const GET_ROUTE_NODE = gql`
                     type
                   }
                 }
-
               }
             }
           }
@@ -305,7 +303,7 @@ export default ({ id, type }) => {
   // if(id) {
 
   // }
-  console.log(`useRouteFeature for id ${id}, type ${type}`)
+  // if (!skipQuery) console.log(`useRouteFeature for id ${id}, type ${type}`);
 
   // React complains if we conditionally call this hook
   const skipQuery = !id;

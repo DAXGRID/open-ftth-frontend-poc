@@ -6,12 +6,14 @@ import DiagramFeatures from "./DiagramFeatures";
 import DiagramContext from "hooks/DiagramContext";
 
 const MapboxDiagram = ({ config }) => {
+  const sourceID = "diagramFeatures";
   const [map, setMap] = React.useState();
+  const [mapLoaded, setMapLoaded] = React.useState(false);
   const { diagramFeatures } = React.useContext(DiagramContext);
 
   const shouldDrawFeatures = React.useCallback(() => {
-    return (map && map.loaded() && diagramFeatures.length)
-  }, [map, diagramFeatures])
+    return map && mapLoaded && diagramFeatures && diagramFeatures.length;
+  }, [map, mapLoaded, diagramFeatures]);
 
   // Setup Map
   React.useLayoutEffect(() => {
@@ -30,8 +32,19 @@ const MapboxDiagram = ({ config }) => {
     });
 
     map.addControl(nav, "top-left");
-  }, [map]);
 
+    map.on("load", () => {
+      map.addSource(sourceID, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      });
+
+      setMapLoaded(true);
+    });
+  }, [map]);
 
   return (
     <div style={{ width: "100%", height: "40vw" }}>
@@ -39,7 +52,9 @@ const MapboxDiagram = ({ config }) => {
         id={config.container}
         style={{ width: "100%", height: "100%" }}
       ></div>
-      {shouldDrawFeatures && (<DiagramFeatures map={map} diagramFeatures={diagramFeatures} />)}
+      {shouldDrawFeatures() && (
+        <DiagramFeatures map={mapLoaded ? map : null} sourceID={sourceID} diagramFeatures={diagramFeatures} />
+      )}
     </div>
   );
 };

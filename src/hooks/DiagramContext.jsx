@@ -6,11 +6,6 @@ const useDiagramFeatures = () => {
   const [diagramFeatures, setDiagramFeatures] = React.useState();
 
   React.useEffect(() => {
-    console.log("DIAGRAM CONTEXT diagramFeatures changed");
-    console.log(diagramFeatures);
-  }, [diagramFeatures]);
-
-  React.useEffect(() => {
     if (!featureData || !featureData.diagramService) return;
 
     const _features =
@@ -59,7 +54,6 @@ const useDiagramFeatures = () => {
     });
 
     const setFeatures = () => {
-      console.log("debounce setFeatures");
       setDiagramFeatures(_parsedFeatures);
     };
 
@@ -68,12 +62,7 @@ const useDiagramFeatures = () => {
       trailing: false
     });
 
-    debouncedSetFeatures()
-
-    // return () => {
-    //   console.log("unload from featureData")
-    //   setDiagramFeatures()
-    // }
+    debouncedSetFeatures();
   }, [featureData]);
 
   return [diagramFeatures, setFeatureData];

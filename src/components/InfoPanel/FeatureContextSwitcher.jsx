@@ -10,8 +10,6 @@ const FeatureContextSwitcher = () => {
     currentFeature &&
     (currentFeature.routeNode || currentFeature.routeSegment)
   ) {
-    console.log("currrent Feature")
-    console.log(currentFeature)
     return <FeatureInfoPanel />;
   } else {
     return <FeatureListInfoPanel />;

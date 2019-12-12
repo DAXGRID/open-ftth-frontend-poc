@@ -13,12 +13,9 @@ import DiagramContext from "hooks/DiagramContext";
 
 import { canSelectAdditional } from "./FeatureLogic";
 
-const DiagramFeatures = ({ map, diagramFeatures }) => {
-  const sourceID = "diagramFeatures";
+const DiagramFeatures = ({ map, mapLoaded, sourceID, diagramFeatures }) => {
   const layers = React.useRef([]);
   const selectedFeatures = React.useRef([]);
-  const [initialLoad, setInitialLoad] = React.useState(true);
-
   const { setClickEvent } = React.useContext(ClickContext);
   const {
     loadingDiagram,
@@ -44,35 +41,14 @@ const DiagramFeatures = ({ map, diagramFeatures }) => {
     });
 
     return _.orderBy(_layers, ["order"], ["asc"]);
-  }, [diagramFeatures]);
+  }, [diagramFeatures, sourceID]);
 
   const addLayers = useCallback(() => {
     _.each(layers.current, layer => {
-      map.addLayer(layer);
+      if (!map.getLayer(layer.id)) {
+        map.addLayer(layer);
+      }
     });
-  }, [map, layers]);
-
-  const resetLayers = useCallback(() => {
-    if (layers.current && layers.current.length > 0) {
-      _.each(
-        [
-          ...layers.current,
-          { id: "selected0" },
-          { id: "selected1" },
-          { id: "selected2" },
-          { id: "selectedLabel0" },
-          { id: "selectedLabel1" },
-          { id: "selectedLabel2" }
-        ],
-        layer => {
-          if (map.getLayer(layer.id)) {
-            map.removeLayer(layer.id);
-          }
-        }
-      );
-    }
-
-    layers.current = [];
   }, [map, layers]);
 
   const layerIDs = useCallback(() => {
@@ -109,9 +85,8 @@ const DiagramFeatures = ({ map, diagramFeatures }) => {
       const feature = getFeatureFromEvent(map, e, layerIDs());
       if (!feature) {
         setClickEvent();
-        selectedFeatures.current = [];
-        setSelectedDiagramFeatures([]);
         clearHighlights();
+        selectedFeatures.current = [];
         return;
       }
       setClickEvent(e.originalEvent);
@@ -127,13 +102,25 @@ const DiagramFeatures = ({ map, diagramFeatures }) => {
       const index = selectedFeatures.current.length - 1;
 
       if (!feature.properties.featureType.includes("Label")) {
-        map.addLayer(selectedDiagramFeatureLayer(feature, "selected" + index));
+        // Belt & suspenders because clearHighlights isn't enough after a mutation for some reason
+        const layerID = "selected" + index;
+        const mapLayer = map.getLayer(layerID);
+
+        if (typeof mapLayer !== "undefined") {
+          map.removeLayer(layerID).removeSource(layerID);
+        }
+        map.addLayer(selectedDiagramFeatureLayer(feature, layerID));
       }
 
       if (feature.properties.label) {
-        map.addLayer(
-          selectedDiagramLabelLayer(feature, "selectedLabel" + index)
-        );
+        // Belt & suspenders because clearHighlights isn't enough after a mutation for some reason
+        const layerID = "selectedLabel" + index;
+        const mapLayer = map.getLayer(layerID);
+
+        if (typeof mapLayer !== "undefined") {
+          map.removeLayer(layerID).removeSource(layerID);
+        }
+        map.addLayer(selectedDiagramLabelLayer(feature, layerID));
       }
     });
   }, [
@@ -146,24 +133,15 @@ const DiagramFeatures = ({ map, diagramFeatures }) => {
 
   const updateMapFeatures = useCallback(() => {
     if (map.getSource(sourceID)) {
-      resetLayers();
       map.getSource(sourceID).setData({
         type: "FeatureCollection",
         features: diagramFeatures
       });
-      layers.current = parseLayersFromFeatures();
-      addLayers();
-    } else {
-      map.addSource(sourceID, {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: diagramFeatures
-        }
-      });
-      addLayers();
     }
-  }, [diagramFeatures, map, resetLayers, addLayers, parseLayersFromFeatures]);
+
+    layers.current = parseLayersFromFeatures();
+    addLayers();
+  }, [diagramFeatures, map, addLayers, parseLayersFromFeatures, sourceID]);
 
   const loadFeatures = useCallback(() => {
     setLoadingDiagram(true);
@@ -174,38 +152,19 @@ const DiagramFeatures = ({ map, diagramFeatures }) => {
   }, [map, diagramFeatures, setLoadingDiagram, updateMapFeatures]);
 
   React.useEffect(() => {
-    if (!map || !diagramFeatures) return;
-
-    if (initialLoad) {
-      setInitialLoad(false);
-      map.on("load", () => {
-        layers.current = parseLayersFromFeatures();
-
-        loadFeatures();
-        setupOnMousemove();
-        setupOnClick();
-      });
-    } else {
-      loadFeatures();
-    }
-
+    if (!map) return;
+    loadFeatures();
+    setupOnClick();
+    setupOnMousemove();
     // No return/unload function for initial load/reload, it only causes render loops
-  }, [
-    map,
-    diagramFeatures,
-    parseLayersFromFeatures,
-    loadFeatures,
-    setupOnClick,
-    setupOnMousemove,
-    initialLoad
-  ]);
+  }, [map, diagramFeatures, loadFeatures, setupOnClick, setupOnMousemove]);
 
   React.useLayoutEffect(() => {
     if (loadingDiagram) {
       setClickEvent();
+      clearHighlights();
       selectedFeatures.current = [];
       setSelectedDiagramFeatures([]);
-      clearHighlights();
     }
   }, [
     loadingDiagram,

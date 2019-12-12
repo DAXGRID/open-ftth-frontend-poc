@@ -43,6 +43,10 @@ const DiagramActions = () => {
   });
   const { clickEvent } = React.useContext(ClickContext);
 
+  const updateCallback = React.useCallback(() => {
+    setLoadingDiagram(true);
+  }, [setLoadingDiagram]);
+
   React.useEffect(() => {
     if (clickEvent) {
       setContextMenu({
@@ -59,41 +63,29 @@ const DiagramActions = () => {
     }
   }, [clickEvent]);
 
-  const [attachConduitToClosure] = useMutation(
-    ATTACH_CONDUIT_TO_CLOSURE,
-    {
-      update: (proxy, mutationResult) => {},
-      refetchQueries: () => ["GetDiagramService"],
-      awaitRefetchQueries: true
-    }
-  );
+  const [attachConduitToClosure] = useMutation(ATTACH_CONDUIT_TO_CLOSURE, {
+    update: (proxy, mutationResult) => {},
+    refetchQueries: () => ["GetDiagramService"],
+    awaitRefetchQueries: true
+  });
 
-  const [cutOuterConduit] = useMutation(
-    CUT_OUTER_CONDUIT,
-    {
-      update: (proxy, mutationResult) => {},
-      refetchQueries: () => ["GetDiagramService"],
-      awaitRefetchQueries: true
-    }
-  );
+  const [cutOuterConduit] = useMutation(CUT_OUTER_CONDUIT, {
+    update: (proxy, mutationResult) => {},
+    refetchQueries: () => ["GetDiagramService"],
+    awaitRefetchQueries: true
+  });
 
-  const [cutInnerConduit] = useMutation(
-    CUT_INNER_CONDUIT,
-    {
-      update: (proxy, mutationResult) => {},
-      refetchQueries: () => ["GetDiagramService"],
-      awaitRefetchQueries: true
-    }
-  );
+  const [cutInnerConduit] = useMutation(CUT_INNER_CONDUIT, {
+    update: (proxy, mutationResult) => {},
+    refetchQueries: () => ["GetDiagramService"],
+    awaitRefetchQueries: true
+  });
 
-  const [connectInnerConduit] = useMutation(
-    CONNECT_INNER_CONDUIT,
-    {
-      update: (proxy, mutationResult) => {},
-      refetchQueries: () => ["GetDiagramService"],
-      awaitRefetchQueries: true
-    }
-  );
+  const [connectInnerConduit] = useMutation(CONNECT_INNER_CONDUIT, {
+    update: (proxy, mutationResult) => {},
+    refetchQueries: () => ["GetDiagramService"],
+    awaitRefetchQueries: true
+  });
 
   const [placeFiberCableWithinConduit] = useMutation(
     PLACE_FIBER_CABLE_WITHIN_CONDUIT,
@@ -103,7 +95,7 @@ const DiagramActions = () => {
       awaitRefetchQueries: true
     }
   );
-  
+
   const onAddToClosure = () => {
     const outerConduit = selectedDiagramFeatures.find(feature => {
       return isOuterConduit(feature);
@@ -116,7 +108,8 @@ const DiagramActions = () => {
     if (!outerConduit || !closure) {
       return;
     }
-    setLoadingDiagram(true);
+
+    updateCallback();
 
     const conduitId = outerConduit.properties.refId;
     const conduitClosureId = closure.properties.refId;
@@ -137,7 +130,8 @@ const DiagramActions = () => {
     if (!outerConduit) {
       return;
     }
-    setLoadingDiagram(true);
+
+    updateCallback();
 
     const multiConduitId = outerConduit.properties.refId;
     const pointOfInterestId = pointOfInterestID;
@@ -158,7 +152,8 @@ const DiagramActions = () => {
     if (!innerConduit) {
       return;
     }
-    setLoadingDiagram(true);
+
+    updateCallback();
 
     const innerConduitId = innerConduit.properties.refId;
     const pointOfInterestId = pointOfInterestID;
@@ -178,7 +173,8 @@ const DiagramActions = () => {
     if (!fromConduit || !toConduit) {
       return;
     }
-    setLoadingDiagram(true);
+
+    updateCallback();
 
     const fromConduitSegmentId = fromConduit.properties.refId;
     const toConduitSegmentId = toConduit.properties.refId;
@@ -194,14 +190,15 @@ const DiagramActions = () => {
   };
 
   const onRouteCableThroughConduits = () => {
-    const cable = selectedDiagramFeatures[0]
+    const cable = selectedDiagramFeatures[0];
     const fromConduit = selectedDiagramFeatures[1];
     const toConduit = selectedDiagramFeatures[2];
 
     if (!cable || !fromConduit || !toConduit) {
       return;
     }
-    setLoadingDiagram(true);
+
+    updateCallback();
 
     const cableSegmentId = cable.properties.refId;
     const conduitSegmentId1 = fromConduit.properties.refId;
@@ -236,7 +233,9 @@ const DiagramActions = () => {
                     feature.properties.label !== "null" && (
                       <span> - {feature.properties.label}</span>
                     )}
-                  {index < (selectedDiagramFeatures.length - 1) && <span> & </span>}
+                  {index < selectedDiagramFeatures.length - 1 && (
+                    <span> & </span>
+                  )}
                 </span>
               ))}
             {!selectedDiagramFeatures ||
@@ -260,9 +259,7 @@ const DiagramActions = () => {
           {canAddToClosure(selectedDiagramFeatures) && (
             <MenuItem onSelect={onAddToClosure}>
               <Glyphicon style={{ marginRight: "10px" }} glyph="log-in" />
-              <span className="text-primary">
-                Add to Well/Closure
-              </span>
+              <span className="text-primary">Add to Well/Closure</span>
             </MenuItem>
           )}
 

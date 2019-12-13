@@ -39,6 +39,16 @@ const FeatureInfoPanel = () => {
     setActiveKey(selectedKey);
   };
 
+  React.useEffect(() => {
+    
+  })
+
+  const defaultActiveKey = () => {
+    console.log("defaultActiveKey")
+    console.log(isRouteNode ? "closure" : "conduits")
+    return isRouteNode ? "closure" : "conduits"
+  };
+
   return (
     <Card
       title={header.title}
@@ -47,7 +57,7 @@ const FeatureInfoPanel = () => {
       content={
         <Tab.Container
           id="itemInfo"
-          defaultActiveKey={isRouteNode ? "closure" : "conduits" }
+          defaultActiveKey={defaultActiveKey()}
           onSelect={handleSelect}
         >
           <Row className="clearfix">

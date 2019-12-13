@@ -22,6 +22,9 @@ export const addressFormatter = (cell, row) => {
 };
 
 export const iconFormatter = (cell, row) => {
+  if (!row || !row.conduit) {
+    return;
+  }
   if (row.conduit.kind === "MULTI_CONDUIT") {
     return multiConduitIcon(cell, row);
   } else {

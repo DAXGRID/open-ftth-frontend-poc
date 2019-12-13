@@ -13,6 +13,7 @@ import highlightRouteFeature, {
 const UneditableFeatures = ({ map, features }) => {
   const {
     highlightedFeature,
+    setHighlightedFeature,
     setCurrentFeatureID
   } = React.useContext(CurrentFeatureContext);
   const layerIDs = {
@@ -70,7 +71,7 @@ const UneditableFeatures = ({ map, features }) => {
       const setupOnClick = () => {
         map.on("click", e => {
           clearSelected();
-          clearHighlight();
+          setHighlightedFeature();
     
           let feature = getFeatureFromEvent(map, e, selectableLayers);
           if (!feature) return;

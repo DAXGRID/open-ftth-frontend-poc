@@ -28,8 +28,11 @@ const UneditableFeatures = ({ map, features }) => {
     layerIDs.routeSegmentLabels
   ];
   
-  const clearHighlights = React.useCallback(() => {
+  const clearSelected = React.useCallback(() => {
     removeHighlight(map, layerIDs.selectedLayer);
+  },[layerIDs, map]);
+
+  const clearHighlight = React.useCallback(() => {
     removeHighlight(map, layerIDs.highlightedLayer);
   },[layerIDs, map]);
 
@@ -66,7 +69,8 @@ const UneditableFeatures = ({ map, features }) => {
     
       const setupOnClick = () => {
         map.on("click", e => {
-          clearHighlights();
+          clearSelected();
+          clearHighlight();
     
           let feature = getFeatureFromEvent(map, e, selectableLayers);
           if (!feature) return;
@@ -91,17 +95,21 @@ const UneditableFeatures = ({ map, features }) => {
       setupOnMousemove();
       setupOnClick();
     });
-  }, [map, features, clearHighlights, layerIDs, selectableLayers, setCurrentFeatureID]);
+  }, [map, features, clearHighlight, layerIDs, selectableLayers, setCurrentFeatureID]);
 
   // highlight features selected from info tab
   React.useEffect(() => {
+    console.log("highlight route feature?")
+    console.log(highlightedFeature)
     if (!map) return;
+
+    clearHighlight();
+
     // clear highlights even if we didn't set one, for edit views
-    clearHighlights();
-      
     if (!highlightedFeature) return;
+
     highlightRouteFeature(map, highlightedFeature, layerIDs.highlightedLayer);
-  }, [map, highlightedFeature, clearHighlights, layerIDs]);
+  }, [map, highlightedFeature, clearHighlight, layerIDs]);
 
   return <></>;
 };

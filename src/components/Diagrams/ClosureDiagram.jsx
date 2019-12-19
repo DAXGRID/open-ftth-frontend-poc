@@ -11,7 +11,9 @@ const ClosureDiagram = ({ currentFeatureID, active }) => {
     setPointOfInterestID,
     setFeatureData,
     loadingDiagram,
-    setLoadingDiagram
+    setLoadingDiagram,
+    errorMessage,
+    setErrorMessage
   } = React.useContext(DiagramContext);
 
   const { data, error, loading } = useDiagramService({
@@ -21,18 +23,21 @@ const ClosureDiagram = ({ currentFeatureID, active }) => {
 
   React.useEffect(() => {
     if (error) {
-      setLoadingDiagram(false);
-      console.error("Error Loading Item: ");
-      console.error(error.message);
+      setErrorMessage(error);
+    } else {
+      setErrorMessage(null);
     }
-  }, [error, setLoadingDiagram]);
+  }, [error, setErrorMessage]);
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      setLoadingDiagram(false);
+    }
+  }, [errorMessage, setLoadingDiagram]);
 
   React.useEffect(() => {
     if (currentFeatureID.id && currentFeatureID.type === "route_node") {
-      console.log(
-        `diagram sees currentFeatureID changed to ${currentFeatureID.id}`
-      );
-
+      setErrorMessage(null);
       setPointOfInterestID(currentFeatureID.id);
     }
   }, [currentFeatureID, setPointOfInterestID]);
@@ -61,11 +66,11 @@ const ClosureDiagram = ({ currentFeatureID, active }) => {
 
   return (
     <>
-      {error && (
+      {errorMessage && (
         <Alert bsStyle="warning">
           <span>
             <b> Error - </b>
-            {error.graphQLErrors.map(({ message }, i) => (
+            {errorMessage.graphQLErrors.map(({ message }, i) => (
               <span key={i}>{message}</span>
             ))}
           </span>

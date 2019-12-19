@@ -33,7 +33,8 @@ const DiagramActions = () => {
   const {
     pointOfInterestID,
     selectedDiagramFeatures,
-    setLoadingDiagram
+    setLoadingDiagram,
+    setErrorMessage
   } = React.useContext(DiagramContext);
 
   const [contextMenu, setContextMenu] = React.useState({
@@ -63,29 +64,58 @@ const DiagramActions = () => {
     }
   }, [clickEvent]);
 
-  const [attachConduitToClosure] = useMutation(ATTACH_CONDUIT_TO_CLOSURE, {
-    update: (proxy, mutationResult) => {},
-    refetchQueries: () => ["GetDiagramService"],
-    awaitRefetchQueries: true
-  });
+  const [attachConduitToClosure, attachConduitToClosureResult] = useMutation(
+    ATTACH_CONDUIT_TO_CLOSURE,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
 
-  const [cutOuterConduit] = useMutation(CUT_OUTER_CONDUIT, {
-    update: (proxy, mutationResult) => {},
-    refetchQueries: () => ["GetDiagramService"],
-    awaitRefetchQueries: true
-  });
+  const [cutOuterConduit, cutOuterConduitResult] = useMutation(
+    CUT_OUTER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
 
-  const [cutInnerConduit] = useMutation(CUT_INNER_CONDUIT, {
-    update: (proxy, mutationResult) => {},
-    refetchQueries: () => ["GetDiagramService"],
-    awaitRefetchQueries: true
-  });
+  const [cutInnerConduit, cutInnerConduitResult] = useMutation(
+    CUT_INNER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
 
-  const [connectInnerConduit] = useMutation(CONNECT_INNER_CONDUIT, {
-    update: (proxy, mutationResult) => {},
-    refetchQueries: () => ["GetDiagramService"],
-    awaitRefetchQueries: true
-  });
+  const [connectInnerConduit, connectInnerConduitResult] = useMutation(
+    CONNECT_INNER_CONDUIT,
+    {
+      update: (proxy, mutationResult) => {},
+      refetchQueries: () => ["GetDiagramService"],
+      awaitRefetchQueries: true
+    }
+  );
+
+  React.useEffect(() => {
+    if (attachConduitToClosureResult.error)
+      setErrorMessage(attachConduitToClosureResult.error);
+    if (cutOuterConduitResult.error)
+      setErrorMessage(cutOuterConduitResult.error);
+    if (cutInnerConduitResult.error)
+      setErrorMessage(cutInnerConduitResult.error);
+    if (connectInnerConduitResult.error)
+      setErrorMessage(connectInnerConduitResult.error);
+  }, [
+    attachConduitToClosureResult,
+    cutOuterConduitResult,
+    cutInnerConduitResult,
+    connectInnerConduitResult,
+    setErrorMessage
+  ]);
 
   const [placeFiberCableWithinConduit] = useMutation(
     PLACE_FIBER_CABLE_WITHIN_CONDUIT,

@@ -44,8 +44,6 @@ const FeatureInfoPanel = () => {
   })
 
   const defaultActiveKey = () => {
-    console.log("defaultActiveKey")
-    console.log(isRouteNode ? "closure" : "conduits")
     return isRouteNode ? "closure" : "conduits"
   };
 

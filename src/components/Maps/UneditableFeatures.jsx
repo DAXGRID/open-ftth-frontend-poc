@@ -78,9 +78,6 @@ const UneditableFeatures = ({ map, features }) => {
           const featureID = feature.properties.id;
           const featureType = feature.properties.dataType;
     
-          console.log("clicked Feature ID")
-          console.log(featureID)
-    
           // select segment by its label. Nodes do this automatically (same layer)
           if (feature.layer.id === layerIDs.routeSegmentLabels) {
             feature = map
@@ -96,12 +93,10 @@ const UneditableFeatures = ({ map, features }) => {
       setupOnMousemove();
       setupOnClick();
     });
-  }, [map, features, clearHighlight, layerIDs, selectableLayers, setCurrentFeatureID]);
+  }, [map, features, clearHighlight, layerIDs, selectableLayers, setCurrentFeatureID, setHighlightedFeature, clearSelected]);
 
   // highlight features selected from info tab
   React.useEffect(() => {
-    console.log("highlight route feature?")
-    console.log(highlightedFeature)
     if (!map) return;
 
     clearHighlight();

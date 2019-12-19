@@ -73,6 +73,7 @@ export default DiagramContext;
 
 export const DiagramProvider = props => {
   const selectedFeatures = React.useRef([]);
+  const [errorMessage, setErrorMessage] = React.useState();
   const [pointOfInterestID, setPointOfInterestID] = React.useState();
   const [diagramFeatures, setFeatureData] = useDiagramFeatures();
   const [loadingDiagram, setLoadingDiagram] = React.useState();
@@ -90,6 +91,8 @@ export const DiagramProvider = props => {
         selectedFeatures,
         selectedDiagramFeatures,
         setSelectedDiagramFeatures,
+        errorMessage,
+        setErrorMessage,
         loadingDiagram,
         setLoadingDiagram
       }}

@@ -12,7 +12,7 @@ const RESET_DEMO_DATA = gql`
       rebuild
     }
   }
-`
+`;
 
 const HeaderLinks = () => {
   const { t, i18n } = useTranslation();
@@ -27,11 +27,31 @@ const HeaderLinks = () => {
   const resetDemoData = e => {
     if (window.confirm("Resetting demo database!")) {
       callResetMutation();
+    }
+  };
+
+  const [
+    callResetMutation,
+    { error: resetMutationError, loading: resetMutationLoading }
+  ] = useMutation(RESET_DEMO_DATA, {
+    onCompleted(result) {
       window.location.reload();
     }
-  }
+  });
 
-  const [callResetMutation] = useMutation(RESET_DEMO_DATA);
+  React.useEffect(() => {
+    if (resetMutationLoading) {
+      document.body.style.cursor = "wait";
+    } else {
+      document.body.style.cursor = "default";
+    }
+
+    if (resetMutationError) {
+      window.alert(`Error resetting database: ${resetMutationError}`);
+
+      document.body.style.cursor = "default";
+    }
+  }, [resetMutationError, resetMutationLoading]);
 
   const changeLanguage = e => {
     i18n.changeLanguage(e);
@@ -49,17 +69,26 @@ const HeaderLinks = () => {
   return (
     <div>
       <Nav pullRight>
-        <NavItem onClick={resetDemoData}>{t('general.reset_demo_data')}</NavItem>
-        <NavItem onClick={resetLocalStorage}>{t('general.reset_cache')}</NavItem>
+        <NavItem onClick={resetDemoData}>
+          {t("general.reset_demo_data")}
+        </NavItem>
+        <NavItem onClick={resetLocalStorage}>
+          {t("general.reset_cache")}
+        </NavItem>
         <NavDropdown
           onSelect={e => changeLanguage(e)}
           title={
             <div>
               <div className="flag">
-                <img alt={currentLang()} src={flags[currentLang()]} width="16" height="16" />
+                <img
+                  alt={currentLang()}
+                  src={flags[currentLang()]}
+                  width="16"
+                  height="16"
+                />
               </div>
               <p className="hidden-md hidden-lg">
-                {t('general.language_selector')}
+                {t("general.language_selector")}
                 <b className="caret" />
               </p>
             </div>
